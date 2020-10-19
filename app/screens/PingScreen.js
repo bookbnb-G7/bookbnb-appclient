@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   TextInput,
@@ -8,6 +8,32 @@ import {
 } from "react-native";
 
 function PingScreen(props) {
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [title, setTitle] = useState("string");
+  const [description, setDescription] = useState("string");
+  const [id, setId] = useState(1);
+
+  useEffect(() => {
+    fetch("https://bookbnb-appserver.herokuapp.com/notes/" + id)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setTitle(result.title);
+          setDescription(result.description);
+          setId(result.id);
+        },
+        // Nota: es importante manejar errores aquí y no en
+        // un bloque catch() para que no interceptemos errores
+        // de errores reales en los componentes.
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+  }, []);
+
   /** Para navegar de un screen a otro tengo que instalar React navigation, al parecer*/
   const handleSendButtonPress = () => alert("Send Pressed");
   const handleGetButtonPress = () => alert("Get Pressed");

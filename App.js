@@ -2,9 +2,9 @@ import React from "react";
 
 import LoginScreen from "./app/screens/LoginScreen";
 import PingScreen from "./app/screens/PingScreen";
-import Ajax from "./app/screens/Ajax";
+import ReactFetchScreen from "./app/screens/ReactFetchScreen";
 
 export default function App() {
   //return <PingScreen/>
-  return <Ajax />;
+  return <ReactFetchScreen />;
 }
