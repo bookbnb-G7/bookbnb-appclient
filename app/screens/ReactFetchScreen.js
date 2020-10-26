@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Button, TextInput, Alert } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
+
+import colors from "../config/colors";
 
 var NUMBER = "0123456789";
 
@@ -38,8 +48,8 @@ function ReactFetchScreen(props) {
   const [title, setTitle] = useState("string");
   const [description, setDescription] = useState("string");
   const [_author, setAuthor] = useState("string");
-
   const [_id, setId] = useState(0);
+
   const [_input_id, setInputId] = useState(1);
 
   const [_id_text, setText] = useState("");
@@ -178,33 +188,53 @@ function ReactFetchScreen(props) {
   } else {
     return (
       <View style={styles.mainContainer}>
-        <Text style={styles.text}>
-          Para Get indicar un id y presionar GET, para un POST apretar SEND
-        </Text>
-        <View style={styles.textContainer}>
-          <TextInput
-            placeholder="id: "
-            onChangeText={(_id_text) => setText(_id_text)}
-          ></TextInput>
-          <TextInput
-            placeholder="title: "
-            onChangeText={(_title_text) => setTitleText(_title_text)}
-          ></TextInput>
-          <TextInput
-            placeholder="description: "
-            onChangeText={(_description_text) =>
-              setDescriptionText(_description_text)
-            }
-          ></TextInput>
+        <View style={styles.headerContainer}>
+          <Text style={styles.textTitle}>
+            {" "}
+            Actualmente esta publicando a /notes{" "}
+          </Text>
+          <Text style={styles.text}>
+            Para Get indicar un id y presionar GET, para un POST completar los
+            campos title y description y apretar POST.
+          </Text>
+          <View style={styles.textInputsContainer}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="id:"
+              onChangeText={(_id_text) => setText(_id_text)}
+            ></TextInput>
+            <TextInput
+              style={styles.textInput}
+              placeholder="title:"
+              onChangeText={(_title_text) => setTitleText(_title_text)}
+            ></TextInput>
+            <TextInput
+              style={styles.textInput}
+              placeholder="description:"
+              onChangeText={(_description_text) =>
+                setDescriptionText(_description_text)
+              }
+            ></TextInput>
+          </View>
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity style={styles.touchableContainer}>
+              <Text style={styles.buttonText} onPress={_handleGetButtonPress}>
+                GET
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.touchableContainer}>
+              <Text style={styles.buttonText} onPress={_handlePostButtonPress}>
+                POST
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.buttonContainer}>
-          <Button title="Get" onPress={_handleGetButtonPress}></Button>
-          <Button title="Post" onPress={_handlePostButtonPress}></Button>
+        <View style={styles.footerContainer}>
+          <Text> JSON Response </Text>
+          <Text> title: {title} </Text>
+          <Text> description: {description}</Text>
+          <Text> id: {_id}</Text>
         </View>
-        <Text> JSON Response </Text>
-        <Text> title: {title} </Text>
-        <Text> description: {description}</Text>
-        <Text> id: {_id}</Text>
       </View>
     );
   }
@@ -213,26 +243,68 @@ function ReactFetchScreen(props) {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#3498db",
+    //justifyContent: "center",
+    backgroundColor: colors.header,
+  },
+  headerContainer: {
+    flex: 2,
+    paddingHorizontal: 20,
+    paddingTop: 30,
+    paddingBottom: 50,
+  },
+  footerContainer: {
+    flex: 2,
+    //flexGrow: 1,
+    backgroundColor: colors.footer,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
   },
   text: {
     textAlign: "center",
   },
-  textContainer: {
-    backgroundColor: "lightblue",
+  textTitle: {
+    textAlign: "center",
+    color: "red",
+    fontWeight: "700",
+    fontSize: 18,
+  },
+  textInputsContainer: {
+    marginTop: 5,
+    //backgroundColor: "lightblue",
     marginBottom: 10,
     paddingHorizontal: 10,
   },
-  buttonContainer: {
-    padding: 10,
+  textInput: {
+    marginBottom: 5,
+    backgroundColor: "#fff",
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
+  },
+  buttonsContainer: {
+    //padding: 10,
+  },
+  touchableContainer: {
+    marginBottom: 10,
+    paddingVertical: 10,
+    backgroundColor: colors.header,
+  },
+  buttonText: {
+    textAlign: "center",
+    color: colors.text,
+    fontWeight: "700",
   },
 });
 
 export default ReactFetchScreen;
 
 /**TODO @AgustinLeguizamon Como Hacer para correr
- * el UseEffect bajo demanda en vez de que
- * suceda una y cada vez que se inicia la app
- * Hay que poner las condiciones en el array [] al final del useEffect, si cambia el valor que coloco ahi
- * vuelve a disparar el effect en el siguiente renderizado e.g. [_id], si _id cambia se ejecuta el useEffect*/
+ * React navigation
+ * Dar la opcion de elegir hacer un POSt, Note, 
+ * 
+ * <Button title="Get" onPress={_handleGetButtonPress}></Button>
+            
+*/
