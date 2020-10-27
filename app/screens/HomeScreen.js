@@ -5,7 +5,7 @@ import colors from "../config/colors";
 
 function HomeScreen({ navigation }) {
   function _handleMakeAPostButton() {
-    //navigation.navigate("Posts");
+    navigation.navigate("Posts");
   }
 
   function _handleMakeANoteButton() {

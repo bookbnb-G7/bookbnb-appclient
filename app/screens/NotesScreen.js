@@ -14,7 +14,7 @@ var NUMBER = "0123456789";
 function isATextNumber(text) {
   let isANumber = true;
   let index = 0;
-  while (index < NUMBER.length && isANumber) {
+  while (index < text.length && isANumber) {
     const element = text[index];
     isANumber = Boolean(NUMBER.search(element) >= 0);
     index++;

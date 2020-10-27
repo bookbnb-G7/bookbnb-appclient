@@ -4,4 +4,5 @@ export default {
   button: "white",
   text: "black",
   subText: "grey",
+  warning: "red",
 };
