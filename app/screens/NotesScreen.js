@@ -3,9 +3,7 @@ import {
   Text,
   View,
   StyleSheet,
-  Button,
   TextInput,
-  Alert,
   TouchableOpacity,
 } from "react-native";
 
@@ -24,24 +22,7 @@ function isATextNumber(text) {
   return isANumber;
 }
 
-function ReactFetchScreen(props) {
-  //https://es.reactjs.org/docs/hooks-state.html
-
-  /** Hook permite usar estado y otras caracteristicas sin escribir una clase*/
-
-  /** UseState reemplaza al this.state de la clase
-   * useState devuelve una pareja de valores, el estado actual
-   * y una funcion que lo actualiza
-   * Usamos set<VarName> para actualizar el valor de <VarName>
-   * useState crea solo la primera vez, las siguientes nos da el estado actual
-   * */
-
-  /** Declaramos variables de estado error, isLoaded, title, description
-   *isLoaded es un bool inicializado en false
-   *title es un array
-   *
-   */
-
+function NotesScreen({ navigation }) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -62,6 +43,7 @@ function ReactFetchScreen(props) {
   /**Como estoy usando Hooks y no clase esto lo miro como metodos de la clase del componente
    * por eso los marco como privados
    */
+
   function _handleGetButtonPress() {
     console.log("Get:" + isATextNumber({ _id_text }));
     if (isATextNumber({ _id_text })) {
@@ -74,25 +56,13 @@ function ReactFetchScreen(props) {
     setIsPost(true);
   }
 
-  // Note: the empty deps array [] means
-  // this useEffect will run once
-  // similar to componentDidMount()
+  function _handleGoHomeButtonPress() {
+    navigation.navigate("Home");
+  }
 
-  /** The Effect Hook allows you to carry out side
-   * effects on functional components.
-   * Con esto le indicamos que el componente debe hacer
-   * algo despues de renderizar
-   * Al agregarlo dentro del componente permite aceder a las variables de estado*/
-
-  /** Sometimes, we want to run some additional code after React has updated the DOM.
-   * Network requests, manual DOM mutations, and logging are common examples of effects
-   * that don’t require a cleanup.*/
-
-  let url = "https://bookbnb-appserver.herokuapp.com/notes/" + _input_id;
-  console.log("url:" + url);
   useEffect(() => {
-    if ((_is_get && _input_id > 0) || !isLoaded) {
-      fetch(url)
+    if ((_is_get && isATextNumber(_id_text)) || !isLoaded) {
+      fetch("https://bookbnb-appserver.herokuapp.com/notes/" + _id_text)
         .then((res) => res.json())
         .then(
           (result) => {
@@ -107,30 +77,13 @@ function ReactFetchScreen(props) {
           }
         );
     } else if (_is_get) {
-      Alert.alert("Debe completar el campo id");
+      alert("Debe completar el campo id");
     }
     return () => {
       setIsGet(false);
     };
   }, [_is_get]);
-  /** 
-  url = "https://bookbnb-appserver.herokuapp.com/posts/" + _id;
-  console.log("url:" + url);
-  useEffect(() => {
-    if (POST){}
-    fetch(url)
-      .then((response) => response.json())
-      //.then((json) => console.log(json))
-      .then((result) => {
-        setIsLoaded(true);
-        setIsPostsLoaded(true);
-        setTitle(result.title);
-        setDescription(result.body);
-        setAuthor(result.author);
-        setId(result.id);
-      });
-  }, []);
-*/
+
   //POST request using fetch inside useEffect
   /**El formato lo podes sacar viendo el try it out
    * the FastApi que te muestra el Curl para el POST*/
@@ -149,9 +102,14 @@ function ReactFetchScreen(props) {
       };
       fetch("https://bookbnb-appserver.herokuapp.com/notes/", requestOptions)
         .then((response) => response.json())
-        .then((json) => console.log(json));
+        //.then((json) => console.log(json))
+        .then((result) => {
+          setTitle(result.title);
+          setDescription(result.description);
+          setId(result.id);
+        });
     } else if (_is_post) {
-      Alert.alert("Debe completar los campos title y description");
+      alert("Debe completar los campos title y description");
     }
     return () => {
       console.log("CleanUp");
@@ -190,7 +148,6 @@ function ReactFetchScreen(props) {
       <View style={styles.mainContainer}>
         <View style={styles.headerContainer}>
           <Text style={styles.textTitle}>
-            {" "}
             Actualmente esta publicando a /notes{" "}
           </Text>
           <Text style={styles.text}>
@@ -227,6 +184,14 @@ function ReactFetchScreen(props) {
                 POST
               </Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.touchableContainer}>
+              <Text
+                style={styles.buttonText}
+                onPress={_handleGoHomeButtonPress}
+              >
+                GO HOME
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.footerContainer}>
@@ -254,7 +219,7 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     flex: 2,
-    //flexGrow: 1,
+    flexGrow: 1,
     backgroundColor: colors.footer,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -288,23 +253,20 @@ const styles = StyleSheet.create({
     //padding: 10,
   },
   touchableContainer: {
-    marginBottom: 10,
-    paddingVertical: 10,
-    backgroundColor: colors.header,
+    marginBottom: 5,
+    marginTop: 10,
   },
   buttonText: {
     textAlign: "center",
-    color: colors.text,
+    color: colors.button,
     fontWeight: "700",
   },
 });
 
-export default ReactFetchScreen;
+export default NotesScreen;
 
 /**TODO @AgustinLeguizamon Como Hacer para correr
  * React navigation
- * Dar la opcion de elegir hacer un POSt, Note, 
- * 
- * <Button title="Get" onPress={_handleGetButtonPress}></Button>
-            
-*/
+ * Dar la opcion de elegir hacer un POSt, Note,
+ *
+ */
