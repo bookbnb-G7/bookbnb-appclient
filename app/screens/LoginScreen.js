@@ -12,9 +12,7 @@ import LoginForm from "../screens/LoginForm";
 
 const logo = require("../assets/Octocat.png");
 
-function LoginScreen({ navigation }) {
-  const handlePress = () => navigation.navigate("Home");
-
+function LoginScreen(props) {
   return (
     /** KeyboardAVoidinvView behavior ="padding" mueve el container cuando aparece el teclado
      * para escribir
@@ -27,12 +25,7 @@ function LoginScreen({ navigation }) {
         </Text>
       </View>
       <View>
-        <LoginForm />
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Text style={styles.buttonText} onPress={handlePress}>
-            LOGIN
-          </Text>
-        </TouchableOpacity>
+        <LoginForm navigation={props.navigation} />
       </View>
     </KeyboardAvoidingView>
   );

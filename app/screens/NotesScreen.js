@@ -9,47 +9,24 @@ import {
 
 import colors from "../config/colors";
 
-var NUMBER = "0123456789";
-
-function isATextNumber(text) {
-  let isANumber = true;
-  let index = 0;
-  while (index < text.length && isANumber) {
-    const element = text[index];
-    isANumber = Boolean(NUMBER.search(element) >= 0);
-    index++;
-  }
-  return isANumber;
-}
+import isANumber from "../helpers/isANumber";
 
 function NotesScreen({ navigation }) {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const [title, setTitle] = useState("string");
-  const [description, setDescription] = useState("string");
-  const [_author, setAuthor] = useState("string");
-  const [_id, setId] = useState(0);
-
-  const [_input_id, setInputId] = useState(1);
+  const [_note, setNote] = useState({});
 
   const [_id_text, setText] = useState("");
   const [_title_text, setTitleText] = useState("");
   const [_description_text, setDescriptionText] = useState("");
 
+  /**TODO: meter el manejo de los POST/GET en un children, se puede hacer eso?  */
   const [_is_post, setIsPost] = useState(false);
   const [_is_get, setIsGet] = useState(false);
 
-  /**Como estoy usando Hooks y no clase esto lo miro como metodos de la clase del componente
-   * por eso los marco como privados
-   */
-
   function _handleGetButtonPress() {
-    console.log("Get:" + isATextNumber({ _id_text }));
-    if (isATextNumber({ _id_text })) {
-      setInputId(parseInt(_id_text));
-      setIsGet(true);
-    }
+    setIsGet(true);
   }
 
   function _handlePostButtonPress() {
@@ -60,16 +37,18 @@ function NotesScreen({ navigation }) {
     navigation.navigate("Home");
   }
 
+  function _handleApiResponse(response) {
+    setNote(response);
+  }
+
   useEffect(() => {
-    if ((_is_get && isATextNumber(_id_text)) || !isLoaded) {
+    if ((_is_get && isANumber(_id_text)) || !isLoaded) {
       fetch("https://bookbnb-appserver.herokuapp.com/notes/" + _id_text)
-        .then((res) => res.json())
+        .then((response) => response.json())
         .then(
-          (result) => {
+          (response) => {
             setIsLoaded(true);
-            setTitle(result.title);
-            setDescription(result.description);
-            setId(result.id);
+            _handleApiResponse(response);
           },
           (error) => {
             setIsLoaded(true);
@@ -84,14 +63,8 @@ function NotesScreen({ navigation }) {
     };
   }, [_is_get]);
 
-  //POST request using fetch inside useEffect
-  /**El formato lo podes sacar viendo el try it out
-   * the FastApi que te muestra el Curl para el POST*/
-
-  console.log("posting:" + _is_post);
   useEffect(() => {
     if (_is_post && _title_text !== "" && _description_text !== "") {
-      console.log("UseEffect");
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -102,38 +75,14 @@ function NotesScreen({ navigation }) {
       };
       fetch("https://bookbnb-appserver.herokuapp.com/notes/", requestOptions)
         .then((response) => response.json())
-        //.then((json) => console.log(json))
-        .then((result) => {
-          setTitle(result.title);
-          setDescription(result.description);
-          setId(result.id);
-        });
+        .then(_handleApiResponse);
     } else if (_is_post) {
       alert("Debe completar los campos title y description");
     }
     return () => {
-      console.log("CleanUp");
       setIsPost(false);
     };
   }, [_is_post]);
-
-  /** 
-  useEffect(() => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: "ReactNativePost",
-        body: "posts",
-        author:"Agus",
-
-      }),
-    };
-    fetch("https://bookbnb-appserver.herokuapp.com/posts/", requestOptions)
-      .then((response) => response.json())
-      .then((json) => console.log(json));
-  }, []);
-  */
 
   if (error) {
     return <Text>Error: {error.message}</Text>;
@@ -196,9 +145,9 @@ function NotesScreen({ navigation }) {
         </View>
         <View style={styles.footerContainer}>
           <Text> JSON Response </Text>
-          <Text> title: {title} </Text>
-          <Text> description: {description}</Text>
-          <Text> id: {_id}</Text>
+          <Text> title: {_note.title} </Text>
+          <Text> description: {_note.description}</Text>
+          <Text> id: {_note.id}</Text>
         </View>
       </View>
     );

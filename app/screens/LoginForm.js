@@ -7,7 +7,9 @@ import {
   Text,
 } from "react-native";
 
-function LoginForm({ navigation }) {
+function LoginForm(props) {
+  const handlePress = () => props.navigation.navigate("Home");
+
   return (
     <View style={styles.loginFormContainer}>
       <TextInput
@@ -25,18 +27,18 @@ function LoginForm({ navigation }) {
         secureTextEntry
         //ref={(input) => this.passwordInput = input}
       ></TextInput>
+      <TouchableOpacity style={styles.buttonContainer}>
+        <Text style={styles.buttonText} onPress={handlePress}>
+          LOGIN
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
-//<TouchableOpacity style={styles.buttonContainer}>
-//<Button title="LOGIN" style={styles.loginButton} onPress={handlePress}> </Button>
-//</TouchableOpacity>
-/** Si uso un boton no tengo que hacer nada con los containers, se acomoda solo */
-
 const styles = StyleSheet.create({
   loginFormContainer: {
-    padding: 20, //horizontal y vertical
+    padding: 20,
   },
   credential: {
     height: 40,
