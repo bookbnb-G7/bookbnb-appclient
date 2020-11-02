@@ -9,6 +9,13 @@ export default {
   white: "#fff",
   separator: "#737373",
   grayBg: "#D8D8D8",
+  graySoft: "#F5F5F5",
   black: "black",
   pinkBg: "#F7DCE2",
+  lBlueBg: "#3498db",
+  redSoft: "#CA4F4F",
+  redSoft2: "#DB5B5B",
+  alpha02: "rgba(255, 255, 255, 0.2)",
+  alpha03: "rgba(255, 255, 255, 0.3)",
+  alpha08: "rgba(255, 255, 255, 0.8)",
 };
