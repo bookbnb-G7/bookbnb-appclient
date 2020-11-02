@@ -16,6 +16,9 @@ function HomeScreen({ navigation }) {
     navigation.navigate("Rooms");
   }
 
+  function _handleProfileButton() {
+    navigation.navigate("Profile");
+  }
   return (
     <View style={styles.mainContainer}>
       <View style={styles.headerContainer}>
@@ -42,6 +45,12 @@ function HomeScreen({ navigation }) {
             onPress={_handleGoRoomsButton}
           >
             <Text style={styles.buttonText}>GO TO ROOMS</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonContainer}
+            onPress={_handleProfileButton}
+          >
+            <Text style={styles.buttonText}>Profile</Text>
           </TouchableOpacity>
         </View>
       </View>

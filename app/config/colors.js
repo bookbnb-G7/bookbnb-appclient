@@ -8,4 +8,7 @@ export default {
   success: "green",
   white: "#fff",
   separator: "#737373",
+  grayBg: "#D8D8D8",
+  black: "black",
+  pinkBg: "#F7DCE2",
 };
