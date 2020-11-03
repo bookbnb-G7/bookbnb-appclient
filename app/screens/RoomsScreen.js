@@ -64,7 +64,9 @@ function RoomsScreen({ navigation }) {
 
   function _handleRateRoomButtonPress() {}
 
-  function _handleReviewRoomButtonPress() {}
+  function _handleReviewRoomButtonPress() {
+    navigation.navigate("ReviewRoom");
+  }
 
   function _handleGetRoomButtonPress() {
     /**navigate Screen con los detalles del room pasandole

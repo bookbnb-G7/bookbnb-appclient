@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import colors from "../config/colors";
-import containers from "../config/containers";
+import containers from "../config/styling";
 import fonts from "../config/fonts";
 
 import Separator from "../helpers/Separator";

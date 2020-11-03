@@ -4,4 +4,5 @@ export default {
   bigCornerRadius: 40,
   buttonBorderRadius: 10,
   buttonHPadding: 10,
+  buttonVPadding: 5,
 };

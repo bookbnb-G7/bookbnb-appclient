@@ -11,6 +11,7 @@ import HomeScreen from "./app/screens/HomeScreen";
 import PostsScreen from "./app/screens/PostsScreen";
 import RoomsScreen from "./app/screens/RoomsScreen";
 import GetRoomScreen from "./app/screens/GetRoomScreen";
+import ReviewRoomScreen from "./app/screens/ReviewRoomScreen";
 import Profile from "./app/screens/Profile";
 
 function LogoTitle() {
@@ -34,6 +35,10 @@ export default function App() {
         <Stack.Screen name="Posts" component={PostsScreen}></Stack.Screen>
         <Stack.Screen name="Rooms" component={RoomsScreen}></Stack.Screen>
         <Stack.Screen name="GetRoom" component={GetRoomScreen}></Stack.Screen>
+        <Stack.Screen
+          name="ReviewRoom"
+          component={ReviewRoomScreen}
+        ></Stack.Screen>
         <Stack.Screen name="Profile" component={Profile}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
