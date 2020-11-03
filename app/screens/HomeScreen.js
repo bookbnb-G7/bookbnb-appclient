@@ -1,7 +1,16 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import BnbBodyView from "../components/BnbBodyView";
+import BnbBubbleView from "../components/BnbBubbleView";
+import BnbButton from "../components/BnbButton";
+import BnbFooterView from "../components/BnbFooterView";
+import BnbHeaderView from "../components/BnbHeaderView";
+import BnbMainView from "../components/BnbMainView";
+import BnbTitleText from "../components/BnbTitleText";
 import colors from "../config/colors";
+
+bnb_book_logo = require("../assets/airbnb.png");
 
 function HomeScreen({ navigation }) {
   function _handleMakeAPostButton() {
@@ -20,74 +29,42 @@ function HomeScreen({ navigation }) {
     navigation.navigate("Profile");
   }
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.prompt}>
-          Por favor seleccione que tipo de accion desea hacer a continuacion
-        </Text>
-      </View>
-      <View style={styles.footerContainer}>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={_handleMakeAPostButton}
-          >
-            <Text style={styles.buttonText}>MAKE A POST</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={_handleMakeANoteButton}
-          >
-            <Text style={styles.buttonText}>MAKE A NOTE</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={_handleGoRoomsButton}
-          >
-            <Text style={styles.buttonText}>GO TO ROOMS</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={_handleProfileButton}
-          >
-            <Text style={styles.buttonText}>Profile</Text>
-          </TouchableOpacity>
+    <BnbMainView>
+      <BnbHeaderView>
+        <BnbTitleText>BnbBook</BnbTitleText>
+      </BnbHeaderView>
+      <BnbBodyView>
+        <Image style={styles.logo} source={bnb_book_logo}></Image>
+        <BnbBubbleView>
+          <Text>
+            Por favor seleccione que tipo de accion desea hacer a continuacion
+          </Text>
+        </BnbBubbleView>
+        <View style={styles.optionsContainer}>
+          <BnbButton onPress={_handleMakeAPostButton} title={"Make a post"} />
+          <BnbButton onPress={_handleMakeANoteButton} title={"Make a note"} />
+          <BnbButton onPress={_handleGoRoomsButton} title={"Go to rooms"} />
+          <BnbButton onPress={_handleProfileButton} title={"Profile"} />
         </View>
-      </View>
-    </View>
+      </BnbBodyView>
+      <BnbFooterView>
+        <Text>footer</Text>
+      </BnbFooterView>
+    </BnbMainView>
   );
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-  },
-  prompt: {
-    color: colors.text,
-    textAlign: "center",
-  },
-  headerContainer: {
-    flex: 1,
-    backgroundColor: colors.footer,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  footerContainer: {
+  optionsContainer: {
     flex: 2,
-    justifyContent: "center",
+    marginVertical: 10,
     alignItems: "center",
-    backgroundColor: colors.header,
+    justifyContent: "space-evenly",
   },
-  buttonsContainer: {
-    marginTop: 10,
-  },
-  buttonContainer: {
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  buttonText: {
-    fontWeight: "700",
-    color: colors.button,
+  logo: {
+    width: 100,
+    height: 100,
+    alignSelf: "center",
   },
 });
 

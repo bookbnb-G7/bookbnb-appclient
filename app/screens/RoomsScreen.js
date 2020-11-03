@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import BnbBubbleView from "../components/BnbBubbleView";
+import BnbButton from "../components/BnbButton";
+import BnbMainView from "../components/BnbMainView";
 
 import colors from "../config/colors";
 import fonts from "../config/fonts";
 
+import Separator from "../helpers/Separator";
 /**TODO: Si esto tiene un handler tiene que ser capaz de burbujearlo mediante el props
  * si no, no lo puedo poner en una carpeta aparte
  */
@@ -20,10 +24,6 @@ function RoomOptionButton(props) {
       <Image source={logo} style={styles.buttonImage}></Image>
     </View>
   );
-}
-
-function Separator() {
-  return <View style={styles.separator}></View>;
 }
 
 function RoomsScreen({ navigation }) {
@@ -89,11 +89,11 @@ function RoomsScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.headerContainer}>
+    <BnbMainView>
+      <BnbBubbleView>
         <Text>Seleccione alguna de las opciones a continuacion</Text>
-      </View>
-      <Separator />
+      </BnbBubbleView>
+      <Separator style={styles.noSeparatorLine} />
       <View style={styles.bodyContainer}>
         <View style={styles.buttonsContainer}>
           <View>
@@ -146,18 +146,9 @@ function RoomsScreen({ navigation }) {
           </View>
         </View>
       </View>
-      <Separator />
-      <View style={styles.footerContainer}>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity>
-            <Text
-              style={styles.footerButtonText}
-              onPress={_handleGoBackButtonPress}
-            >
-              GO TO HOME
-            </Text>
-          </TouchableOpacity>
-        </View>
+      <Separator style={styles.noSeparatorLine} />
+      <BnbBubbleView>
+        <BnbButton onPress={_handleGoBackButtonPress} title={"Go to Home"} />
         <View style={{ flexDirection: "row" }}>
           {Object.entries(_room).map(([key, value]) => {
             return (
@@ -167,8 +158,8 @@ function RoomsScreen({ navigation }) {
             );
           })}
         </View>
-      </View>
-    </View>
+      </BnbBubbleView>
+    </BnbMainView>
   );
 }
 
@@ -177,39 +168,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
-  headerContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.white,
-    borderColor: colors.pinkBg,
-    borderWidth: 1,
-    borderTopRightRadius: 40,
-    borderTopLeftRadius: 40,
-    borderBottomRightRadius: 40,
-    borderBottomLeftRadius: 40,
-  },
+
   bodyContainer: {
-    //flexGrow: 1,
     backgroundColor: colors.white,
     borderTopRightRadius: 5,
     borderTopLeftRadius: 5,
     borderBottomRightRadius: 5,
     borderBottomLeftRadius: 5,
-  },
-  buttonsContainer: {
-    justifyContent: "flex-end",
-  },
-  footerContainer: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: colors.white,
-    borderColor: colors.pinkBg,
-    borderWidth: 1,
-    borderTopRightRadius: 40,
-    borderTopLeftRadius: 40,
-    borderBottomRightRadius: 40,
-    borderBottomLeftRadius: 40,
   },
   fixToText: {
     flexDirection: "row",
@@ -219,24 +184,12 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: fonts.big,
   },
-  separator: {
-    marginVertical: 4,
-    borderBottomColor: colors.separator,
-    //borderWidth: 1,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+  noSeparatorLine: {
+    borderBottomWidth: 0,
   },
   buttonImage: {
     width: 50,
     height: 50,
-  },
-  footerButtonText: {
-    paddingHorizontal: 10,
-    fontSize: fonts.semi,
-    borderWidth: 1,
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10,
   },
 });
 
