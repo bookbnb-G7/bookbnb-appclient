@@ -13,6 +13,10 @@ import RoomsScreen from "./app/screens/RoomsScreen";
 import GetRoomScreen from "./app/screens/GetRoomScreen";
 import ReviewRoomScreen from "./app/screens/ReviewRoomScreen";
 import Profile from "./app/screens/Profile";
+import SearchResultRooms from "./app/screens/SearchResultRooms";
+import SearchRoomsScreen from "./app/screens/SearchRoomsScreen";
+import SearchInputScreen from "./app/screens/SearchInputScreen";
+import CalendarScreen from "./app/screens/CalendarScreen";
 
 function LogoTitle() {
   return (
@@ -35,11 +39,12 @@ export default function App() {
         <Stack.Screen name="Posts" component={PostsScreen}></Stack.Screen>
         <Stack.Screen name="Rooms" component={RoomsScreen}></Stack.Screen>
         <Stack.Screen name="GetRoom" component={GetRoomScreen}></Stack.Screen>
-        <Stack.Screen
-          name="ReviewRoom"
-          component={ReviewRoomScreen}
-        ></Stack.Screen>
-        <Stack.Screen name="Profile" component={Profile}></Stack.Screen>
+        <Stack.Screen name="ReviewRoom" component={ReviewRoomScreen} />
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="SearchRooms" component={SearchRoomsScreen} />
+        <Stack.Screen name="SearchInput" component={SearchInputScreen} />
+        <Stack.Screen name="SearchCalendar" component={CalendarScreen} />
+        <Stack.Screen name="SearchResultRooms" component={SearchResultRooms} />
       </Stack.Navigator>
     </NavigationContainer>
   );

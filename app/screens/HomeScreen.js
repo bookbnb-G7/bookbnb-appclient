@@ -1,6 +1,5 @@
 import React from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbBubbleView from "../components/BnbBubbleView";
 import BnbButton from "../components/BnbButton";
@@ -8,7 +7,6 @@ import BnbFooterView from "../components/BnbFooterView";
 import BnbHeaderView from "../components/BnbHeaderView";
 import BnbMainView from "../components/BnbMainView";
 import BnbTitleText from "../components/BnbTitleText";
-import colors from "../config/colors";
 
 bnb_book_logo = require("../assets/airbnb.png");
 
@@ -28,6 +26,10 @@ function HomeScreen({ navigation }) {
   function _handleProfileButton() {
     navigation.navigate("Profile");
   }
+
+  function _handleSearchRoomsButton() {
+    navigation.navigate("SearchRooms");
+  }
   return (
     <BnbMainView>
       <BnbHeaderView>
@@ -45,6 +47,7 @@ function HomeScreen({ navigation }) {
           <BnbButton onPress={_handleMakeANoteButton} title={"Make a note"} />
           <BnbButton onPress={_handleGoRoomsButton} title={"Go to rooms"} />
           <BnbButton onPress={_handleProfileButton} title={"Profile"} />
+          <BnbButton onPress={_handleSearchRoomsButton} title={"Search"} />
         </View>
       </BnbBodyView>
       <BnbFooterView>
