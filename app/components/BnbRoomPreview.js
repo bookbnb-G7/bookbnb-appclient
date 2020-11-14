@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
 
@@ -15,6 +16,12 @@ const BnbRoomPreview = (props) => {
   const [_is_loaded, setIsLoaded] = useState(false);
 
   console.log(url_ratings);
+
+  const _handleImagePress = () => {
+    /**Le paso el room, podria pasarle los ratings tambien */
+    props.navigation.navigate("Room", props.room);
+  };
+
   /**ComponentDidMount obtengo todos los datos a partir del
    * room que recibo por props (le saco el id)*/
   /**Super importante el isLoaded porque caso contrario intentamos mostrar objetos indefinidos
@@ -59,7 +66,12 @@ const BnbRoomPreview = (props) => {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.roomImageContainer}>
-          <Image source={room_image} style={styles.roomImage}></Image>
+          <TouchableOpacity
+            style={styles.roomImage}
+            onPress={_handleImagePress}
+          >
+            <Image source={room_image}></Image>
+          </TouchableOpacity>
         </View>
         <View style={styles.roomDescriptionContainer}>
           <Text style={styles.roomReviewScore}>

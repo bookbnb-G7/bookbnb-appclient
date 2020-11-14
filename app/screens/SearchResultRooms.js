@@ -72,7 +72,10 @@ function SearchResultRooms(props) {
           <ScrollView>
             {_room.rooms.map((item, index) => (
               <View key={item.id}>
-                <BnbRoomPreview room={item}></BnbRoomPreview>
+                <BnbRoomPreview
+                  navigation={props.navigation}
+                  room={item}
+                ></BnbRoomPreview>
               </View>
             ))}
           </ScrollView>

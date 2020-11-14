@@ -13,8 +13,8 @@ import Separator from "../helpers/Separator";
 class SearchCountersScreen extends Component {
   state = {
     counters: [
-      { ageGroup: "adult", quantity: 0 },
-      { ageGroup: "children", quantity: 0 },
+      { age_group: "adult", quantity: 0 },
+      { age_group: "children", quantity: 0 },
     ],
   };
 

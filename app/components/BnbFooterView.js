@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderTopColor: colors.redSoft,
     borderTopWidth: 1,
-    flex: 0.1,
+    paddingVertical: styling.separator,
+    //flex: 0.1,
   },
 });
 
