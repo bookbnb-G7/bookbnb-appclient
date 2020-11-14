@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbFooterView from "../components/BnbFooterView";
 import BnbMainView from "../components/BnbMainView";
+import RoomReview from "../components/RoomReview";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
+import Separator from "../helpers/Separator";
 
 const image = require("../assets/bookbnb_1.png");
 
@@ -64,13 +66,18 @@ function RoomScreen({ route, navigation }, props) {
           <View style={styles.roomDescriptionContainer}>
             <Text>Aca deberia haber una descripcion detallada del room</Text>
           </View>
-          <View>
+          <Separator></Separator>
+          <ScrollView style={styles.reviewsContainer}>
+            <Text>Reseñas</Text>
             {_reviews.reviews.map((item, index) => (
               <View key={item.id}>
-                <Text>{item.review}</Text>
+                <RoomReview
+                  left={<Text>{item.reviewer}</Text>}
+                  right={<Text>{item.review}</Text>}
+                ></RoomReview>
               </View>
             ))}
-          </View>
+          </ScrollView>
         </BnbBodyView>
         <BnbFooterView>
           <BnbButton
@@ -102,6 +109,7 @@ const styles = StyleSheet.create({
     fontSize: fonts.big,
     fontWeight: fonts.bold,
   },
+  reviewsContainer: {},
 });
 
 export default RoomScreen;

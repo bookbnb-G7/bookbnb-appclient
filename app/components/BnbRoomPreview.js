@@ -15,8 +15,6 @@ const BnbRoomPreview = (props) => {
   const [_error, setError] = useState(null);
   const [_is_loaded, setIsLoaded] = useState(false);
 
-  console.log(url_ratings);
-
   const _handleImagePress = () => {
     /**Le paso el room, podria pasarle los ratings tambien */
     props.navigation.navigate("Room", props.room);
