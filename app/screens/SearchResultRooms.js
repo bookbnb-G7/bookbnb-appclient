@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbMainView from "../components/BnbMainView";
 import BnbRoomPreview from "../components/BnbRoomPreview";
@@ -8,7 +9,29 @@ import Separator from "../helpers/Separator";
 
 function SearchResultRooms(props) {
   const url = "http://bookbnb-appserver.herokuapp.com/rooms/1";
-  const [_room, setRoom] = useState({});
+  const [_room, setRoom] = useState({
+    rooms: [
+      {
+        type: "Dpto",
+        owner: "Agus",
+        owner_id: 99,
+        price_per_day: 100,
+        id: 1,
+        created_at: "string",
+        updated_at: "string",
+      },
+
+      {
+        type: "Casa",
+        owner: "Agus",
+        owner_id: 40,
+        price_per_day: 200,
+        id: 2,
+        created_at: "string",
+        updated_at: "string",
+      },
+    ],
+  });
 
   const [_error, setError] = useState(null);
 
@@ -18,7 +41,7 @@ function SearchResultRooms(props) {
   };
 
   /**Component did mount */
-  useEffect(() => {
+  /**useEffect(() => {
     fetch(url)
       .then((response) => response.json())
       .then(
@@ -30,7 +53,7 @@ function SearchResultRooms(props) {
         }
       );
   }, []);
-
+**/
   if (_error) {
     return (
       <View style={styles.loading}>
@@ -42,10 +65,17 @@ function SearchResultRooms(props) {
       <BnbMainView>
         <Separator></Separator>
         <BnbBodyView>
-          <Text style={styles.infoText}>Mas de 300 lugares para alojarse</Text>
+          <Text style={styles.infoText}>
+            Encontramos {_room.rooms.length} lugares para alojarse
+          </Text>
           <Separator></Separator>
-          <BnbRoomPreview room={_room}></BnbRoomPreview>
-          <BnbRoomPreview room={_room}></BnbRoomPreview>
+          <ScrollView>
+            {_room.rooms.map((item, index) => (
+              <View key={item.id}>
+                <BnbRoomPreview room={item}></BnbRoomPreview>
+              </View>
+            ))}
+          </ScrollView>
         </BnbBodyView>
       </BnbMainView>
     );

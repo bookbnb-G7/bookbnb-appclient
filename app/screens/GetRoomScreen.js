@@ -6,13 +6,7 @@ import fonts from "../config/fonts";
 
 import isANumber from "../helpers/isANumber";
 
-/**TODO: en vez de un screen a parte, volver esto un CUstom React hook
- * y buscar implementarlo en RoomsScreen
- */
-
-/**TODO: meter en la carpeta helpers o crear otra carpeta para componentes de UI
- * ui_helpers?
- */
+/**TODO: Delete this screen */
 
 function Separator() {
   return <View style={styles.separator}></View>;
