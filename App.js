@@ -17,6 +17,7 @@ import SearchResultRooms from "./app/screens/SearchResultRooms";
 import SearchRoomsScreen from "./app/screens/SearchRoomsScreen";
 import SearchInputScreen from "./app/screens/SearchInputScreen";
 import CalendarScreen from "./app/screens/CalendarScreen";
+import SearchCountersScreen from "./app/screens/SearchCountersScreen";
 
 function LogoTitle() {
   return (
@@ -44,6 +45,7 @@ export default function App() {
         <Stack.Screen name="SearchRooms" component={SearchRoomsScreen} />
         <Stack.Screen name="SearchInput" component={SearchInputScreen} />
         <Stack.Screen name="SearchCalendar" component={CalendarScreen} />
+        <Stack.Screen name="SearchCounters" component={SearchCountersScreen} />
         <Stack.Screen name="SearchResultRooms" component={SearchResultRooms} />
       </Stack.Navigator>
     </NavigationContainer>

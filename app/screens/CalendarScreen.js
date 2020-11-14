@@ -12,7 +12,7 @@ import Separator from "../helpers/Separator";
 function CalendarScreen({ route, navigation }) {
   const { location } = route.params;
   const _handleNextButtonPress = () => {
-    navigation.navigate("SearchResultRooms");
+    navigation.navigate("SearchCounters");
   };
   return (
     <BnbMainView>
