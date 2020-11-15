@@ -8,4 +8,5 @@ export default {
   buttonHPadding: 10,
   buttonVPadding: 5,
   separator: 8,
+  iconSize: 50,
 };

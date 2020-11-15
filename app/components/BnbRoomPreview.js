@@ -17,7 +17,7 @@ const BnbRoomPreview = (props) => {
 
   const _handleImagePress = () => {
     /**Le paso el room, podria pasarle los ratings tambien */
-    props.navigation.navigate("Room", props.room);
+    props.navigation.navigate("Room", { room: props.room, ratings: _ratings });
   };
 
   /**ComponentDidMount obtengo todos los datos a partir del
@@ -63,23 +63,20 @@ const BnbRoomPreview = (props) => {
   } else {
     return (
       <View style={styles.mainContainer}>
-        <View style={styles.roomImageContainer}>
-          <TouchableOpacity
-            style={styles.roomImage}
-            onPress={_handleImagePress}
-          >
-            <Image source={room_image}></Image>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.roomDescriptionContainer}>
-          <Text style={styles.roomReviewScore}>
-            {getAverageRating()} de 5 estrellas
-          </Text>
-          <Text style={styles.roomTitleText}>{props.room.type}</Text>
-          <Text style={styles.roomPriceText}>
-            Precio por dia: ${props.room.price_per_day}
-          </Text>
-        </View>
+        <TouchableOpacity onPress={_handleImagePress}>
+          <View style={styles.roomImageContainer}>
+            <Image source={room_image} style={styles.roomImage}></Image>
+          </View>
+          <View style={styles.roomDescriptionContainer}>
+            <Text style={styles.roomReviewScore}>
+              {getAverageRating()} de 5 estrellas
+            </Text>
+            <Text style={styles.roomTitleText}>{props.room.type}</Text>
+            <Text style={styles.roomPriceText}>
+              Precio por dia: ${props.room.price_per_day}
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }

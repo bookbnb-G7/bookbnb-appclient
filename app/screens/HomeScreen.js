@@ -11,18 +11,6 @@ import BnbTitleText from "../components/BnbTitleText";
 bnb_book_logo = require("../assets/airbnb.png");
 
 function HomeScreen({ navigation }) {
-  function _handleMakeAPostButton() {
-    navigation.navigate("Posts");
-  }
-
-  function _handleMakeANoteButton() {
-    navigation.navigate("Notes");
-  }
-
-  function _handleGoRoomsButton() {
-    navigation.navigate("Rooms");
-  }
-
   function _handleProfileButton() {
     navigation.navigate("Profile");
   }
@@ -43,9 +31,6 @@ function HomeScreen({ navigation }) {
           </Text>
         </BnbBubbleView>
         <View style={styles.optionsContainer}>
-          <BnbButton onPress={_handleMakeAPostButton} title={"Make a post"} />
-          <BnbButton onPress={_handleMakeANoteButton} title={"Make a note"} />
-          <BnbButton onPress={_handleGoRoomsButton} title={"Go to rooms"} />
           <BnbButton onPress={_handleProfileButton} title={"Profile"} />
           <BnbButton onPress={_handleSearchRoomsButton} title={"Search"} />
         </View>

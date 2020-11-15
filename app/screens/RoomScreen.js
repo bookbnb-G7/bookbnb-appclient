@@ -13,8 +13,8 @@ import Separator from "../helpers/Separator";
 const image = require("../assets/bookbnb_1.png");
 
 /**TODO: los fetch son los mismos que para el room preview, ponerlos en un customhook o helper */
-function RoomScreen({ route, navigation }, props) {
-  const room = route.params;
+function RoomScreen({ route, navigation }) {
+  const { room, ratings } = route.params;
 
   const [_reviews, setReviews] = useState({});
   const [_error, setError] = useState(false);
@@ -39,6 +39,19 @@ function RoomScreen({ route, navigation }, props) {
       );
   }, []);
 
+  const [_average_rating, setAverageRating] = useState(0);
+  useEffect(() => {
+    const getAverageRating = () => {
+      let average_rating = 0;
+      ratings.ratings.forEach(function (item, index, array) {
+        average_rating += item.rating;
+      });
+      average_rating = average_rating / ratings.ratings.length;
+      setAverageRating(average_rating);
+    };
+    getAverageRating();
+  }, []);
+
   if (_error) {
     return (
       <View>
@@ -54,31 +67,34 @@ function RoomScreen({ route, navigation }, props) {
   } else {
     return (
       <BnbMainView>
-        <Image style={styles.roomImage} source={image}></Image>
-        <BnbBodyView>
-          <View style={styles.roomInfoContainer}>
-            <Text>TODO Rating</Text>
-            <Text style={styles.titleText}>{room.type}</Text>
-            <Text style={styles.priceText}>
-              Precio por dia: {room.price_per_day}
-            </Text>
-          </View>
-          <View style={styles.roomDescriptionContainer}>
-            <Text>Aca deberia haber una descripcion detallada del room</Text>
-          </View>
-          <Separator></Separator>
-          <ScrollView style={styles.reviewsContainer}>
-            <Text>Reseñas</Text>
-            {_reviews.reviews.map((item, index) => (
-              <View key={item.id}>
-                <RoomReview
-                  left={<Text>{item.reviewer}</Text>}
-                  right={<Text>{item.review}</Text>}
-                ></RoomReview>
-              </View>
-            ))}
-          </ScrollView>
-        </BnbBodyView>
+        <ScrollView>
+          <Image style={styles.roomImage} source={image}></Image>
+          <BnbBodyView>
+            <View style={styles.roomInfoContainer}>
+              <Text>{_average_rating} de 5 estrellas</Text>
+              <Text style={styles.titleText}>{room.type}</Text>
+              <Text style={styles.priceText}>
+                Precio por dia: {room.price_per_day}
+              </Text>
+            </View>
+            <View style={styles.roomDescriptionContainer}>
+              <Text>Aca deberia haber una descripcion detallada del room</Text>
+            </View>
+            <Separator></Separator>
+            <View style={styles.reviewsContainer}>
+              <Text style={styles.reviewsTitleText}>Reseñas</Text>
+              {_reviews.reviews.map((item, index) => (
+                <View key={item.id}>
+                  <RoomReview
+                    reviewer={item.reviewer}
+                    date={item.created_at}
+                    review={item.review}
+                  ></RoomReview>
+                </View>
+              ))}
+            </View>
+          </BnbBodyView>
+        </ScrollView>
         <BnbFooterView>
           <BnbButton
             title="Volver atras"
@@ -103,13 +119,16 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: fonts.big,
-    fontWeight: fonts.bold,
   },
   priceText: {
     fontSize: fonts.big,
     fontWeight: fonts.bold,
   },
   reviewsContainer: {},
+  reviewsTitleText: {
+    fontSize: fonts.big,
+    alignSelf: "center",
+  },
 });
 
 export default RoomScreen;
