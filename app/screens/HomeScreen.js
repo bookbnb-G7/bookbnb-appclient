@@ -7,6 +7,7 @@ import BnbFooterView from "../components/BnbFooterView";
 import BnbHeaderView from "../components/BnbHeaderView";
 import BnbMainView from "../components/BnbMainView";
 import BnbTitleText from "../components/BnbTitleText";
+import Separator from "../helpers/Separator";
 
 bnb_book_logo = require("../assets/airbnb.png");
 
@@ -20,16 +21,9 @@ function HomeScreen({ navigation }) {
   }
   return (
     <BnbMainView>
-      <BnbHeaderView>
-        <BnbTitleText>BnbBook</BnbTitleText>
-      </BnbHeaderView>
+      <Separator />
       <BnbBodyView>
         <Image style={styles.logo} source={bnb_book_logo}></Image>
-        <BnbBubbleView>
-          <Text>
-            Por favor seleccione que tipo de accion desea hacer a continuacion
-          </Text>
-        </BnbBubbleView>
         <View style={styles.optionsContainer}>
           <BnbButton onPress={_handleProfileButton} title={"Profile"} />
           <BnbButton onPress={_handleSearchRoomsButton} title={"Search"} />

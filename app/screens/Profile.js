@@ -6,25 +6,11 @@ import containers from "../config/styling";
 import fonts from "../config/fonts";
 
 import Separator from "../helpers/Separator";
+import BnbButton from "../components/BnbButton";
+import BnbFooterView from "../components/BnbFooterView";
+import BnbMainView from "../components/BnbMainView";
 
 const user_logo = require("../assets/icon.png");
-
-/**NO funca*/
-function ListObjectValues(anObject, aStyle) {
-  return (
-    <View>
-      {Object.entries(anObject).map(([key, value]) => {
-        return (
-          <View style={aStyle} key={key}>
-            <Text>
-              {key}:{value}
-            </Text>
-          </View>
-        );
-      })}
-    </View>
-  );
-}
 
 function Profile({ navigation }) {
   const [_userData, setUserData] = useState({
@@ -42,10 +28,7 @@ function Profile({ navigation }) {
   }
 
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.titleText}>Perfil de usuario</Text>
-      </View>
+    <BnbMainView>
       <View style={styles.twoColumns}>
         <View style={styles.leftColumn}>
           <View style={styles.logoContainer}>
@@ -82,14 +65,13 @@ function Profile({ navigation }) {
           </View>
         </View>
       </View>
-      <View style={styles.footerContainer}>
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Text style={styles.buttonText} onPress={_handleGotoHomeButtonPress}>
-            Go to Home
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      <BnbFooterView>
+        <BnbButton
+          onPress={_handleGotoHomeButtonPress}
+          title={"Volver Inicio"}
+        />
+      </BnbFooterView>
+    </BnbMainView>
   );
 }
 
@@ -160,22 +142,6 @@ const styles = StyleSheet.create({
   },
   userFieldText: {
     backgroundColor: colors.graySoft,
-  },
-  footerContainer: {
-    flex: 0.2,
-    backgroundColor: colors.white,
-    borderBottomLeftRadius: containers.smallCornerRadius,
-    borderBottomRightRadius: containers.smallCornerRadius,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonContainer: {},
-
-  buttonText: {
-    paddingHorizontal: containers.buttonHPadding,
-    borderWidth: 1,
-    borderRadius: containers.buttonBorderRadius,
-    backgroundColor: colors.redSoft2,
   },
 });
 
