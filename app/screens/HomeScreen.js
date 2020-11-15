@@ -1,12 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
 import BnbBodyView from "../components/BnbBodyView";
-import BnbBubbleView from "../components/BnbBubbleView";
 import BnbButton from "../components/BnbButton";
 import BnbFooterView from "../components/BnbFooterView";
-import BnbHeaderView from "../components/BnbHeaderView";
 import BnbMainView from "../components/BnbMainView";
-import BnbTitleText from "../components/BnbTitleText";
 import Separator from "../helpers/Separator";
 
 bnb_book_logo = require("../assets/airbnb.png");
