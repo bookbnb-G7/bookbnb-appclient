@@ -13,10 +13,10 @@ import styling from "../config/styling";
 import constants from "../constant/constants";
 import Separator from "../helpers/Separator";
 import Counter from "../components/Counter";
+import httpPostRequest from "../helpers/httpPostRequest";
 
 const image = require("../assets/bookbnb_1.png");
 
-/**TODO: los fetch son los mismos que para el room preview, ponerlos en un customhook o helper */
 function RoomScreen({ route, navigation }) {
   const { room, ratings } = route.params;
 
@@ -27,15 +27,12 @@ function RoomScreen({ route, navigation }) {
   const [_average_rating, setAverageRating] = useState(0);
 
   const [_review, setReview] = useState("string");
-  const [_reviewResponse, setReviewResponse] = useState({});
-
   const [_rating, setRating] = useState({
     quantity: 0,
   });
+  const [_apiResponse, setApiResponse] = useState({});
 
-  const [_ratingResponse, setRatingResponse] = useState({});
-
-  const URL =
+  const URL_REVIEWS =
     "http://bookbnb-appserver.herokuapp.com/rooms/" + room.id + "/reviews";
 
   const URL_RATINGS =
@@ -46,25 +43,26 @@ function RoomScreen({ route, navigation }) {
   /**TODO: contador no se actualiza, necesario un reset*/
   const _handleRatingChange = (counter, offset) => {
     const cpyCounter = counter;
-    /**Nunca modificar el state directamente, modificar una copia*/
     cpyCounter.quantity += offset;
     setRating(cpyCounter);
   };
 
+  const _handleApiResponse = (data) => {
+    alert(JSON.stringify(data));
+    setApiResponse(data);
+  };
+
   const _handlePostAReview = () => {
     if (_review !== "" || _review === "string") {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      httpPostRequest(
+        URL_REVIEWS,
+        {
           review: _review,
           reviewer: "App",
           reviewer_id: 0,
-        }),
-      };
-      fetch(URL, requestOptions)
-        .then((response) => response.json())
-        .then((data) => setReviewResponse(data));
+        },
+        _handleApiResponse
+      );
       setReview("");
     } else {
       alert("No puede publicar una reseña vacia");
@@ -73,26 +71,28 @@ function RoomScreen({ route, navigation }) {
 
   const _handleRateRoomButtonPress = () => {
     if (_rating.quantity !== 0) {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      httpPostRequest(
+        URL_RATINGS,
+        {
           rating: _rating.quantity,
           reviewer: "App",
           reviewer_id: 0,
-        }),
-      };
-      fetch(URL_RATINGS, requestOptions)
-        .then((response) => response.json())
-        .then((data) => setRatingResponse(data));
+        },
+        _handleApiResponse
+      );
       setRating({ quantity: 0 });
     } else {
       alert("Puntaje no puede ser 0");
     }
   };
 
+  /**TODO: este useEffect lo re pito en muchos casos
+   * podria pasarle un handler por parametro y un
+   * dentro del handler defino un Object{response:{}, loaded:false, error:{}}
+   * con los argumentos del handler que me pasa el customHook e.g useComponentDidMount
+   */
   useEffect(() => {
-    fetch(URL)
+    fetch(URL_REVIEWS)
       .then((response) => response.json())
       .then(
         (response) => {
