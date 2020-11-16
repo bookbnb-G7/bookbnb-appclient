@@ -18,8 +18,8 @@ class SearchCountersScreen extends Component {
     ],
   };
 
-  _handleIncrement = (Counter, offset) => {
-    const index = this.state.counters.indexOf(Counter);
+  _handleIncrement = (counter, offset) => {
+    const index = this.state.counters.indexOf(counter);
     const cpyCounter = this.state.counters[index];
     cpyCounter.quantity += offset;
     this.setState({ cpyCounter });

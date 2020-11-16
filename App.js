@@ -1,9 +1,8 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image } from "react-native";
-
-const Stack = createStackNavigator();
 
 import LoginScreen from "./app/screens/LoginScreen";
 import HomeScreen from "./app/screens/HomeScreen";
@@ -24,22 +23,51 @@ function LogoTitle() {
   );
 }
 
+const HomeStack = createStackNavigator();
+
+function HomeStackScreen() {
+  return (
+    <HomeStack.Navigator
+      screenOptions={{ headerRight: (props) => <LogoTitle {...props} /> }}
+    >
+      <HomeStack.Screen name="Home" component={HomeScreen}></HomeStack.Screen>
+    </HomeStack.Navigator>
+  );
+}
+
+const SearchStack = createStackNavigator();
+
+function SearchStackScreen() {
+  return (
+    <SearchStack.Navigator
+      screenOptions={{ headerRight: (props) => <LogoTitle {...props} /> }}
+    >
+      <SearchStack.Screen name="SearchRooms" component={SearchRoomsScreen} />
+      <SearchStack.Screen name="SearchInput" component={SearchInputScreen} />
+      <SearchStack.Screen name="SearchCalendar" component={CalendarScreen} />
+      <SearchStack.Screen
+        name="SearchCounters"
+        component={SearchCountersScreen}
+      />
+      <SearchStack.Screen
+        name="SearchResultRooms"
+        component={SearchResultRooms}
+      />
+      <SearchStack.Screen name="Room" component={RoomScreen} />
+    </SearchStack.Navigator>
+  );
+}
+
+const Tab = createBottomTabNavigator();
+
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{ headerRight: (props) => <LogoTitle {...props} /> }}
-      >
-        <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
-        <Stack.Screen name="Home" component={HomeScreen}></Stack.Screen>
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="SearchRooms" component={SearchRoomsScreen} />
-        <Stack.Screen name="SearchInput" component={SearchInputScreen} />
-        <Stack.Screen name="SearchCalendar" component={CalendarScreen} />
-        <Stack.Screen name="SearchCounters" component={SearchCountersScreen} />
-        <Stack.Screen name="SearchResultRooms" component={SearchResultRooms} />
-        <Stack.Screen name="Room" component={RoomScreen} />
-      </Stack.Navigator>
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeStackScreen} />
+        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen name="SearchRooms" component={SearchStackScreen} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
