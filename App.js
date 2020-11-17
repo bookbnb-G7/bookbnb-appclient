@@ -8,7 +8,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import LoginScreen from "./app/screens/LoginScreen";
 import HomeScreen from "./app/screens/HomeScreen";
 import SearchUsersScreen from "./app/screens/SearchUsersScreen";
-import Profile from "./app/screens/Profile";
 import SearchResultRooms from "./app/screens/SearchResultRooms";
 import SearchRoomsScreen from "./app/screens/SearchRoomsScreen";
 import SearchInputScreen from "./app/screens/SearchInputScreen";
@@ -16,9 +15,7 @@ import CalendarScreen from "./app/screens/CalendarScreen";
 import SearchCountersScreen from "./app/screens/SearchCountersScreen";
 import RoomScreen from "./app/screens/RoomScreen";
 import SearchUsersResultScreen from "./app/screens/SearchUsersResultScreen";
-import ProfileInfoScreen from "./app/screens/ProfileInfoScreen";
-
-const profile_icon = require("./app/assets/profile_icon.png");
+import ProfileStackScreen from "./app/screens/Profile/ProfileStackScreen";
 
 function LogoTitle() {
   return (
@@ -42,8 +39,7 @@ function HomeStackScreen() {
         name="SearchUsersResult"
         component={SearchUsersResultScreen}
       />
-      <HomeStack.Screen name="Profile" component={Profile} />
-      <HomeStack.Screen name="ProfileInfo" component={ProfileInfoScreen} />
+      <HomeStack.Screen name="ProfileStack" component={ProfileStackScreen} />
     </HomeStack.Navigator>
   );
 }
@@ -84,7 +80,7 @@ export default function App() {
 
             if (route.name === "Home") {
               iconName = "ios-home";
-            } else if (route.name === "Profile") {
+            } else if (route.name === "ProfileStack") {
               iconName = "ios-contact";
             } else if (route.name === "SearchRooms") {
               iconName = "ios-search";
@@ -96,8 +92,8 @@ export default function App() {
         })}
       >
         <Tab.Screen
-          name="Profile"
-          component={Profile}
+          name="ProfileStack"
+          component={ProfileStackScreen}
           options={{ title: "Perfil" }}
         />
         <Tab.Screen

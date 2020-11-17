@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, Image, StatusBar } from "react-native";
-import colors from "../config/colors";
-import fonts from "../config/fonts";
+import colors from "../../config/colors";
+import fonts from "../../config/fonts";
 
-import Separator from "../helpers/Separator";
-import BnbButton from "../components/BnbButton";
-import BnbFooterView from "../components/BnbFooterView";
-import BnbMainView from "../components/BnbMainView";
-import BnbBodyView from "../components/BnbBodyView";
-import BnbIconText from "../components/BnbIconText";
+import Separator from "../../helpers/Separator";
+import BnbButton from "../../components/BnbButton";
+import BnbFooterView from "../../components/BnbFooterView";
+import BnbMainView from "../../components/BnbMainView";
+import BnbBodyView from "../../components/BnbBodyView";
+import BnbIconText from "../../components/BnbIconText";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 function Profile({ route, navigation }) {
-  const user_logo = require("../assets/icon.png");
-  const PROFILE_ICON = require("../assets/profile_icon.png");
-  const ROOM_ICON = require("../assets/house_logo.png");
+  const user_logo = require("../../assets/icon.png");
+  const PROFILE_ICON = require("../../assets/profile_icon.png");
+  const ROOM_ICON = require("../../assets/house_logo.png");
   const user = route.params;
   const [_userData, setUserData] = useState({
     firstname: "Agustin",
@@ -74,9 +74,6 @@ function Profile({ route, navigation }) {
           ))}
         </View>
       </BnbBodyView>
-      <BnbFooterView>
-        <BnbButton title="Editar Perfil"></BnbButton>
-      </BnbFooterView>
     </BnbMainView>
   );
 }

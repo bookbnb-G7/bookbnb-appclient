@@ -1,13 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import BnbBodyView from "../components/BnbBodyView";
-import BnbButton from "../components/BnbButton";
-import BnbMainView from "../components/BnbMainView";
-import BnbTitleText from "../components/BnbTitleText";
-import colors from "../config/colors";
-import fonts from "../config/fonts";
-import styling from "../config/styling";
-import Separator from "../helpers/Separator";
+import BnbBodyView from "../../components/BnbBodyView";
+import BnbButton from "../../components/BnbButton";
+import BnbMainView from "../../components/BnbMainView";
+import BnbTitleText from "../../components/BnbTitleText";
+import colors from "../../config/colors";
+import fonts from "../../config/fonts";
+import styling from "../../config/styling";
+import Separator from "../../helpers/Separator";
 
 function ProfileInfoScreen({ route, navigation }) {
   const { user, is_owner } = route.params;
