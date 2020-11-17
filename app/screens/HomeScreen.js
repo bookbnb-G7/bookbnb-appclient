@@ -26,9 +26,6 @@ function HomeScreen({ navigation }) {
           <BnbButton onPress={_handleSearchRoomsButton} title={"Search"} />
         </View>
       </BnbBodyView>
-      <BnbFooterView>
-        <Text>footer</Text>
-      </BnbFooterView>
     </BnbMainView>
   );
 }

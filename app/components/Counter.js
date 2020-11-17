@@ -14,22 +14,22 @@ class Counter extends Component {
             onPress={() =>
               this.props.onIncrement(
                 this.props.counter,
-                this.props.counter.quantity >= this.props.maxCount ? 0 : 1
+                this.props.counter.quantity <= 0 ? 0 : -1
               )
             }
           >
-            <Text style={styles.button}> + </Text>
+            <Text style={styles.button}> - </Text>
           </TouchableOpacity>
           <Text> {this.props.counter.quantity} </Text>
           <TouchableOpacity
             onPress={() =>
               this.props.onIncrement(
                 this.props.counter,
-                this.props.counter.quantity <= 0 ? 0 : -1
+                this.props.counter.quantity >= this.props.maxCount ? 0 : 1
               )
             }
           >
-            <Text style={styles.button}> - </Text>
+            <Text style={styles.button}> + </Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 import LoginScreen from "./app/screens/LoginScreen";
 import HomeScreen from "./app/screens/HomeScreen";
@@ -13,6 +14,8 @@ import SearchInputScreen from "./app/screens/SearchInputScreen";
 import CalendarScreen from "./app/screens/CalendarScreen";
 import SearchCountersScreen from "./app/screens/SearchCountersScreen";
 import RoomScreen from "./app/screens/RoomScreen";
+
+const profile_icon = require("./app/assets/profile_icon.png");
 
 function LogoTitle() {
   return (
@@ -63,10 +66,40 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="Profile" component={Profile} />
-        <Tab.Screen name="SearchRooms" component={SearchStackScreen} />
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === "Home") {
+              iconName = focused
+                ? "ios-information-circle"
+                : "ios-information-circle-outline";
+            } else if (route.name === "Profile") {
+              iconName = focused ? "ios-list-box" : "ios-list";
+            }
+
+            // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+      >
+        <Tab.Screen
+          name="Profile"
+          component={Profile}
+          options={{ title: "Perfil" }}
+        />
+        <Tab.Screen
+          name="Home"
+          component={HomeStackScreen}
+          options={{ title: "Inicio" }}
+        />
+        <Tab.Screen
+          name="SearchRooms"
+          component={SearchStackScreen}
+          options={{ title: "Buscar" }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
