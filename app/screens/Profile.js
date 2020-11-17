@@ -12,16 +12,26 @@ import BnbMainView from "../components/BnbMainView";
 
 const user_logo = require("../assets/icon.png");
 
-function Profile({ navigation }) {
+function Profile({ route, navigation }) {
+  const user = route.params;
+
   const [_userData, setUserData] = useState({
-    name: "Agustin",
-    surname: "Leguizamon",
-    username: "leguiagus",
-    password: "123456",
+    firstname: "Agustin",
+    lastname: "Leguizamon",
     email: "aleguizamon@fi.uba.ar",
-    age: "25",
-    owner: "true",
+    phonenumber: "123456",
+    country: "Arg",
+    birthdate: "13-7-95",
   });
+
+  /**{
+    "firstname": "string",
+    "lastname": "string",
+    "email": "string",
+    "phonenumber": "string",
+    "country": "string",
+    "birthdate": "string"
+  }*/
 
   function _handleGotoHomeButtonPress() {
     navigation.navigate("Home");

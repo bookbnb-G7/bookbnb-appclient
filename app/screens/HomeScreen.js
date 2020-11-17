@@ -16,14 +16,25 @@ function HomeScreen({ navigation }) {
   function _handleSearchRoomsButton() {
     navigation.navigate("SearchRooms");
   }
+
+  const _handleSearchUsersButton = () => {
+    navigation.navigate("SearchUsers");
+  };
+
   return (
     <BnbMainView>
-      <Separator />
       <BnbBodyView>
         <Image style={styles.logo} source={bnb_book_logo}></Image>
         <View style={styles.optionsContainer}>
-          <BnbButton onPress={_handleProfileButton} title={"Profile"} />
-          <BnbButton onPress={_handleSearchRoomsButton} title={"Search"} />
+          <BnbButton onPress={_handleProfileButton} title={"Perfil"} />
+          <BnbButton
+            onPress={_handleSearchRoomsButton}
+            title={"Buscar Habitaciones"}
+          />
+          <BnbButton
+            onPress={_handleSearchUsersButton}
+            title={"Buscar Usuarios (Login)"}
+          />
         </View>
       </BnbBodyView>
     </BnbMainView>

@@ -7,6 +7,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 import LoginScreen from "./app/screens/LoginScreen";
 import HomeScreen from "./app/screens/HomeScreen";
+import SearchUsersScreen from "./app/screens/SearchUsersScreen";
 import Profile from "./app/screens/Profile";
 import SearchResultRooms from "./app/screens/SearchResultRooms";
 import SearchRoomsScreen from "./app/screens/SearchRoomsScreen";
@@ -14,6 +15,7 @@ import SearchInputScreen from "./app/screens/SearchInputScreen";
 import CalendarScreen from "./app/screens/CalendarScreen";
 import SearchCountersScreen from "./app/screens/SearchCountersScreen";
 import RoomScreen from "./app/screens/RoomScreen";
+import SearchUsersResultScreen from "./app/screens/SearchUsersResultScreen";
 
 const profile_icon = require("./app/assets/profile_icon.png");
 
@@ -33,7 +35,12 @@ function HomeStackScreen() {
     <HomeStack.Navigator
       screenOptions={{ headerRight: (props) => <LogoTitle {...props} /> }}
     >
-      <HomeStack.Screen name="Home" component={HomeScreen}></HomeStack.Screen>
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="SearchUsers" component={SearchUsersScreen} />
+      <HomeStack.Screen
+        name="SearchUsersResult"
+        component={SearchUsersResultScreen}
+      />
     </HomeStack.Navigator>
   );
 }
