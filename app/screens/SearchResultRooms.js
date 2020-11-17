@@ -8,53 +8,33 @@ import fonts from "../config/fonts";
 import Separator from "../helpers/Separator";
 
 function SearchResultRooms(props) {
-  const url = "http://bookbnb-appserver.herokuapp.com/rooms/1";
-  const [_room, setRoom] = useState({
-    rooms: [
-      {
-        type: "Dpto",
-        owner: "Agus",
-        owner_id: 99,
-        price_per_day: 100,
-        id: 1,
-        created_at: "string",
-        updated_at: "string",
-      },
-
-      {
-        type: "Casa",
-        owner: "Agus",
-        owner_id: 40,
-        price_per_day: 200,
-        id: 2,
-        created_at: "string",
-        updated_at: "string",
-      },
-    ],
-  });
-
+  const [_rooms, setRooms] = useState({});
   const [_error, setError] = useState(null);
+  const [_is_loaded, setIsLoaded] = useState(false);
+  const URL_ROOMS = "http://bookbnb-appserver.herokuapp.com/rooms/";
 
-  const _handleApiResponse = (response) => {
-    /**No es un solo room, es un array de rooms */
-    setRoom(response);
-  };
-
-  /**Component did mount */
-  /**useEffect(() => {
-    fetch(url)
+  useEffect(() => {
+    fetch(URL_ROOMS)
       .then((response) => response.json())
       .then(
         (response) => {
-          _handleApiResponse(response);
+          setRooms(response);
+          setIsLoaded(true);
         },
         (error) => {
           setError(error);
+          setIsLoaded(true);
         }
       );
   }, []);
-**/
-  if (_error) {
+
+  if (!_is_loaded) {
+    return (
+      <View style={styles.loading}>
+        <Text>Cargando...</Text>
+      </View>
+    );
+  } else if (_error) {
     return (
       <View style={styles.loading}>
         <Text> Error: {_error.message}</Text>
@@ -66,11 +46,11 @@ function SearchResultRooms(props) {
         <Separator></Separator>
         <BnbBodyView>
           <Text style={styles.infoText}>
-            Encontramos {_room.rooms.length} lugares para alojarse
+            Encontramos {_rooms.rooms.length} lugares para alojarse
           </Text>
           <Separator></Separator>
           <ScrollView>
-            {_room.rooms.map((item, index) => (
+            {_rooms.rooms.map((item, index) => (
               <View key={item.id}>
                 <BnbRoomPreview
                   navigation={props.navigation}

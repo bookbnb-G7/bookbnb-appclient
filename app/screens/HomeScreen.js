@@ -22,7 +22,7 @@ function HomeScreen({ navigation }) {
   };
 
   return (
-    <BnbMainView>
+    <BnbMainView style={{ backgroundColor: "white" }}>
       <BnbBodyView>
         <Image style={styles.logo} source={bnb_book_logo}></Image>
         <View style={styles.optionsContainer}>

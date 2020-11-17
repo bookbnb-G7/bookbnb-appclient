@@ -16,6 +16,7 @@ import CalendarScreen from "./app/screens/CalendarScreen";
 import SearchCountersScreen from "./app/screens/SearchCountersScreen";
 import RoomScreen from "./app/screens/RoomScreen";
 import SearchUsersResultScreen from "./app/screens/SearchUsersResultScreen";
+import ProfileInfoScreen from "./app/screens/ProfileInfoScreen";
 
 const profile_icon = require("./app/assets/profile_icon.png");
 
@@ -41,6 +42,8 @@ function HomeStackScreen() {
         name="SearchUsersResult"
         component={SearchUsersResultScreen}
       />
+      <HomeStack.Screen name="Profile" component={Profile} />
+      <HomeStack.Screen name="ProfileInfo" component={ProfileInfoScreen} />
     </HomeStack.Navigator>
   );
 }
@@ -80,11 +83,11 @@ export default function App() {
             let iconName;
 
             if (route.name === "Home") {
-              iconName = focused
-                ? "ios-information-circle"
-                : "ios-information-circle-outline";
+              iconName = "ios-home";
             } else if (route.name === "Profile") {
-              iconName = focused ? "ios-list-box" : "ios-list";
+              iconName = "ios-contact";
+            } else if (route.name === "SearchRooms") {
+              iconName = "ios-search";
             }
 
             // You can return any component that you like here!
