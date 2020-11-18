@@ -1,8 +1,8 @@
 import React from "react";
 
-const httpPostRequest = (url, body, onResponse) => {
+const httpPostRequest = (method, url, body, onResponse) => {
   const requestOptions = {
-    method: "POST",
+    method: method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   };

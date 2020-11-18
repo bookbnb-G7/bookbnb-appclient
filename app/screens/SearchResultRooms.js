@@ -5,7 +5,7 @@ import BnbBodyView from "../components/BnbBodyView";
 import BnbMainView from "../components/BnbMainView";
 import BnbRoomPreview from "../components/BnbRoomPreview";
 import fonts from "../config/fonts";
-import Separator from "../helpers/Separator";
+import Separator from "../components/Separator";
 
 function SearchResultRooms(props) {
   const [_rooms, setRooms] = useState({});

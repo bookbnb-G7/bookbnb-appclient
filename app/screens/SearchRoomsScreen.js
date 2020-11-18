@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbBubbleView from "../components/BnbBubbleView";
 import BnbMainView from "../components/BnbMainView";
-import Separator from "../helpers/Separator";
+import Separator from "../components/Separator";
 
 function SearchRoomsScreen({ navigation }) {
   const _handleSearchButtonPress = () => {

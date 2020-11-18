@@ -5,7 +5,7 @@ import BnbBodyView from "../components/BnbBodyView";
 import BnbIconText from "../components/BnbIconText";
 import BnbMainView from "../components/BnbMainView";
 import fonts from "../config/fonts";
-import Separator from "../helpers/Separator";
+import Separator from "../components/Separator";
 
 const icon = require("../assets/bookbnb_1.png");
 

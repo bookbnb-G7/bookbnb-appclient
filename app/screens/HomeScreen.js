@@ -4,7 +4,7 @@ import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbFooterView from "../components/BnbFooterView";
 import BnbMainView from "../components/BnbMainView";
-import Separator from "../helpers/Separator";
+import Separator from "../components/Separator";
 
 bnb_book_logo = require("../assets/airbnb.png");
 

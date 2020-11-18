@@ -6,7 +6,7 @@ import BnbBubbleView from "../components/BnbBubbleView";
 import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
 import fonts from "../config/fonts";
-import Separator from "../helpers/Separator";
+import Separator from "../components/Separator";
 
 function SearchUsersScreen({ navigation }) {
   const [_username, setUsername] = useState("");

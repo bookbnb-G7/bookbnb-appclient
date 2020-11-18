@@ -3,9 +3,7 @@ import { StyleSheet, View, Text, Image, StatusBar } from "react-native";
 import colors from "../../config/colors";
 import fonts from "../../config/fonts";
 
-import Separator from "../../helpers/Separator";
-import BnbButton from "../../components/BnbButton";
-import BnbFooterView from "../../components/BnbFooterView";
+import Separator from "../../components/Separator";
 import BnbMainView from "../../components/BnbMainView";
 import BnbBodyView from "../../components/BnbBodyView";
 import BnbIconText from "../../components/BnbIconText";

@@ -11,7 +11,7 @@ import colors from "../config/colors";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
 import constants from "../constant/constants";
-import Separator from "../helpers/Separator";
+import Separator from "../components/Separator";
 import Counter from "../components/Counter";
 import httpPostRequest from "../helpers/httpPostRequest";
 
@@ -38,8 +38,6 @@ function RoomScreen({ route, navigation }) {
   const URL_RATINGS =
     "http://bookbnb-appserver.herokuapp.com/rooms/" + room.id + "/ratings";
 
-  const _handleGoBackButtonPress = () => navigation.goBack();
-
   /**TODO: contador no se actualiza, necesario un reset*/
   const _handleRatingChange = (counter, offset) => {
     const cpyCounter = counter;
@@ -55,6 +53,7 @@ function RoomScreen({ route, navigation }) {
   const _handlePostAReview = () => {
     if (_review !== "" || _review === "string") {
       httpPostRequest(
+        "POST",
         URL_REVIEWS,
         {
           review: _review,
@@ -72,6 +71,7 @@ function RoomScreen({ route, navigation }) {
   const _handleRateRoomButtonPress = () => {
     if (_rating.quantity !== 0) {
       httpPostRequest(
+        "POST",
         URL_RATINGS,
         {
           rating: _rating.quantity,

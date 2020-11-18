@@ -8,7 +8,7 @@ import Counter from "../components/Counter";
 import colors from "../config/colors";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
-import Separator from "../helpers/Separator";
+import Separator from "../components/Separator";
 
 class SearchCountersScreen extends Component {
   state = {
