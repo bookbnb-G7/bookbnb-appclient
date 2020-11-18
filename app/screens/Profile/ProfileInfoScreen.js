@@ -31,13 +31,13 @@ function ProfileInfoScreen({ route, navigation }) {
     /**Le agrego a user el id para el PUT
      * TODO: necesito el id
      */
-    /**user.id = "3";
+    let user_id = 11;
     httpPostRequest(
-      "PUT",
-      "http://bookbnb-appserver.herokuapp.com/users/",
+      "PATCH",
+      "http://bookbnb-appserver.herokuapp.com/users/" + user_id,
       user,
       _handleApiResponse
-    );*/
+    );
   };
 
   const _changeUserState = (key, value) => {
