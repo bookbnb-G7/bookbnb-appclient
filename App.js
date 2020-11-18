@@ -16,6 +16,7 @@ import SearchCountersScreen from "./app/screens/SearchCountersScreen";
 import RoomScreen from "./app/screens/RoomScreen";
 import SearchUsersResultScreen from "./app/screens/SearchUsersResultScreen";
 import ProfileStackScreen from "./app/screens/Profile/ProfileStackScreen";
+import RoomEditScreen from "./app/screens/RoomEditScreen";
 
 function LogoTitle() {
   return (
@@ -63,6 +64,7 @@ function SearchStackScreen() {
         component={SearchResultRooms}
       />
       <SearchStack.Screen name="Room" component={RoomScreen} />
+      <SearchStack.Screen name="RoomDetails" component={RoomEditScreen} />
     </SearchStack.Navigator>
   );
 }

@@ -86,6 +86,9 @@ function RoomScreen({ route, navigation }) {
     }
   };
 
+  const _handleRoomDetailsButtonPress = () => {
+    navigation.navigate("RoomDetails", { room: room });
+  };
   /**TODO: este useEffect lo re pito en muchos casos
    * podria pasarle un handler por parametro y un
    * dentro del handler defino un Object{response:{}, loaded:false, error:{}}
@@ -186,6 +189,11 @@ function RoomScreen({ route, navigation }) {
               ></Counter>
               <BnbButton title="Puntuar" onPress={_handleRateRoomButtonPress} />
             </View>
+            <Separator />
+            <BnbButton
+              title="Detalles"
+              onPress={_handleRoomDetailsButtonPress}
+            />
           </BnbBodyView>
         </ScrollView>
       </BnbMainView>
