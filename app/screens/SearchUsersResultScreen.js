@@ -18,7 +18,7 @@ function SearchUsersResultScreen({ route, navigation }) {
     alert(JSON.stringify(_user));
     navigation.navigate("ProfileStack", {
       screen: "Profile",
-      params: { user: _user },
+      params: { user: _user, id: search },
     });
   };
 

@@ -13,7 +13,7 @@ import Separator from "../../components/Separator";
 import httpPostRequest from "../../helpers/httpPostRequest";
 
 function ProfileInfoScreen({ route, navigation }) {
-  const { user, is_owner } = route.params;
+  const { user, is_owner, id } = route.params;
 
   const [_is_editing, setIsEditing] = useState(false);
 
@@ -31,10 +31,9 @@ function ProfileInfoScreen({ route, navigation }) {
     /**Le agrego a user el id para el PUT
      * TODO: necesito el id
      */
-    let user_id = 11;
     httpPostRequest(
       "PATCH",
-      "http://bookbnb-appserver.herokuapp.com/users/" + user_id,
+      "http://bookbnb-appserver.herokuapp.com/users/" + id,
       user,
       _handleApiResponse
     );

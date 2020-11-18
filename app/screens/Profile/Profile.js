@@ -13,7 +13,7 @@ function Profile({ route, navigation }) {
   const user_logo = require("../../assets/icon.png");
   const PROFILE_ICON = require("../../assets/profile_icon.png");
   const ROOM_ICON = require("../../assets/house_logo.png");
-  const { user } = route.params;
+  const { user, id } = route.params;
 
   /**MOCK user */
   const [_userData, setUserData] = useState({
@@ -25,9 +25,9 @@ function Profile({ route, navigation }) {
     birthdate: "13-7-95",
   });
 
-  /**TODO: is_owner deberia ser un atributo del user?? */
+  /**TODO: is_owner deberia ser una validacion*/
   const _handleProfileInfoPress = () => {
-    navigation.navigate("ProfileInfo", { user: user, is_owner: true });
+    navigation.navigate("ProfileInfo", { user: user, is_owner: true, id: id });
   };
 
   const _handleRoomsInfoPress = () => {
