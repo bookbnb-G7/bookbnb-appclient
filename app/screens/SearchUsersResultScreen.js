@@ -1,16 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import BnbBodyView from "../components/BnbBodyView";
+import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
+import BnbTitleText from "../components/BnbTitleText";
+import Separator from "../components/Separator";
+import fonts from "../config/fonts";
 
-function SearchUsersResultScreen(props) {
+function SearchUsersResultScreen({ route, navigation }) {
+  const { search } = route.params;
+
   const [_user, setUser] = useState({});
   const [_error, setError] = useState(null);
   const [_is_loaded, setIsLoaded] = useState(false);
 
-  /**TODO: Aca en vez del id deberia pasarle el username http:.../users?username=props.username_input*/
+  const _handleContinueButtonPress = () => {
+    alert(JSON.stringify(_user));
+    navigation.navigate("ProfileStack", {
+      screen: "Profile",
+      params: { user: _user },
+    });
+  };
+
+  /**TODO: Aca en vez del id deberia pasarle el search http:.../users?search=props.username_input*/
   useEffect(() => {
-    fetch("http://bookbnb-appserver.herokuapp.com/users/1")
+    fetch("http://bookbnb-appserver.herokuapp.com/users/" + search)
       .then((response) => response.json())
       .then(
         (data) => {
@@ -38,17 +52,31 @@ function SearchUsersResultScreen(props) {
     );
   } else {
     return (
-      <BnbMainView>
-        <BnbBodyView>
-          {Object.entries(_user).map(([key, value]) => (
-            <View key={key}>
-              <Text>{value}</Text>
-            </View>
-          ))}
+      <BnbMainView style={styles.white}>
+        <BnbBodyView style={styles.bodyContainer}>
+          <BnbTitleText>Login Exitoso</BnbTitleText>
+          <Separator style={{ borderBottomWidth: 0 }}></Separator>
+          <BnbButton
+            title="Continuar"
+            onPress={_handleContinueButtonPress}
+          ></BnbButton>
         </BnbBodyView>
       </BnbMainView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  white: {
+    backgroundColor: "white",
+  },
+  message: {
+    fontSize: fonts.big,
+  },
+  bodyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default SearchUsersResultScreen;

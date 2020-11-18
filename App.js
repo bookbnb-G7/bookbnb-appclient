@@ -92,11 +92,6 @@ export default function App() {
         })}
       >
         <Tab.Screen
-          name="ProfileStack"
-          component={ProfileStackScreen}
-          options={{ title: "Perfil" }}
-        />
-        <Tab.Screen
           name="Home"
           component={HomeStackScreen}
           options={{ title: "Inicio" }}

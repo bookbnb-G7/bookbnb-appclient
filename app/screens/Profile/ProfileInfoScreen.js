@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useScreens } from "react-native-screens";
 import BnbBodyView from "../../components/BnbBodyView";
 import BnbButton from "../../components/BnbButton";
@@ -46,47 +46,50 @@ function ProfileInfoScreen({ route, navigation }) {
 
   return (
     <BnbMainView style={{ backgroundColor: "white" }}>
-      <BnbBodyView>
-        <BnbTitleText style={styles.subTitle}>
-          Informacion de la cuenta
-        </BnbTitleText>
-        <View style={styles.userInfoContainer}>
-          <View>
-            {Object.entries(user).map(([key, value]) => {
-              return (
-                <View key={key}>
-                  <Separator />
-                  <View style={styles.row}>
-                    <Text style={styles.leftUserFieldText}>{key}: </Text>
-                    <TextInput
-                      style={styles.rightUserFieldText}
-                      defaultValue={value}
-                      editable={_is_editing}
-                      onChangeText={(text) => _changeUserState(key, text)}
-                    ></TextInput>
+      <ScrollView>
+        <BnbBodyView>
+          <BnbTitleText style={styles.subTitle}>
+            Informacion de la cuenta
+          </BnbTitleText>
+          <View style={styles.userInfoContainer}>
+            <View>
+              {Object.entries(user).map(([key, value]) => {
+                return (
+                  <View key={key}>
+                    <Separator />
+                    <View style={styles.row}>
+                      <Text style={styles.leftUserFieldText}>{key}: </Text>
+                      <TextInput
+                        style={styles.rightUserFieldText}
+                        defaultValue={value}
+                        editable={_is_editing}
+                        multiline
+                        onChangeText={(text) => _changeUserState(key, text)}
+                      ></TextInput>
+                    </View>
                   </View>
-                </View>
-              );
-            })}
+                );
+              })}
+            </View>
           </View>
-        </View>
-        {is_owner && !_is_editing && (
-          <View style={styles.buttonContainer}>
-            <BnbButton
-              title="Editar tus datos"
-              onPress={_handleEnableEditButtonPress}
-            />
-          </View>
-        )}
-        {is_owner && _is_editing && (
-          <View style={styles.buttonContainer}>
-            <BnbButton
-              title="Aceptar"
-              onPress={_handleFinishEditingButtonPress}
-            />
-          </View>
-        )}
-      </BnbBodyView>
+          {is_owner && !_is_editing && (
+            <View style={styles.buttonContainer}>
+              <BnbButton
+                title="Editar tus datos"
+                onPress={_handleEnableEditButtonPress}
+              />
+            </View>
+          )}
+          {is_owner && _is_editing && (
+            <View style={styles.buttonContainer}>
+              <BnbButton
+                title="Aceptar"
+                onPress={_handleFinishEditingButtonPress}
+              />
+            </View>
+          )}
+        </BnbBodyView>
+      </ScrollView>
     </BnbMainView>
   );
 }
@@ -109,6 +112,7 @@ const styles = StyleSheet.create({
   rightUserFieldText: {
     backgroundColor: colors.graySoft,
     fontSize: fonts.semi,
+    flex: 1.5,
   },
   buttonContainer: {
     marginVertical: styling.separator,

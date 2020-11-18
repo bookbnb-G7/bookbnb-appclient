@@ -7,6 +7,7 @@ import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
 import fonts from "../config/fonts";
 import Separator from "../components/Separator";
+import BnbFooterView from "../components/BnbFooterView";
 
 function SearchUsersScreen({ navigation }) {
   const [_username, setUsername] = useState("");
@@ -20,21 +21,23 @@ function SearchUsersScreen({ navigation }) {
   return (
     <BnbMainView>
       <Separator style={{ borderBottomWidth: 0 }}></Separator>
-      <BnbBodyView>
+      <BnbBodyView></BnbBodyView>
+      <BnbFooterView>
         <BnbBubbleView style={{ alignItems: "flex-start" }}>
           <TextInput
-            placeholder="Nombre del usuario"
+            placeholder="Nombre de usuario (id)"
             style={styles.searchInputText}
             onChangeText={setUsername}
             value={_username}
           />
         </BnbBubbleView>
+        <Separator style={{ borderBottomWidth: 0 }} />
+        <BnbBubbleView style={{ alignItems: "flex-start" }}>
+          <TextInput placeholder="Contraseña" style={styles.searchInputText} />
+        </BnbBubbleView>
         <Separator />
-        <BnbButton
-          title="Buscar Usuario"
-          onPress={_handleSearchUserButtonPress}
-        />
-      </BnbBodyView>
+        <BnbButton title="Ingresar" onPress={_handleSearchUserButtonPress} />
+      </BnbFooterView>
     </BnbMainView>
   );
 }

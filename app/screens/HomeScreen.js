@@ -9,10 +9,6 @@ import Separator from "../components/Separator";
 bnb_book_logo = require("../assets/airbnb.png");
 
 function HomeScreen({ navigation }) {
-  function _handleProfileButton() {
-    navigation.navigate("Profile");
-  }
-
   function _handleSearchRoomsButton() {
     navigation.navigate("SearchRooms");
   }
@@ -26,15 +22,11 @@ function HomeScreen({ navigation }) {
       <BnbBodyView>
         <Image style={styles.logo} source={bnb_book_logo}></Image>
         <View style={styles.optionsContainer}>
-          <BnbButton onPress={_handleProfileButton} title={"Perfil"} />
           <BnbButton
             onPress={_handleSearchRoomsButton}
             title={"Buscar Habitaciones"}
           />
-          <BnbButton
-            onPress={_handleSearchUsersButton}
-            title={"Buscar Usuarios (Login)"}
-          />
+          <BnbButton onPress={_handleSearchUsersButton} title={"Login"} />
         </View>
       </BnbBodyView>
     </BnbMainView>

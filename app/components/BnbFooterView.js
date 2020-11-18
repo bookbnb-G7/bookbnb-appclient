@@ -16,10 +16,10 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: styling.smallCornerRadius,
     alignItems: "center",
     justifyContent: "center",
-    borderTopColor: colors.redSoft,
-    borderTopWidth: 1,
+    //borderTopColor: colors.redSoft,
+    //borderTopWidth: 1,
     paddingVertical: styling.separator,
-    //flex: 0.1,
+    paddingHorizontal: styling.bodyHPadding,
   },
 });
 

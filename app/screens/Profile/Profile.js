@@ -13,7 +13,9 @@ function Profile({ route, navigation }) {
   const user_logo = require("../../assets/icon.png");
   const PROFILE_ICON = require("../../assets/profile_icon.png");
   const ROOM_ICON = require("../../assets/house_logo.png");
-  const user = route.params;
+  const { user } = route.params;
+
+  /**MOCK user */
   const [_userData, setUserData] = useState({
     firstname: "Agustin",
     lastname: "Leguizamon",
@@ -25,7 +27,7 @@ function Profile({ route, navigation }) {
 
   /**TODO: is_owner deberia ser un atributo del user?? */
   const _handleProfileInfoPress = () => {
-    navigation.navigate("ProfileInfo", { user: _userData, is_owner: true });
+    navigation.navigate("ProfileInfo", { user: user, is_owner: true });
   };
 
   const _handleRoomsInfoPress = () => {
@@ -55,7 +57,7 @@ function Profile({ route, navigation }) {
           </View>
           <View style={styles.rightColumn}>
             <Text style={styles.userName}>
-              {_userData.firstname} {_userData.lastname}
+              {user.firstname} {user.lastname}
             </Text>
           </View>
         </View>
