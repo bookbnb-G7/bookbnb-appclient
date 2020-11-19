@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { useScreens } from "react-native-screens";
 import BnbBodyView from "../../components/BnbBodyView";
@@ -11,6 +11,7 @@ import fonts from "../../config/fonts";
 import styling from "../../config/styling";
 import Separator from "../../components/Separator";
 import httpPostRequest from "../../helpers/httpPostRequest";
+import httpGetRequest from "../../helpers/httpGetRequest";
 
 function ProfileInfoScreen({ route, navigation }) {
   const { user, is_owner, id } = route.params;
@@ -36,6 +37,32 @@ function ProfileInfoScreen({ route, navigation }) {
     );
   };
 
+  const _handleConfirmDelete = () => {
+    setIsEditing(false);
+    httpGetRequest(
+      "DELETE",
+      "http://bookbnb-appserver.herokuapp.com/users/" + id,
+      _handleApiResponse
+    );
+    navigation.navigate("Home");
+  };
+
+  const _handleDeleteAccountButtonPress = () => {
+    Alert.alert(
+      "Alert Title",
+      "My Alert Msg",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: _handleConfirmDelete },
+      ],
+      { cancelable: false }
+    );
+  };
+
   const _changeUserState = (key, value) => {
     user[key] = value;
   };
@@ -44,7 +71,7 @@ function ProfileInfoScreen({ route, navigation }) {
     <BnbMainView style={{ backgroundColor: "white" }}>
       <ScrollView>
         <BnbBodyView>
-          <BnbTitleText style={styles.subTitle}>
+          <BnbTitleText style={styles.title}>
             Informacion de la cuenta
           </BnbTitleText>
           <View style={styles.userInfoContainer}>
@@ -71,7 +98,7 @@ function ProfileInfoScreen({ route, navigation }) {
           <View style={styles.buttonContainer}>
             {is_owner && (
               <BnbButton
-                title={_is_editing ? "Aceptar" : "Editar tus datos"}
+                title={_is_editing ? "Aceptar cambios" : "Editar tus datos"}
                 onPress={
                   _is_editing
                     ? _handleFinishEditingButtonPress
@@ -81,11 +108,24 @@ function ProfileInfoScreen({ route, navigation }) {
             )}
             {is_owner && _is_editing && (
               <BnbButton
-                title="Cancelar"
+                title="Cancelar cambios"
                 onPress={_handleToggleEditButtonPress}
               />
             )}
           </View>
+          <Separator></Separator>
+          {is_owner && _is_editing && (
+            <View style={styles.deleteAccountContainer}>
+              <BnbTitleText style={styles.subTitle}>
+                Eliminar tu cuenta
+              </BnbTitleText>
+              <BnbButton
+                style={styles.buttonContainer}
+                title="Borrar cuenta"
+                onPress={_handleDeleteAccountButtonPress}
+              />
+            </View>
+          )}
         </BnbBodyView>
       </ScrollView>
     </BnbMainView>
@@ -93,7 +133,7 @@ function ProfileInfoScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  subTitle: {
+  title: {
     color: "black",
     fontSize: fonts.bigBig,
   },
@@ -117,6 +157,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  deleteAccountContainer: {
+    //alignItems: "center",
+  },
+  subTitle: {
+    color: "black",
+    fontSize: fonts.bigMedium,
   },
 });
 

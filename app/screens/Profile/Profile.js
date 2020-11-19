@@ -15,16 +15,6 @@ function Profile({ route, navigation }) {
   const ROOM_ICON = require("../../assets/house_logo.png");
   const { user, id } = route.params;
 
-  /**MOCK user */
-  const [_userData, setUserData] = useState({
-    firstname: "Agustin",
-    lastname: "Leguizamon",
-    email: "aleguizamon@fi.uba.ar",
-    phonenumber: "123456",
-    country: "Arg",
-    birthdate: "13-7-95",
-  });
-
   /**TODO: is_owner deberia ser una validacion*/
   const _handleProfileInfoPress = () => {
     navigation.navigate("ProfileInfo", { user: user, is_owner: true, id: id });
