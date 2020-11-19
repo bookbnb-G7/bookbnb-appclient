@@ -10,10 +10,11 @@ import BnbIconText from "../../components/BnbIconText";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 function Profile({ route, navigation }) {
-  const user_logo = require("../../assets/icon.png");
   const PROFILE_ICON = require("../../assets/profile_icon.png");
   const ROOM_ICON = require("../../assets/house_logo.png");
   const { user, id } = route.params;
+
+  const user_logo = { uri: user.photo };
 
   /**TODO: is_owner deberia ser una validacion*/
   const _handleProfileInfoPress = () => {
