@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   rightColumn: {
     justifyContent: "center",
     alignItems: "center",
-    //flex: 2,
+    flex: 1,
     paddingHorizontal: 20,
   },
   userName: {
