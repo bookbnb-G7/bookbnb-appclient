@@ -17,8 +17,8 @@ function ProfileInfoScreen({ route, navigation }) {
 
   const [_is_editing, setIsEditing] = useState(false);
 
-  const _handleEnableEditButtonPress = () => {
-    setIsEditing(true);
+  const _handleToggleEditButtonPress = () => {
+    setIsEditing(!_is_editing);
   };
 
   const _handleApiResponse = (data) => {
@@ -28,9 +28,6 @@ function ProfileInfoScreen({ route, navigation }) {
   const _handleFinishEditingButtonPress = () => {
     setIsEditing(false);
     alert(JSON.stringify(user));
-    /**Le agrego a user el id para el PUT
-     * TODO: necesito el id
-     */
     httpPostRequest(
       "PATCH",
       "http://bookbnb-appserver.herokuapp.com/users/" + id,
@@ -71,22 +68,24 @@ function ProfileInfoScreen({ route, navigation }) {
               })}
             </View>
           </View>
-          {is_owner && !_is_editing && (
-            <View style={styles.buttonContainer}>
+          <View style={styles.buttonContainer}>
+            {is_owner && (
               <BnbButton
-                title="Editar tus datos"
-                onPress={_handleEnableEditButtonPress}
+                title={_is_editing ? "Aceptar" : "Editar tus datos"}
+                onPress={
+                  _is_editing
+                    ? _handleFinishEditingButtonPress
+                    : _handleToggleEditButtonPress
+                }
               />
-            </View>
-          )}
-          {is_owner && _is_editing && (
-            <View style={styles.buttonContainer}>
+            )}
+            {is_owner && _is_editing && (
               <BnbButton
-                title="Aceptar"
-                onPress={_handleFinishEditingButtonPress}
+                title="Cancelar"
+                onPress={_handleToggleEditButtonPress}
               />
-            </View>
-          )}
+            )}
+          </View>
         </BnbBodyView>
       </ScrollView>
     </BnbMainView>
@@ -114,8 +113,10 @@ const styles = StyleSheet.create({
     flex: 1.5,
   },
   buttonContainer: {
-    marginVertical: styling.separator,
+    marginVertical: 20,
     alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
 
