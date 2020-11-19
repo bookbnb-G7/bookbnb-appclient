@@ -49,8 +49,8 @@ function ProfileInfoScreen({ route, navigation }) {
 
   const _handleDeleteAccountButtonPress = () => {
     Alert.alert(
-      "Alert Title",
-      "My Alert Msg",
+      "Eliminar cuenta",
+      "Si acepta la cuenta sera eliminada permanentemente",
       [
         {
           text: "Cancel",

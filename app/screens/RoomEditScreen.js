@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
@@ -9,6 +9,7 @@ import Separator from "../components/Separator";
 import colors from "../config/colors";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
+import httpGetRequest from "../helpers/httpGetRequest";
 import httpPostRequest from "../helpers/httpPostRequest";
 
 function RoomEditScreen({ route, navigation }) {
@@ -34,6 +35,32 @@ function RoomEditScreen({ route, navigation }) {
         price_per_day: room.price_per_day,
       },
       _handleApiResponse
+    );
+  };
+
+  const _handleConfirmDelete = () => {
+    setIsEditing(false);
+    httpGetRequest(
+      "DELETE",
+      "http://bookbnb-appserver.herokuapp.com/rooms/" + room.id,
+      _handleApiResponse
+    );
+    navigation.navigate("Home");
+  };
+
+  const _handleDeleteRoomButtonPress = () => {
+    Alert.alert(
+      "Eliminar habitación",
+      "Si acepta la habitación sera eliminada permanentemente",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "Aceptar", onPress: _handleConfirmDelete },
+      ],
+      { cancelable: false }
     );
   };
 
@@ -86,6 +113,19 @@ function RoomEditScreen({ route, navigation }) {
             ></BnbButton>
           )}
         </View>
+        <Separator></Separator>
+        {_is_owner && _is_editing && (
+          <View>
+            <BnbTitleText style={styles.subTitle}>
+              Eliminar Habitación
+            </BnbTitleText>
+            <BnbButton
+              style={styles.buttonsContainer}
+              title="Eliminar habitación"
+              onPress={_handleDeleteRoomButtonPress}
+            />
+          </View>
+        )}
       </BnbBodyView>
     </BnbMainView>
   );

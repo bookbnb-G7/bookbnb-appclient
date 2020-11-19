@@ -18,22 +18,11 @@ import SearchUsersResultScreen from "./app/screens/SearchUsersResultScreen";
 import ProfileStackScreen from "./app/screens/Profile/ProfileStackScreen";
 import RoomEditScreen from "./app/screens/RoomEditScreen";
 
-function LogoTitle() {
-  return (
-    <Image
-      style={{ width: 50, height: 50 }}
-      source={require("./app/assets/Octocat.png")}
-    ></Image>
-  );
-}
-
 const HomeStack = createStackNavigator();
 
 function HomeStackScreen() {
   return (
-    <HomeStack.Navigator
-      screenOptions={{ headerRight: (props) => <LogoTitle {...props} /> }}
-    >
+    <HomeStack.Navigator>
       <HomeStack.Screen name="Home" component={HomeScreen} />
       <HomeStack.Screen name="SearchUsers" component={SearchUsersScreen} />
       <HomeStack.Screen
@@ -49,9 +38,7 @@ const SearchStack = createStackNavigator();
 
 function SearchStackScreen() {
   return (
-    <SearchStack.Navigator
-      screenOptions={{ headerRight: (props) => <LogoTitle {...props} /> }}
-    >
+    <SearchStack.Navigator>
       <SearchStack.Screen name="SearchRooms" component={SearchRoomsScreen} />
       <SearchStack.Screen name="SearchInput" component={SearchInputScreen} />
       <SearchStack.Screen name="SearchCalendar" component={CalendarScreen} />
