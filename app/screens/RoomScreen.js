@@ -51,7 +51,7 @@ function RoomScreen({ route, navigation }) {
 
   /**TODO: @AgustinLeguizamon reviewer esta mockeado */
   const _handlePostAReview = () => {
-    if (_review !== "" || _review === "string") {
+    if (_review != "" || _review == "string") {
       httpPostRequest(
         "POST",
         URL_REVIEWS,

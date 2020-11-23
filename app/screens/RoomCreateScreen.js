@@ -10,6 +10,7 @@ import BnbTitleText from "../components/BnbTitleText";
 import Separator from "../components/Separator";
 import fonts from "../config/fonts";
 import httpPostRequest from "../helpers/httpPostRequest";
+import isANumber from "../helpers/isANumber";
 
 function RoomCreateScreen({ route, navigation }) {
   const { user_id, user } = route.params;
@@ -31,17 +32,21 @@ function RoomCreateScreen({ route, navigation }) {
   };
 
   const _handleNextButtonPress = () => {
-    httpPostRequest(
-      "POST",
-      rooms_url,
-      {
-        type: _type,
-        owner: user.firstname,
-        owner_id: user_id,
-        price_per_day: _price_per_day,
-      },
-      _handleApiResponse
-    );
+    if (isANumber(_price_per_day.toString())) {
+      httpPostRequest(
+        "POST",
+        rooms_url,
+        {
+          type: _type,
+          owner: user.firstname,
+          owner_id: user_id,
+          price_per_day: _price_per_day,
+        },
+        _handleApiResponse
+      );
+    } else {
+      alert("El precio por dia debe ser un valor numerico");
+    }
   };
 
   const _handleGoBackButtonPress = () => {
