@@ -28,9 +28,9 @@ function RoomScreen({ route, navigation }) {
 
   const [_review, setReview] = useState("string");
   const [_rating, setRating] = useState({
+    id: 0,
     quantity: 0,
   });
-  const [_apiResponse, setApiResponse] = useState({});
 
   const URL_REVIEWS =
     "http://bookbnb-appserver.herokuapp.com/rooms/" + room.id + "/reviews";
@@ -38,16 +38,22 @@ function RoomScreen({ route, navigation }) {
   const URL_RATINGS =
     "http://bookbnb-appserver.herokuapp.com/rooms/" + room.id + "/ratings";
 
-  /**TODO: contador no se actualiza, necesario un reset*/
+  /**TODO: contador no se actualiza, necesario un reset
+   * a pesar de modificar el state _rating al parecer el objeto se toma como que no cambio
+   * Object == Object ?
+   * e.g si uso otro set, como setReview ahi si me actualiza la pantalla
+   */
+
   const _handleRatingChange = (counter, offset) => {
+    //const index = _rating.indexOf(counter);
     const cpyCounter = counter;
     cpyCounter.quantity += offset;
+    alert(JSON.stringify(cpyCounter));
     setRating(cpyCounter);
   };
 
   const _handleApiResponse = (data) => {
     alert(JSON.stringify(data));
-    setApiResponse(data);
   };
 
   const _handlePostAReview = () => {

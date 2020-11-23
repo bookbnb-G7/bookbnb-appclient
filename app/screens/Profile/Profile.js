@@ -22,7 +22,7 @@ function Profile({ route, navigation }) {
   };
 
   const _handleRoomsInfoPress = () => {
-    alert("rooms info");
+    navigation.navigate("RoomCreate", { user_id: id, user: user });
   };
 
   const PROFILE_OPTIONS = [
