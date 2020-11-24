@@ -53,10 +53,6 @@ function RoomCreateScreen({ route, navigation }) {
     navigation.goBack();
   };
 
-  const _dummy = () => {
-    //alert("OnEndEditing");
-  };
-
   return (
     <BnbMainView>
       <BnbBodyView>
@@ -95,9 +91,6 @@ const styles = StyleSheet.create({
   titleText: {
     alignSelf: "center",
     fontSize: fonts.bigBig,
-  },
-  roomForm: {
-    //alignItems: "center",
   },
 });
 
