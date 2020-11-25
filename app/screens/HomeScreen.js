@@ -1,74 +1,74 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  ImageBackground,
+  Dimensions,
+} from "react-native";
+import BnbBodyView from "../components/BnbBodyView";
+import BnbButton from "../components/BnbButton";
+import BnbMainView from "../components/BnbMainView";
 import colors from "../config/colors";
 
+const bnb_book_logo = require("../assets/Bookbnb_logo.png");
+const background = require("../assets/background_2.png");
+
 function HomeScreen({ navigation }) {
-  function _handleMakeAPostButton() {
-    navigation.navigate("Posts");
+  function _handleSearchRoomsButton() {
+    navigation.navigate("SearchRooms");
   }
 
-  function _handleMakeANoteButton() {
-    navigation.navigate("Notes");
-  }
+  const _handleSearchUsersButton = () => {
+    navigation.navigate("SearchUsers");
+  };
 
   return (
-    <View style={styles.mainContainer}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.prompt}>
-          Por favor seleccione que tipo de accion desea hacer a continuacion
-        </Text>
-      </View>
-      <View style={styles.footerContainer}>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={_handleMakeAPostButton}
-          >
-            <Text style={styles.buttonText}>MAKE A POST</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={_handleMakeANoteButton}
-          >
-            <Text style={styles.buttonText}>MAKE A NOTE</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+    <BnbMainView style={styles.white}>
+      <Image style={styles.logo} source={bnb_book_logo}></Image>
+      <BnbBodyView style={styles.bodyContainer}>
+        <ImageBackground source={background} style={styles.background}>
+          <View style={styles.optionsContainer}>
+            <BnbButton
+              onPress={_handleSearchRoomsButton}
+              title={"Buscar Habitaciones"}
+            />
+            <BnbButton onPress={_handleSearchUsersButton} title={"Login"} />
+          </View>
+        </ImageBackground>
+      </BnbBodyView>
+    </BnbMainView>
   );
 }
 
+const dimensions = Dimensions.get("window");
+
 const styles = StyleSheet.create({
-  mainContainer: {
+  white: {
+    backgroundColor: colors.graySoft,
+  },
+  optionsContainer: {
     flex: 1,
+    marginVertical: 10,
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
-  prompt: {
-    color: colors.text,
-    textAlign: "center",
+  bodyContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0)",
+    borderWidth: 1,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
   },
-  headerContainer: {
+  logo: {
+    width: 100,
+    height: 100,
+    alignSelf: "center",
+  },
+  background: {
     flex: 1,
-    backgroundColor: colors.footer,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  footerContainer: {
-    flex: 2,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.header,
-  },
-  buttonsContainer: {
-    marginTop: 10,
-  },
-  buttonContainer: {
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  buttonText: {
-    fontWeight: "700",
-    color: colors.button,
+    //width: "100%",
+    //resizeMode: "repeat",
   },
 });
 
