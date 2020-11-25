@@ -23,12 +23,12 @@ function ProfileInfoScreen({ route, navigation }) {
   };
 
   const _handleApiResponse = (data) => {
-    alert(JSON.stringify(data));
+    //alert(JSON.stringify(data));
   };
 
   const _handleFinishEditingButtonPress = () => {
     setIsEditing(false);
-    alert(JSON.stringify(user));
+    //alert(JSON.stringify(user));
     httpPostRequest(
       "PATCH",
       "http://bookbnb-appserver.herokuapp.com/users/" + id,
