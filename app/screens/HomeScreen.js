@@ -24,6 +24,10 @@ function HomeScreen({ navigation }) {
     navigation.navigate("SearchUsers");
   };
 
+  const _handleRegisterButton = () => {
+    navigation.navigate("SignUp");
+  };
+
   return (
     <BnbMainView style={styles.white}>
       <Image style={styles.logo} source={bnb_book_logo}></Image>
@@ -34,7 +38,8 @@ function HomeScreen({ navigation }) {
               onPress={_handleSearchRoomsButton}
               title={"Buscar Habitaciones"}
             />
-            <BnbButton onPress={_handleSearchUsersButton} title={"Login"} />
+            <BnbButton onPress={_handleSearchUsersButton} title={"Ingresar"} />
+            <BnbButton onPress={_handleRegisterButton} title={"Registrarse"} />
           </View>
         </ImageBackground>
       </BnbBodyView>
