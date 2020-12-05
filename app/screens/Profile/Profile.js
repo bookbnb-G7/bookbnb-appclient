@@ -25,12 +25,21 @@ function Profile({ route, navigation }) {
     navigation.navigate("RoomCreate", { user_id: id, user: user });
   };
 
+  const _handleProfileImagePress = () => {
+    navigation.navigate("ProfileImage", { photo_uri: user.photo });
+  };
+
   const PROFILE_OPTIONS = [
     { id: 0, title: "Informacion de la cuenta" },
     { id: 1, title: "Habitaciones" },
+    { id: 2, title: "Foto de perfil" },
   ];
-  const ICONS = [PROFILE_ICON, ROOM_ICON];
-  const HANDLERS = [_handleProfileInfoPress, _handleRoomsInfoPress];
+  const ICONS = [PROFILE_ICON, ROOM_ICON, ROOM_ICON];
+  const HANDLERS = [
+    _handleProfileInfoPress,
+    _handleRoomsInfoPress,
+    _handleProfileImagePress,
+  ];
 
   return (
     <BnbMainView
@@ -43,7 +52,9 @@ function Profile({ route, navigation }) {
         <View style={styles.twoColumns}>
           <View style={styles.leftColumn}>
             <View style={styles.logoContainer}>
-              <Image source={user_logo} style={styles.userLogo}></Image>
+              <TouchableOpacity onPress={_handleProfileImagePress}>
+                <Image source={user_logo} style={styles.userLogo}></Image>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.rightColumn}>

@@ -40,7 +40,8 @@ function RoomCreateScreen({ route, navigation }) {
       ],
       { cancelable: false }
     );
-    navigation.navigate("Profile");
+    //navigation.navigate("Profile");
+    //TODO: navigation.navigate("ImageEditScreen")
   };
 
   const _handleApiError = (error) => {
