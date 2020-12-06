@@ -6,6 +6,9 @@ import Constants from "expo-constants";
 import BnbButton from "../components/BnbButton";
 import BnbBodyView from "../components/BnbBodyView";
 import Separator from "../components/Separator";
+import httpPostRequest from "../helpers/httpPostRequest";
+import BnbAlert from "../components/BnbAlert";
+import httpPostImage from "../helpers/httpPostImage";
 
 /**Debe servir tanto para el perfil como para las habitaciones
  * El perfil es una sola imagen
@@ -14,8 +17,26 @@ import Separator from "../components/Separator";
  */
 
 function ImagesPickScreen({ route, navigation }) {
-  const { photo_uri } = route.params;
-  const [image, setImage] = useState(photo_uri);
+  const { id, user } = route.params;
+  const [image, setImage] = useState(user.photo);
+
+  const _handleApiResponse = (data) => {
+    BnbAlert(
+      "Foto de perfil",
+      "Foto de perfil actualizada con exito",
+      "Entendido",
+      false
+    );
+  };
+
+  const _handleApiError = () => {
+    BnbAlert(
+      "Foto de perfil",
+      "Ha ocurrido un error al querer actualizar la foto",
+      "Entendido",
+      false
+    );
+  };
 
   useEffect(() => {
     (async () => {
@@ -24,7 +45,7 @@ function ImagesPickScreen({ route, navigation }) {
           status,
         } = await ImagePicker.requestCameraRollPermissionsAsync();
         if (status !== "granted") {
-          alert("Necesitamos permisos de la camara para poder seguir");
+          alert("Se necesitan permisos de la camara para poder continuar");
           navigation.goBack();
         }
       }
@@ -39,11 +60,15 @@ function ImagesPickScreen({ route, navigation }) {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       setImage(result.uri);
-      /**Aca deberia enviarla al storage*/
+      httpPostImage(
+        "POST",
+        "http://bookbnb-appserver.herokuapp.com/upload_profile_picture/" + id,
+        image,
+        _handleApiResponse,
+        _handleApiError
+      );
     }
   };
 
@@ -56,7 +81,6 @@ function ImagesPickScreen({ route, navigation }) {
             <Separator />
           </View>
         )}
-
         <BnbButton
           style={styles.button}
           title={"Elegir una imagen del rollo de la camara"}

@@ -26,7 +26,7 @@ function Profile({ route, navigation }) {
   };
 
   const _handleProfileImagePress = () => {
-    navigation.navigate("ProfileImage", { photo_uri: user.photo });
+    navigation.navigate("ProfileImage", { id: id, user: user });
   };
 
   const PROFILE_OPTIONS = [
