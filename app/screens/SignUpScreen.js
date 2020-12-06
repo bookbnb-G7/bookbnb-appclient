@@ -21,7 +21,6 @@ function SignUpScreen(props) {
       "https://melmagazine.com/wp-content/uploads/2020/07/zuck_sunscreen.jpg",
   });
 
-  /**TODO: ver si asi funciona, mandandole el Object entero */
   const _handleTextChange = (id, text) => {
     setProfile((prevState) => ({
       ...prevState,
@@ -30,7 +29,7 @@ function SignUpScreen(props) {
   };
 
   const _handleCreateUserButtonPress = () => {
-    alert(JSON.stringify(profile));
+    //alert(JSON.stringify(profile));
   };
 
   return (

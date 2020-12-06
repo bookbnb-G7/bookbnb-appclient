@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, Platform, StyleSheet, View } from "react-native";
+import { Image, Platform, StyleSheet, View, Text } from "react-native";
 import BnbMainView from "../components/BnbMainView";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
@@ -9,6 +9,7 @@ import Separator from "../components/Separator";
 import httpPostRequest from "../helpers/httpPostRequest";
 import BnbAlert from "../components/BnbAlert";
 import httpPostImage from "../helpers/httpPostImage";
+import styling from "../config/styling";
 
 /**Debe servir tanto para el perfil como para las habitaciones
  * El perfil es una sola imagen
@@ -74,6 +75,7 @@ function ImagesPickScreen({ route, navigation }) {
 
   return (
     <BnbMainView>
+      <Separator></Separator>
       <BnbBodyView>
         {Image && (
           <View>
@@ -81,9 +83,13 @@ function ImagesPickScreen({ route, navigation }) {
             <Separator />
           </View>
         )}
+        <Text style={styles.textContainer}>
+          Seleccione una imagen del rollo de la camara para cambiar su foto de
+          perfil
+        </Text>
         <BnbButton
           style={styles.button}
-          title={"Elegir una imagen del rollo de la camara"}
+          title={"Cambiar foto de perfil"}
           onPress={pickImage}
         ></BnbButton>
       </BnbBodyView>
@@ -99,6 +105,10 @@ const styles = StyleSheet.create({
   },
   button: {
     alignSelf: "center",
+  },
+  textContainer: {
+    alignItems: "center",
+    marginVertical: styling.separator * 2,
   },
 });
 
