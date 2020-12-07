@@ -32,14 +32,9 @@ function Profile({ route, navigation }) {
   const PROFILE_OPTIONS = [
     { id: 0, title: "Informacion de la cuenta" },
     { id: 1, title: "Habitaciones" },
-    { id: 2, title: "Foto de perfil" },
   ];
-  const ICONS = [PROFILE_ICON, ROOM_ICON, ROOM_ICON];
-  const HANDLERS = [
-    _handleProfileInfoPress,
-    _handleRoomsInfoPress,
-    _handleProfileImagePress,
-  ];
+  const ICONS = [PROFILE_ICON, ROOM_ICON];
+  const HANDLERS = [_handleProfileInfoPress, _handleRoomsInfoPress];
 
   return (
     <BnbMainView

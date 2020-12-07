@@ -8,12 +8,11 @@ import BnbBodyView from "../components/BnbBodyView";
 import Separator from "../components/Separator";
 import httpPostRequest from "../helpers/httpPostRequest";
 import BnbAlert from "../components/BnbAlert";
-import httpPostImage from "../helpers/httpPostImage";
 import styling from "../config/styling";
-
+import httpPostImage from "../helpers/httpPostImage";
 
 function getFileNameExtension(fname) {
-  return fname.slice((fname.lastIndexOf(".") - 1 >>> 0) + 2);
+  return fname.slice(((fname.lastIndexOf(".") - 1) >>> 0) + 2);
 }
 
 /**Debe servir tanto para el perfil como para las habitaciones
@@ -26,7 +25,7 @@ function ImagesPickScreen({ route, navigation }) {
   const { id, user } = route.params;
   const [image, setImage] = useState(user.photo);
 
-  const _handleApiResponse = (data) => {
+  const _handleApiResponse = () => {
     BnbAlert(
       "Foto de perfil",
       "Foto de perfil actualizada con exito",
@@ -66,14 +65,16 @@ function ImagesPickScreen({ route, navigation }) {
       quality: 1,
       base64: true,
     });
+
     const extension = getFileNameExtension(result.uri);
     const file = {
       uri: result.uri,
       name: "profile." + extension,
-      type: "image/" + extension
-    }
+      type: "image/" + extension,
+    };
+
     if (!result.cancelled) {
-      //setImage(file);
+      setImage(result.uri);
       httpPostImage(
         "PATCH",
         "https://bookbnb-appserver.herokuapp.com/users/" + id + "/photo",
