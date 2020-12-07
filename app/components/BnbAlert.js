@@ -1,12 +1,12 @@
 import { Alert } from "react-native";
 
-const BnbAlert = (title, sub_title, text, is_cancelable, callback) => {
+const BnbAlert = (title, body, button, is_cancelable, callback) => {
   Alert.alert(
     title,
-    sub_title,
+    body,
     [
       {
-        text: text,
+        text: button,
       },
     ],
     { cancelable: is_cancelable }
