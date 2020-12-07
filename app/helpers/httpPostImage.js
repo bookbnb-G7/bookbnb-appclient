@@ -3,10 +3,10 @@ import React from "react";
 const httpPostImage = (method, url, image, onResponse, onError) => {
   const formData = new FormData();
   /**??????No le tengo que pasar un string si no un FildeDescriptor al archivo */
-  formData.append("file", image);
+  formData.append('file', image);
   const requestOptions = {
     method: method,
-    //headers: { "Content-Type": "multipart/form-data" },
+    headers: { "Content-Type": "multipart/form-data" },
     body: formData,
   };
   fetch(url, requestOptions)
