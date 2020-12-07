@@ -25,6 +25,10 @@ function Profile({ route, navigation }) {
     navigation.navigate("RoomCreate", { user_id: id, user: user });
   };
 
+  const _handleProfileImagePress = () => {
+    navigation.navigate("ProfileImage", { id: id, user: user });
+  };
+
   const PROFILE_OPTIONS = [
     { id: 0, title: "Informacion de la cuenta" },
     { id: 1, title: "Habitaciones" },
@@ -43,7 +47,9 @@ function Profile({ route, navigation }) {
         <View style={styles.twoColumns}>
           <View style={styles.leftColumn}>
             <View style={styles.logoContainer}>
-              <Image source={user_logo} style={styles.userLogo}></Image>
+              <TouchableOpacity onPress={_handleProfileImagePress}>
+                <Image source={user_logo} style={styles.userLogo}></Image>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.rightColumn}>

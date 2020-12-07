@@ -17,6 +17,7 @@ import RoomScreen from "./app/screens/RoomScreen";
 import SearchUsersResultScreen from "./app/screens/SearchUsersResultScreen";
 import ProfileStackScreen from "./app/screens/Profile/ProfileStackScreen";
 import RoomEditScreen from "./app/screens/RoomEditScreen";
+import SignUpScreen from "./app/screens/SignUpScreen";
 
 const HomeStack = createStackNavigator();
 
@@ -30,6 +31,7 @@ function HomeStackScreen() {
         component={SearchUsersResultScreen}
       />
       <HomeStack.Screen name="ProfileStack" component={ProfileStackScreen} />
+      <HomeStack.Screen name="SignUp" component={SignUpScreen} />
     </HomeStack.Navigator>
   );
 }

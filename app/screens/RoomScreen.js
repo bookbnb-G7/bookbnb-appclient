@@ -46,7 +46,7 @@ function RoomScreen({ route, navigation }) {
   };
 
   const _handleApiResponse = (data) => {
-    alert(JSON.stringify(data));
+    //alert(JSON.stringify(data));
   };
 
   /**TODO: @AgustinLeguizamon reviewer esta mockeado */
