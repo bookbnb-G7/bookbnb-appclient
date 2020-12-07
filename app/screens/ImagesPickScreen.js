@@ -11,6 +11,11 @@ import BnbAlert from "../components/BnbAlert";
 import httpPostImage from "../helpers/httpPostImage";
 import styling from "../config/styling";
 
+
+function getFileNameExtension(fname) {
+  return fname.slice((fname.lastIndexOf(".") - 1 >>> 0) + 2);
+}
+
 /**Debe servir tanto para el perfil como para las habitaciones
  * El perfil es una sola imagen
  * Las habitaciones son muchas
@@ -59,14 +64,20 @@ function ImagesPickScreen({ route, navigation }) {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
-
+    const extension = getFileNameExtension(result.uri);
+    const file = {
+      uri: result.uri,
+      name: "profile." + extension,
+      type: "image/" + extension
+    }
     if (!result.cancelled) {
-      setImage(result.uri);
+      //setImage(file);
       httpPostImage(
-        "POST",
-        "http://bookbnb-appserver.herokuapp.com/upload_profile_picture/" + id,
-        image,
+        "PATCH",
+        "https://bookbnb-appserver.herokuapp.com/users/" + id + "/photo",
+        file,
         _handleApiResponse,
         _handleApiError
       );
