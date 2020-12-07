@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
   image: {
     width: 200,
     height: 200,
+    borderRadius: styling.smallCornerRadius,
     alignSelf: "center",
   },
   button: {
