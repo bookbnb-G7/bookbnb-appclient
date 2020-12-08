@@ -26,7 +26,10 @@ function Profile({ route, navigation }) {
   };
 
   const _handleProfileImagePress = () => {
-    navigation.navigate("ProfileImage", { id: id, user: user });
+    //navigation.navigate("ProfileImage", { id: id, user: user });
+    const url =
+      "https://bookbnb-appserver.herokuapp.com/users/" + id + "/photo";
+    navigation.navigate("ProfileImage", { image_uri: user.photo, url: url });
   };
 
   const PROFILE_OPTIONS = [

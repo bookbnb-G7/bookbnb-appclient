@@ -2,10 +2,8 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import LoginScreen from "./app/screens/LoginScreen";
 import HomeScreen from "./app/screens/HomeScreen";
 import UserLoginScreen from "./app/screens/UserLoginScreen";
 import SearchResultRooms from "./app/screens/SearchResultRooms";
