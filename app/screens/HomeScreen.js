@@ -11,6 +11,7 @@ import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
 import colors from "../config/colors";
+import styling from "../config/styling";
 
 const bnb_book_logo = require("../assets/Bookbnb_logo.png");
 const background = require("../assets/background_2.png");
@@ -29,20 +30,18 @@ function HomeScreen({ navigation }) {
   };
 
   return (
-    <BnbMainView style={styles.white}>
-      <Image style={styles.logo} source={bnb_book_logo}></Image>
-      <BnbBodyView style={styles.bodyContainer}>
-        <ImageBackground source={background} style={styles.background}>
-          <View style={styles.optionsContainer}>
-            <BnbButton
-              onPress={_handleSearchRoomsButton}
-              title={"Buscar Habitaciones"}
-            />
-            <BnbButton onPress={_handleSearchUsersButton} title={"Ingresar"} />
-            <BnbButton onPress={_handleRegisterButton} title={"Registrarse"} />
-          </View>
-        </ImageBackground>
-      </BnbBodyView>
+    <BnbMainView style={styles.mainContainer}>
+      <ImageBackground source={background} style={styles.background}>
+        <Image style={styles.logo} source={bnb_book_logo}></Image>
+        <View style={styles.optionsContainer}>
+          <BnbButton
+            onPress={_handleSearchRoomsButton}
+            title={"Buscar Habitaciones"}
+          />
+          <BnbButton onPress={_handleSearchUsersButton} title={"Ingresar"} />
+          <BnbButton onPress={_handleRegisterButton} title={"Registrarse"} />
+        </View>
+      </ImageBackground>
     </BnbMainView>
   );
 }
@@ -50,8 +49,8 @@ function HomeScreen({ navigation }) {
 const dimensions = Dimensions.get("window");
 
 const styles = StyleSheet.create({
-  white: {
-    backgroundColor: colors.graySoft,
+  mainContainer: {
+    //backgroundColor: colors.graySoft,
   },
   optionsContainer: {
     flex: 1,
@@ -69,9 +68,12 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     alignSelf: "center",
+    borderRadius: styling.bigCornerRadius,
+    backgroundColor: "white",
   },
   background: {
     flex: 1,
+    paddingVertical: 10,
     //width: "100%",
     //resizeMode: "repeat",
   },

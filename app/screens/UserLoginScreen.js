@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbBubbleView from "../components/BnbBubbleView";
@@ -7,10 +7,12 @@ import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
 import fonts from "../config/fonts";
 import Separator from "../components/Separator";
-import BnbFooterView from "../components/BnbFooterView";
 import firebase from "../database/firebase";
 import constants from "../constant/constants";
 import BnbLoading from "../components/BnbLoading";
+import styling from "../config/styling";
+import colors from "../config/colors";
+import BnbAlert from "../components/BnbAlert";
 
 function UserLoginScreen({ navigation }) {
   const [_user, setUser] = useState({
@@ -21,24 +23,18 @@ function UserLoginScreen({ navigation }) {
   const [_is_awaiting, setIsAwaiting] = useState(false);
 
   const _handleTextChange = (name, value) => {
-    setUser({ ...prevState, [name]: value });
+    setUser({ ..._user, [name]: value });
   };
 
   const _handleLoginUserButtonPress = () => {
     if (_user.email == "" || _user.password == "") {
-      BnbAlert(
-        "Ingresar",
-        "Uno o mas campos no han sido completados",
-        "Entendido",
-        false
-      );
+      setLoginError(constants.ERR_EMPTY_FIELD);
     } else {
       setIsAwaiting(true);
       firebase.auth
-        .signInWithEmailAndPassword(user.email, user.password)
-        .then(() => {
-          BnbAlert("Ingresar", "Login exitoso", "Entendido", false);
-          setIsAwaiting(false);
+        .signInWithEmailAndPassword(_user.email, _user.password)
+        .then((userCredential) => {
+          navigation.navigate("Home");
         })
         .catch((error) => {
           setIsAwaiting(false);
@@ -56,34 +52,45 @@ function UserLoginScreen({ navigation }) {
   };
 
   if (_is_awaiting) {
-    <BnbLoading></BnbLoading>;
+    return <BnbLoading></BnbLoading>;
   } else {
     return (
       <BnbMainView>
         <Separator style={{ borderBottomWidth: 0 }}></Separator>
-        <BnbBodyView></BnbBodyView>
-        <BnbFooterView>
-          <BnbBubbleView style={{ alignItems: "flex-start" }}>
-            <TextInput
-              placeholder="E-mail"
-              style={styles.searchInputText}
-              onChangeText={(text) => _handleTextChange("email", text)}
-              value={_user.email}
+        <BnbBodyView>
+          <View style={styles.centerContainer}>
+            <BnbBubbleView style={styles.bubbleContainer}>
+              <TextInput
+                placeholder="E-mail"
+                style={styles.searchInputText}
+                onChangeText={(text) => _handleTextChange("email", text)}
+                value={_user.email}
+              />
+            </BnbBubbleView>
+            <Separator style={{ borderBottomWidth: 0 }} />
+            <BnbBubbleView style={styles.bubbleContainer}>
+              <TextInput
+                placeholder="Contraseña"
+                style={styles.searchInputText}
+                onChangeText={(text) => _handleTextChange("password", text)}
+                value={_user.password}
+                secureTextEntry={true}
+              />
+            </BnbBubbleView>
+            <Separator style={{ borderBottomWidth: 0 }} />
+            <BnbButton
+              title="Ingresar"
+              style={styles.loginButton}
+              onPress={_handleLoginUserButtonPress}
             />
-          </BnbBubbleView>
-          <Separator style={{ borderBottomWidth: 0 }} />
-          <BnbBubbleView style={{ alignItems: "flex-start" }}>
-            <TextInput
-              placeholder="Contraseña"
-              style={styles.searchInputText}
-              onChangeText={(text) => _handleTextChange("password", text)}
-              value={_user.password}
-              secureTextEntry={true}
-            />
-          </BnbBubbleView>
-          <Separator />
-          <BnbButton title="Ingresar" onPress={_handleLoginUserButtonPress} />
-        </BnbFooterView>
+            {_login_error != "" && (
+              <View>
+                <Separator style={{ borderBottomWidth: 0 }}></Separator>
+                <Text style={styles.errorText}> {_login_error}</Text>
+              </View>
+            )}
+          </View>
+        </BnbBodyView>
       </BnbMainView>
     );
   }
@@ -92,6 +99,19 @@ function UserLoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   searchInputText: {
     fontSize: fonts.big,
+  },
+  bubbleContainer: {
+    alignItems: "flex-start",
+  },
+  loginButton: {
+    width: "100%",
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  errorText: {
+    color: colors.error,
   },
 });
 

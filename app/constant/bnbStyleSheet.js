@@ -1,17 +1,11 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import colors from "../config/colors";
+import fonts from "../config/fonts";
 import styling from "../config/styling";
 
-const BnbBubbleView = (props) => (
-  <View elevation={5} style={{ ...styles.bubbleContainer, ...props.style }}>
-    {props.children}
-  </View>
-);
-
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   bubbleContainer: {
-    borderRadius: styling.bigCornerRadius,
+    borderRadius: styling.mediumCornerRadius,
     backgroundColor: colors.white,
     height: 50,
     width: "100%",
@@ -24,10 +18,11 @@ const styles = StyleSheet.create({
       width: 10,
       height: 10,
     },
-    //alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
   },
+  subTitle: {
+    fontSize: fonts.semi,
+    fontWeight: fonts.bold,
+  },
 });
-
-export default BnbBubbleView;

@@ -8,6 +8,9 @@ export default {
   buttonBorderRadius: 10,
   buttonHPadding: 10,
   buttonVPadding: 5,
+  buttonHeight: 50,
+  buttonWidth: 140,
+  elevation: 5,
   separator: 8,
   iconSize: 50,
 };

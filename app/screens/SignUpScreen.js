@@ -13,6 +13,7 @@ import BnbMainView from "../components/BnbMainView";
 import BnbTextInputObject from "../components/BnbTextInputObject";
 import Separator from "../components/Separator";
 import colors from "../config/colors";
+import bnbStyleSheet from "../constant/bnbStyleSheet";
 import constants from "../constant/constants";
 import firebase from "../database/firebase";
 
@@ -24,10 +25,10 @@ function SignUpScreen({ route, navigation }) {
   const [_sign_in_error, setSignInError] = useState("");
   const [_is_awaiting, setIsAwaiting] = useState(false);
 
-  const _handleTextChange = (name, value) => {
+  const _handleTextChange = (key, value) => {
     setUser((prevState) => ({
       ...prevState,
-      [name]: value,
+      [key]: value,
     }));
   };
 
@@ -68,19 +69,21 @@ function SignUpScreen({ route, navigation }) {
         <Separator style={{ borderBottomWidth: 0 }}></Separator>
         <BnbBodyView>
           <BnbTextInputObject
-            left="E-Mail"
+            name="E-Mail"
             id={"email"}
             object={user}
             editable={true}
             onChange={_handleTextChange}
+            customStyle={bnbStyleSheet.bubbleContainer}
           />
           <Separator style={{ borderBottomWidth: 0 }} />
           <BnbTextInputObject
-            left="Contraseña"
+            name="Contraseña"
             id={"password"}
             object={user}
             editable={true}
             onChange={_handleTextChange}
+            customStyle={bnbStyleSheet.bubbleContainer}
           />
           <Separator style={{ borderBottomWidth: 0 }} />
           <BnbButton
@@ -88,6 +91,7 @@ function SignUpScreen({ route, navigation }) {
             onPress={_handleCreateUserButtonPress}
             style={styles.signIn}
           />
+
           <Separator style={{ borderBottomWidth: 0 }}></Separator>
           {_sign_in_error != "" && (
             <View>
@@ -103,6 +107,10 @@ function SignUpScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   errorText: {
     color: colors.error,
+  },
+  centerContainer: {
+    justifyContent: "center",
+    flex: 1,
   },
   signIn: {
     width: "100%",

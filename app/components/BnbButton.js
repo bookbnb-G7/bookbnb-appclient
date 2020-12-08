@@ -21,7 +21,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     textAlign: "center",
     fontSize: fonts.big,
-    width: 130,
+    width: styling.buttonWidth,
+    height: styling.buttonHeight,
+    textAlignVertical: "center",
   },
 });
 
