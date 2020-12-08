@@ -7,7 +7,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 import LoginScreen from "./app/screens/LoginScreen";
 import HomeScreen from "./app/screens/HomeScreen";
-import SearchUsersScreen from "./app/screens/SearchUsersScreen";
+import UserLoginScreen from "./app/screens/UserLoginScreen";
 import SearchResultRooms from "./app/screens/SearchResultRooms";
 import SearchRoomsScreen from "./app/screens/SearchRoomsScreen";
 import SearchInputScreen from "./app/screens/SearchInputScreen";
@@ -25,7 +25,7 @@ function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen name="Home" component={HomeScreen} />
-      <HomeStack.Screen name="SearchUsers" component={SearchUsersScreen} />
+      <HomeStack.Screen name="UserLogin" component={UserLoginScreen} />
       <HomeStack.Screen
         name="SearchUsersResult"
         component={SearchUsersResultScreen}

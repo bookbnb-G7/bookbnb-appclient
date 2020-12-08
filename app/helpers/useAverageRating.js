@@ -1,5 +1,6 @@
 import React from "react";
 
+/**Sin usar, no tiene sentido hacer un hook de una funcion helper */
 function useAverageRating(props) {
   const url_ratings =
     "http://bookbnb-appserver.herokuapp.com/rooms/" +

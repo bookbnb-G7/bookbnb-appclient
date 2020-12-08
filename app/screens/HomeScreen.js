@@ -21,7 +21,7 @@ function HomeScreen({ navigation }) {
   }
 
   const _handleSearchUsersButton = () => {
-    navigation.navigate("SearchUsers");
+    navigation.navigate("UserLogin");
   };
 
   const _handleRegisterButton = () => {

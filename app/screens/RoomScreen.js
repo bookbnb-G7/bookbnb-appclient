@@ -191,6 +191,7 @@ function RoomScreen({ route, navigation }) {
             </View>
             <Separator />
             <BnbButton
+              style={styles.center}
               title="Detalles"
               onPress={_handleRoomDetailsButtonPress}
             />
@@ -230,6 +231,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.graySoft,
     borderWidth: 1,
     marginVertical: styling.separator,
+  },
+  center: {
+    alignSelf: "center",
   },
 });
 
