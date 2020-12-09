@@ -10,9 +10,7 @@ import Separator from "../components/Separator";
 import firebase from "../database/firebase";
 import constants from "../constant/constants";
 import BnbLoading from "../components/BnbLoading";
-import styling from "../config/styling";
 import colors from "../config/colors";
-import BnbAlert from "../components/BnbAlert";
 
 function UserLoginScreen({ navigation }) {
   const [_user, setUser] = useState({
@@ -36,8 +34,13 @@ function UserLoginScreen({ navigation }) {
         .then((userCredential) => {
           /**MOCK id*/
           //TODO crear una API que maneje los request de la database ApiDatabase
-          navigation.navigate("SearchUsersResult", { search: 1 });
+          //navigation.navigate("SearchUsersResult", { search: 1 });
           //navigation.navigate("Home");
+          //Me meto directo a crear un room para probar
+          console.log(userCredential);
+          navigation.navigate("ProfileStack", {
+            screen: "RoomCreate",
+          });
         })
         .catch((error) => {
           setIsAwaiting(false);
