@@ -32,15 +32,8 @@ function UserLoginScreen({ navigation }) {
       firebase.auth
         .signInWithEmailAndPassword(_user.email, _user.password)
         .then((userCredential) => {
-          /**MOCK id*/
           //TODO crear una API que maneje los request de la database ApiDatabase
-          //navigation.navigate("SearchUsersResult", { search: 1 });
-          //navigation.navigate("Home");
-          //Me meto directo a crear un room para probar
-          console.log(userCredential);
-          navigation.navigate("ProfileStack", {
-            screen: "RoomCreate",
-          });
+          navigation.goBack();
         })
         .catch((error) => {
           setIsAwaiting(false);

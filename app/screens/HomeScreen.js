@@ -9,14 +9,19 @@ import {
 } from "react-native";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
+import BnbLoading from "../components/BnbLoading";
 import BnbMainView from "../components/BnbMainView";
 import colors from "../config/colors";
 import styling from "../config/styling";
+import useGetCurrentSignedInUser from "../database/useGetCurrentSignedInUser";
+import firebase from "../database/firebase";
+import { SecureStore } from "expo";
 
 const bnb_book_logo = require("../assets/Bookbnb_logo.png");
 const background = require("../assets/background_2.png");
 
 function HomeScreen({ navigation }) {
+  const [user, initializing] = useGetCurrentSignedInUser();
   function _handleSearchRoomsButton() {
     navigation.navigate("SearchRooms");
   }
@@ -29,21 +34,56 @@ function HomeScreen({ navigation }) {
     navigation.navigate("SignUp");
   };
 
-  return (
-    <BnbMainView style={styles.mainContainer}>
-      <ImageBackground source={background} style={styles.background}>
-        <Image style={styles.logo} source={bnb_book_logo}></Image>
-        <View style={styles.optionsContainer}>
-          <BnbButton
-            onPress={_handleSearchRoomsButton}
-            title={"Buscar Habitaciones"}
-          />
-          <BnbButton onPress={_handleSearchUsersButton} title={"Ingresar"} />
-          <BnbButton onPress={_handleRegisterButton} title={"Registrarse"} />
-        </View>
-      </ImageBackground>
-    </BnbMainView>
-  );
+  const _handleLogOutButton = () => {
+    firebase.auth
+      .signOut()
+      .then(() => console.log(user.email + " Cerro sesion"));
+  };
+
+  const _handleProfileButton = () => {
+    navigation.navigate("ProfileStack");
+  };
+
+  if (initializing) {
+    return <BnbLoading></BnbLoading>;
+  } else {
+    return (
+      <BnbMainView style={styles.mainContainer}>
+        <ImageBackground source={background} style={styles.background}>
+          <Image style={styles.logo} source={bnb_book_logo}></Image>
+          <View style={styles.optionsContainer}>
+            {user && (
+              <BnbButton
+                onPress={_handleSearchRoomsButton}
+                title={"Buscar Habitaciones"}
+              />
+            )}
+            {!user && (
+              <BnbButton
+                onPress={_handleSearchUsersButton}
+                title={"Ingresar"}
+              />
+            )}
+            {!user && (
+              <BnbButton
+                onPress={_handleRegisterButton}
+                title={"Registrarse"}
+              />
+            )}
+            {user && (
+              <BnbButton
+                onPress={_handleLogOutButton}
+                title={"Cerrar sesion"}
+              />
+            )}
+            {user && (
+              <BnbButton onPress={_handleProfileButton} title={"Perfil"} />
+            )}
+          </View>
+        </ImageBackground>
+      </BnbMainView>
+    );
+  }
 }
 
 const dimensions = Dimensions.get("window");

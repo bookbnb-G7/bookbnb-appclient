@@ -34,10 +34,12 @@ function RoomCreateScreen({ navigation }) {
 
   function onAuthStateChanged(user) {
     setUser(user);
-    user.getIdToken().then((response) => {
-      setToken(response);
-      console.log("Auth token:" + token);
-    });
+    if (user) {
+      user.getIdToken().then((response) => {
+        setToken(response);
+        console.log("Auth token:" + token);
+      });
+    }
     if (_initializing) {
       setInitializing(false);
     }

@@ -16,6 +16,7 @@ import SearchUsersResultScreen from "./app/screens/SearchUsersResultScreen";
 import ProfileStackScreen from "./app/screens/Profile/ProfileStackScreen";
 import RoomEditScreen from "./app/screens/RoomEditScreen";
 import SignUpScreen from "./app/screens/SignUpScreen";
+import BnbLoading from "./app/components/BnbLoading";
 
 const HomeStack = createStackNavigator();
 
@@ -59,6 +60,15 @@ function SearchStackScreen() {
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  /**const [user, initializing] = useGetCurrentSignedInUser();
+  
+  if (initializing){
+    return <BnbLoading></BnbLoading>
+  }
+
+  if(user){
+   secureStore.rememeber(user) 
+  }*/
   return (
     <NavigationContainer>
       <Tab.Navigator
