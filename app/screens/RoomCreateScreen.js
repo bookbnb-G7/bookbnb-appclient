@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
 import BnbAlert from "../components/BnbAlert";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbContainer from "../components/BnbContainer";
 import BnbMainView from "../components/BnbMainView";
-import BnbTextInput from "../components/BnbTextInput";
 import BnbTextInputObject from "../components/BnbTextInputObject";
 import BnbTitleText from "../components/BnbTitleText";
 import Separator from "../components/Separator";
@@ -16,6 +14,9 @@ import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import isANumber from "../helpers/isANumber";
 import BnbLoading from "../components/BnbLoading";
 import firebase from "../database/firebase";
+import constants from "../constant/constants";
+import BnbSecureStore from "../classes/BnbSecureStore";
+import useGetCurrentSignedInUser from "../database/useGetCurrentSignedInUser";
 
 function RoomCreateScreen({ navigation }) {
   const [_room, setRoom] = useState({
@@ -23,16 +24,40 @@ function RoomCreateScreen({ navigation }) {
     price_per_day: "",
   });
   const [_is_awaiting, setIsAwaiting] = useState(false);
-  const [_initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
-  const [token, setToken] = useState("");
+  //const [_initializing, setInitializing] = useState(true);
+  //const [user, setUser] = useState();
+  const [_token, setToken] = useState("null");
   const rooms_url = "http://bookbnb-appserver.herokuapp.com/rooms/";
 
   const _handleTextChange = (key, value) => {
     setRoom({ ..._room, [key]: value });
   };
 
-  function onAuthStateChanged(user) {
+  const [user, initializing] = useGetCurrentSignedInUser();
+  useEffect(() => {
+    if (user) {
+      user.getIdToken().then((response) => {
+        setToken(response);
+        console.log("Auth: " + _token);
+      });
+    }
+  }, [user]);
+
+  /**Al parecer, storear el user en SecureStore hace que "pierda" los metodos */
+  const [storedUser, setStoredUser] = useState();
+  useEffect(() => {
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
+      setStoredUser(response);
+      if (storedUser) {
+        /**console.log(storedUser.getIdToken()).then((response) => {
+            setToken(response);
+            console.log("Auth token: " + _token);
+          });*/
+      }
+    });
+  }, []);
+
+  /**function onAuthStateChanged(user) {
     setUser(user);
     if (user) {
       user.getIdToken().then((response) => {
@@ -49,7 +74,7 @@ function RoomCreateScreen({ navigation }) {
     const suscriber = firebase.auth.onAuthStateChanged(onAuthStateChanged);
     return suscriber; // unsuscribe on unmount
   }, []);
-
+*/
   const _handleApiResponse = (data) => {
     /**BnbAlert(
       "Creación de habitación",
@@ -83,7 +108,7 @@ function RoomCreateScreen({ navigation }) {
           type: _room.type,
           price_per_day: _room.price_per_day,
         },
-        { "Content-Type": "application/json", "x-access-token": token },
+        { "Content-Type": "application/json", "x-access-token": _token },
         _handleApiResponse,
         _handleApiError
       );
@@ -97,7 +122,8 @@ function RoomCreateScreen({ navigation }) {
     navigation.goBack();
   };
 
-  if (_initializing) return <BnbLoading></BnbLoading>;
+  //if (!storedUser) return <BnbLoading></BnbLoading>;
+  if (initializing) return <BnbLoading></BnbLoading>;
 
   if (_is_awaiting) {
     return (
@@ -139,7 +165,10 @@ function RoomCreateScreen({ navigation }) {
             <Text>Cuenta actual: {user.email}</Text>
           </View>
           <BnbContainer>
-            <BnbButton title="Continuar" onPress={_handleNextButtonPress} />
+            {_token != "null" && (
+              <BnbButton title="Continuar" onPress={_handleNextButtonPress} />
+            )}
+
             <BnbButton title="Cancelar" onPress={_handleGoBackButtonPress} />
           </BnbContainer>
         </BnbBodyView>

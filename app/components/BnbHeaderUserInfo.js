@@ -3,7 +3,6 @@ import { StyleSheet, Text, View } from "react-native";
 import styling from "../config/styling";
 
 function BnbHeaderUserInfo(props) {
-  console.log("props:" + props.userEmail);
   return (
     <View style={styles.mainContainer}>
       <Text>Usuario: {props.userEmail}</Text>

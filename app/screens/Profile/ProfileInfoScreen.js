@@ -12,6 +12,7 @@ import styling from "../../config/styling";
 import Separator from "../../components/Separator";
 import httpPostRequest from "../../helpers/httpPostRequest";
 import httpGetRequest from "../../helpers/httpGetRequest";
+import BnbAlert from "../../components/BnbAlert";
 
 function ProfileInfoScreen({ route, navigation }) {
   const { user, is_owner, id } = route.params;
@@ -28,7 +29,6 @@ function ProfileInfoScreen({ route, navigation }) {
 
   const _handleFinishEditingButtonPress = () => {
     setIsEditing(false);
-    //alert(JSON.stringify(user));
     httpPostRequest(
       "PATCH",
       "http://bookbnb-appserver.herokuapp.com/users/" + id,
@@ -48,13 +48,13 @@ function ProfileInfoScreen({ route, navigation }) {
   };
 
   const _handleDeleteAccountButtonPress = () => {
+    //BnbAlert("Eliminar cuenta", "Si acepta la cuenta sera eliminada permanentemente",)
     Alert.alert(
       "Eliminar cuenta",
       "Si acepta la cuenta sera eliminada permanentemente",
       [
         {
           text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
           style: "cancel",
         },
         { text: "OK", onPress: _handleConfirmDelete },

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image, StatusBar } from "react-native";
 import colors from "../../config/colors";
 import fonts from "../../config/fonts";
@@ -8,17 +8,22 @@ import BnbMainView from "../../components/BnbMainView";
 import BnbBodyView from "../../components/BnbBodyView";
 import BnbIconText from "../../components/BnbIconText";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import BnbSecureStore from "../../classes/BnbSecureStore";
+import constants from "../../constant/constants";
 
 function Profile({ route, navigation }) {
   const PROFILE_ICON = require("../../assets/profile_icon.png");
   const ROOM_ICON = require("../../assets/house_logo.png");
-  const { user, id } = route.params;
 
-  const user_logo = { uri: user.photo };
+  const [storedUser, setStoredUser] = useState();
+  useEffect(() => {
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
+      setStoredUser(response);
+    });
+  }, []);
 
-  /**TODO: is_owner deberia ser una validacion*/
   const _handleProfileInfoPress = () => {
-    navigation.navigate("ProfileInfo", { user: user, is_owner: true, id: id });
+    //navigation.navigate("ProfileInfo", { user: user, is_owner: true, id: id });
   };
 
   const _handleRoomsInfoPress = () => {
@@ -27,9 +32,9 @@ function Profile({ route, navigation }) {
 
   const _handleProfileImagePress = () => {
     //navigation.navigate("ProfileImage", { id: id, user: user });
-    const url =
+    /**const url =
       "https://bookbnb-appserver.herokuapp.com/users/" + id + "/photo";
-    navigation.navigate("ProfileImage", { image_uri: user.photo, url: url });
+    navigation.navigate("ProfileImage", { image_uri: user.photo, url: url });*/
   };
 
   const PROFILE_OPTIONS = [
@@ -51,14 +56,14 @@ function Profile({ route, navigation }) {
           <View style={styles.leftColumn}>
             <View style={styles.logoContainer}>
               <TouchableOpacity onPress={_handleProfileImagePress}>
-                <Image source={user_logo} style={styles.userLogo}></Image>
+                <Image source={PROFILE_ICON} style={styles.userLogo}></Image>
               </TouchableOpacity>
             </View>
           </View>
           <View style={styles.rightColumn}>
-            <Text style={styles.userName}>
-              {user.firstname} {user.lastname}
-            </Text>
+            {storedUser && (
+              <Text style={styles.userName}>{storedUser.email}</Text>
+            )}
           </View>
         </View>
         <View style={styles.bodyContainer}>
