@@ -59,27 +59,39 @@ function HomeStackScreen() {
 const SearchStack = createStackNavigator();
 
 function SearchStackScreen() {
-  return (
-    <SearchStack.Navigator
-      screenOptions={{
-        headerRight: (props) => <BnbHeaderUserInfo userEmail="user" />,
-      }}
-    >
-      <SearchStack.Screen name="SearchRooms" component={SearchRoomsScreen} />
-      <SearchStack.Screen name="SearchInput" component={SearchInputScreen} />
-      <SearchStack.Screen name="SearchCalendar" component={CalendarScreen} />
-      <SearchStack.Screen
-        name="SearchCounters"
-        component={SearchCountersScreen}
-      />
-      <SearchStack.Screen
-        name="SearchResultRooms"
-        component={SearchResultRooms}
-      />
-      <SearchStack.Screen name="Room" component={RoomScreen} />
-      <SearchStack.Screen name="RoomDetails" component={RoomEditScreen} />
-    </SearchStack.Navigator>
-  );
+  const [storedUser, setStoredUser] = useState();
+  useEffect(() => {
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
+      setStoredUser(response);
+    });
+  }, []);
+  if (!storedUser) {
+    return <BnbLoading></BnbLoading>;
+  } else {
+    return (
+      <SearchStack.Navigator
+        screenOptions={{
+          headerRight: (props) => (
+            <BnbHeaderUserInfo userEmail={storedUser.email} />
+          ),
+        }}
+      >
+        <SearchStack.Screen name="SearchRooms" component={SearchRoomsScreen} />
+        <SearchStack.Screen name="SearchInput" component={SearchInputScreen} />
+        <SearchStack.Screen name="SearchCalendar" component={CalendarScreen} />
+        <SearchStack.Screen
+          name="SearchCounters"
+          component={SearchCountersScreen}
+        />
+        <SearchStack.Screen
+          name="SearchResultRooms"
+          component={SearchResultRooms}
+        />
+        <SearchStack.Screen name="Room" component={RoomScreen} />
+        <SearchStack.Screen name="RoomDetails" component={RoomEditScreen} />
+      </SearchStack.Navigator>
+    );
+  }
 }
 
 const Tab = createBottomTabNavigator();
@@ -93,10 +105,6 @@ export default function App() {
     return <BnbLoading></BnbLoading>;
   }
 
-  if (user) {
-    //si el usuario esta logeado, lo guardo en el SecureStore
-    //BnbSecureStore.remember(constants.CACHE_USER_KEY, user);
-  }
   return (
     <NavigationContainer>
       {!user && (

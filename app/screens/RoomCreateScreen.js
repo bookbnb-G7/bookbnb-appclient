@@ -126,13 +126,7 @@ function RoomCreateScreen({ navigation }) {
   if (initializing) return <BnbLoading></BnbLoading>;
 
   if (_is_awaiting) {
-    return (
-      <View>
-        <Text style={{ alignSelf: "center", justifyContent: "center" }}>
-          Creando habitacion...
-        </Text>
-      </View>
-    );
+    return <BnbLoading text="Creando habitacion"></BnbLoading>;
   } else {
     return (
       <BnbMainView>

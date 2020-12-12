@@ -10,6 +10,7 @@ function useGetCurrentSignedInUser(props) {
   function _onAuthStateChanged(user) {
     setUser(user);
     if (user) {
+      /**Si el user no es null, es decir se logeo, lo guardo */
       BnbSecureStore.remember(constants.CACHE_USER_KEY, user);
     }
     if (initializing) {

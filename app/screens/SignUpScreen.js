@@ -15,12 +15,22 @@ import Separator from "../components/Separator";
 import colors from "../config/colors";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import constants from "../constant/constants";
+import urls from "../constant/urls";
 import firebase from "../database/firebase";
 
 function SignUpScreen({ route, navigation }) {
   const [user, setUser] = useState({
     email: "",
     password: "",
+  });
+  const [appServerUser, setAppServerUser] = useState({
+    firstname: "null",
+    lastname: "null",
+    email: "null@email.com",
+    phonenumber: "1",
+    country: "null",
+    birthdate: "0000-00-00",
+    photo: "https://www.cmtv.com.ar/imagenes_artistas/70.jpg?Chayanne",
   });
   const [_sign_in_error, setSignInError] = useState("");
   const [_is_awaiting, setIsAwaiting] = useState(false);
@@ -30,6 +40,14 @@ function SignUpScreen({ route, navigation }) {
       ...prevState,
       [key]: value,
     }));
+  };
+
+  const _handleApiResponse = () => {
+    navigation.navigate("Home");
+  };
+
+  const _handleApiError = () => {
+    setIsAwaiting(false);
   };
 
   const _handleCreateUserButtonPress = () => {
@@ -46,7 +64,16 @@ function SignUpScreen({ route, navigation }) {
             "Entendido",
             false
           );
-          navigation.navigate("Home");
+          /**Solicitar datos personales */
+          setAppServerUser(...appServerUser, { [email]: user.email });
+          /**httpPostTokenRequest(
+            "POST",
+            urls.URL_USERS,
+            appServerUser,
+            { "Content-Type": "application/json", "x-access-token": userCredential.token},
+            _handleApiResponse,
+            _handleApiError
+          );*/
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {

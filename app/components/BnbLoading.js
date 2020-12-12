@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 const BnbLoading = (props) => (
   <View style={styles.loading}>
-    <Text>Cargando...</Text>
+    {props.text ? <Text>{props.text}</Text> : <Text>Cargando...</Text>}
   </View>
 );
 
