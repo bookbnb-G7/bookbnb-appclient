@@ -40,10 +40,6 @@ function HomeScreen({ navigation }) {
       .then(() => console.log(user.email + " Cerro sesion"));
   };
 
-  const _handleProfileButton = () => {
-    navigation.navigate("ProfileStack");
-  };
-
   if (initializing) {
     return <BnbLoading></BnbLoading>;
   } else {
@@ -75,9 +71,6 @@ function HomeScreen({ navigation }) {
                 onPress={_handleLogOutButton}
                 title={"Cerrar sesion"}
               />
-            )}
-            {user && (
-              <BnbButton onPress={_handleProfileButton} title={"Perfil"} />
             )}
           </View>
         </ImageBackground>
