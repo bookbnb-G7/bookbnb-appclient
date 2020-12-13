@@ -27,7 +27,7 @@ function RoomCreateScreen({ navigation }) {
   //const [_initializing, setInitializing] = useState(true);
   //const [user, setUser] = useState();
   const [_token, setToken] = useState("null");
-  const rooms_url = "http://bookbnb-appserver.herokuapp.com/rooms/";
+  const rooms_url = "https://bookbnb-appserver.herokuapp.com/rooms";
 
   const _handleTextChange = (key, value) => {
     setRoom({ ..._room, [key]: value });
@@ -108,7 +108,10 @@ function RoomCreateScreen({ navigation }) {
           type: _room.type,
           price_per_day: _room.price_per_day,
         },
-        { "Content-Type": "application/json", "x-access-token": _token },
+        {
+          "Content-Type": "application/json",
+          "x-access-token": _token,
+        },
         _handleApiResponse,
         _handleApiError
       );

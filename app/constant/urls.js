@@ -1,3 +1,3 @@
 export default {
-  URL_USERS: "http://bookbnb-appserver.herokuapp.com/users",
+  URL_USERS: "https://bookbnb-appserver.herokuapp.com/users",
 };

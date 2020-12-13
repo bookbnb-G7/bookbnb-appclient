@@ -13,7 +13,8 @@ const httpPostTokenRequest = (
     headers: header,
     body: JSON.stringify(body),
   };
-  console.log("Debug httpPostTokenRequest:" + JSON.stringify(header));
+  console.log("Debug httpPostTokenRequest header:" + JSON.stringify(header));
+  console.log("Debug httpPostTokenRequest body:" + JSON.stringify(body));
   /**error captura los errores de red pero NO los errores de HTTP */
   fetch(url, requestOptions)
     .then(async (response) => {
@@ -27,7 +28,7 @@ const httpPostTokenRequest = (
       }
     })
     .catch((error) => {
-      console.log("Error en la peticion fetch:" + error);
+      console.log("Error en la peticion fetch: " + error);
       onError();
     });
 };

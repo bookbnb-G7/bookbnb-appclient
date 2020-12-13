@@ -26,14 +26,6 @@ function HomeScreen({ navigation }) {
     navigation.navigate("SearchRooms");
   }
 
-  const _handleSearchUsersButton = () => {
-    navigation.navigate("UserLogin");
-  };
-
-  const _handleRegisterButton = () => {
-    navigation.navigate("SignUp");
-  };
-
   const _handleLogOutButton = () => {
     firebase.auth
       .signOut()
@@ -52,24 +44,6 @@ function HomeScreen({ navigation }) {
               <BnbButton
                 onPress={_handleSearchRoomsButton}
                 title={"Buscar Habitaciones"}
-              />
-            )}
-            {!user && (
-              <BnbButton
-                onPress={_handleSearchUsersButton}
-                title={"Ingresar"}
-              />
-            )}
-            {!user && (
-              <BnbButton
-                onPress={_handleRegisterButton}
-                title={"Registrarse"}
-              />
-            )}
-            {user && (
-              <BnbButton
-                onPress={_handleLogOutButton}
-                title={"Cerrar sesion"}
               />
             )}
           </View>

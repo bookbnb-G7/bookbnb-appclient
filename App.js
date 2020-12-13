@@ -29,23 +29,28 @@ const HomeStack = createStackNavigator();
 
 function HomeStackScreen() {
   /**https://stackoverflow.com/questions/61281739/how-do-i-access-promise-callback-value-outside-of-the-function */
-  const [storedUser, setStoredUser] = useState();
+  const [user, initializing] = useGetCurrentSignedInUser();
+
+  /**const [storedUser, setStoredUser] = useState();
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
       setStoredUser(response);
     });
-  }, []);
-  if (!storedUser) {
+  }, []);*/
+  if (initializing) {
     return <BnbLoading></BnbLoading>;
   } else {
     return (
       <HomeStack.Navigator
         screenOptions={{
           headerRight: (props) => (
-            <BnbHeaderUserInfo userEmail={storedUser.email} />
+            <BnbHeaderUserInfo userEmail={user ? user.email : ""} />
           ),
         }}
       >
+        <HomeStack.Screen name="Welcome" component={WelcomeScreen} />
+        <HomeStack.Screen name="SignUp" component={SignUpScreen} />
+        <HomeStack.Screen name="UserLogin" component={UserLoginScreen} />
         <HomeStack.Screen name="Home" component={HomeScreen} />
         <HomeStack.Screen
           name="SearchUsersResult"
@@ -60,6 +65,7 @@ const SearchStack = createStackNavigator();
 
 function SearchStackScreen() {
   const [storedUser, setStoredUser] = useState();
+
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
       setStoredUser(response);
@@ -96,8 +102,6 @@ function SearchStackScreen() {
 
 const Tab = createBottomTabNavigator();
 
-const SignInStack = createStackNavigator();
-
 export default function App() {
   const [user, initializing] = useGetCurrentSignedInUser();
   console.log("##############");
@@ -107,52 +111,45 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {!user && (
-        <SignInStack.Navigator>
-          <SignInStack.Screen name="Welcome" component={WelcomeScreen} />
-          <SignInStack.Screen name="SignUp" component={SignUpScreen} />
-          <SignInStack.Screen name="UserLogin" component={UserLoginScreen} />
-        </SignInStack.Navigator>
-      )}
-      {user && (
-        <Tab.Navigator
-          initialRouteName="Home"
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName;
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
 
-              if (route.name === "Home") {
-                iconName = "ios-home";
-              } else if (route.name === "ProfileStack") {
-                iconName = "ios-contact";
-              } else if (route.name === "SearchRooms") {
-                iconName = "ios-search";
-              }
+            if (route.name === "Home") {
+              iconName = "ios-home";
+            } else if (route.name === "ProfileStack") {
+              iconName = "ios-contact";
+            } else if (route.name === "SearchRooms") {
+              iconName = "ios-search";
+            }
 
-              // You can return any component that you like here!
-              return <Ionicons name={iconName} size={size} color={color} />;
-            },
-          })}
-        >
-          <Tab.Screen
-            name="Home"
-            component={HomeStackScreen}
-            options={{ title: "Inicio" }}
-          />
+            // You can return any component that you like here!
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+      >
+        <Tab.Screen
+          name="Home"
+          component={HomeStackScreen}
+          options={{ title: "Inicio" }}
+        />
+        {user && (
           <Tab.Screen
             name="SearchRooms"
             component={SearchStackScreen}
             options={{ title: "Buscar" }}
           />
-          {user && (
-            <Tab.Screen
-              name="ProfileStack"
-              component={ProfileStackScreen}
-              options={{ title: "Perfil" }}
-            />
-          )}
-        </Tab.Navigator>
-      )}
+        )}
+        {user && (
+          <Tab.Screen
+            name="ProfileStack"
+            component={ProfileStackScreen}
+            options={{ title: "Perfil" }}
+          />
+        )}
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }

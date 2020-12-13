@@ -7,6 +7,7 @@ import ImagePickScreen from "../ImagePickScreen";
 import constants from "../../constant/constants";
 import BnbLoading from "../../components/BnbLoading";
 import BnbSecureStore from "../../classes/BnbSecureStore";
+import BnbHeaderUserInfo from "../../components/BnbHeaderUserInfo";
 
 const ProfileStack = createStackNavigator();
 
@@ -22,7 +23,13 @@ function ProfileStackScreen(props) {
     return <BnbLoading></BnbLoading>;
   } else {
     return (
-      <ProfileStack.Navigator>
+      <ProfileStack.Navigator
+        screenOptions={{
+          headerRight: (props) => (
+            <BnbHeaderUserInfo userEmail={storedUser.email} />
+          ),
+        }}
+      >
         <ProfileStack.Screen name="Profile" component={Profile} />
         <ProfileStack.Screen name="ProfileInfo" component={ProfileInfoScreen} />
         <ProfileStack.Screen name="RoomCreate" component={RoomCreateScreen} />

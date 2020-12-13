@@ -10,6 +10,8 @@ import BnbIconText from "../../components/BnbIconText";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import BnbSecureStore from "../../classes/BnbSecureStore";
 import constants from "../../constant/constants";
+import BnbButton from "../../components/BnbButton";
+import firebase from "../../database/firebase";
 
 function Profile({ route, navigation }) {
   const PROFILE_ICON = require("../../assets/profile_icon.png");
@@ -35,6 +37,13 @@ function Profile({ route, navigation }) {
     /**const url =
       "https://bookbnb-appserver.herokuapp.com/users/" + id + "/photo";
     navigation.navigate("ProfileImage", { image_uri: user.photo, url: url });*/
+  };
+
+  const _handleLogOutButton = () => {
+    firebase.auth
+      .signOut()
+      .then(() => console.log(storedUser.email + " Cerro sesion"));
+    navigation.navigate("Welcome");
   };
 
   const PROFILE_OPTIONS = [
@@ -78,12 +87,20 @@ function Profile({ route, navigation }) {
             </View>
           ))}
         </View>
+        <BnbButton
+          style={styles.center}
+          title="Cerrar sesion"
+          onPress={_handleLogOutButton}
+        ></BnbButton>
       </BnbBodyView>
     </BnbMainView>
   );
 }
 
 const styles = StyleSheet.create({
+  center: {
+    alignSelf: "center",
+  },
   twoColumns: {
     //flex: 1,
     flexDirection: "row",
