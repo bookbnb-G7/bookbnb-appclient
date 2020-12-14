@@ -33,7 +33,7 @@ function UserLoginScreen({ navigation }) {
         .signInWithEmailAndPassword(_user.email, _user.password)
         .then((userCredential) => {
           //TODO crear una API que maneje los request de la database ApiDatabase
-          navigation.goBack();
+          navigation.navigate("Home");
         })
         .catch((error) => {
           setIsAwaiting(false);

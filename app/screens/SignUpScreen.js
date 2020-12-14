@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Profiler } from "react";
 import { Text, View, StyleSheet } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { color } from "react-native-reanimated";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbAlert from "../components/BnbAlert";
@@ -24,6 +24,12 @@ function SignUpScreen({ route, navigation }) {
   const [user, setUser] = useState({
     email: "",
     password: "",
+    firstname: "App",
+    lastname: "App",
+    phonenumber: "11-1111111",
+    country: "USA",
+    birthdate: "1999-11-11",
+    photo: "",
   });
   /**TODO: crear un formulario para completar estos campos, photo??? */
 
@@ -47,7 +53,12 @@ function SignUpScreen({ route, navigation }) {
   };
 
   const _handleCreateUserButtonPress = () => {
-    if (user.email == "" || user.password == "") {
+    if (
+      user.email == "" ||
+      user.password == "" ||
+      user.firstname == "" ||
+      user.lastname == ""
+    ) {
       setSignInError(constants.ERR_EMPTY_FIELD);
     } else {
       setSignInError("");
@@ -57,12 +68,12 @@ function SignUpScreen({ route, navigation }) {
         .then(async (userCredential) => {
           return userCredential.user.getIdToken().then((id_token) => {
             const appServerUser = {
-              firstname: "App",
-              lastname: "App",
+              firstname: user.firstname,
+              lastname: user.lastname,
               email: user.email,
-              phonenumber: "650-543-4800",
-              country: "USA",
-              birthdate: "1984-05-14",
+              phonenumber: user.phonenumber,
+              country: user.country,
+              birthdate: user.birthdate,
               photo:
                 "https://melmagazine.com/wp-content/uploads/2020/07/zuck_sunscreen.jpg",
             };
@@ -99,29 +110,71 @@ function SignUpScreen({ route, navigation }) {
       <BnbMainView>
         <Separator style={{ borderBottomWidth: 0 }}></Separator>
         <BnbBodyView>
-          <BnbTextInputObject
-            name="E-Mail"
-            id={"email"}
-            object={user}
-            editable={true}
-            onChange={_handleTextChange}
-            customStyle={bnbStyleSheet.bubbleContainer}
-          />
-          <Separator style={{ borderBottomWidth: 0 }} />
-          <BnbTextInputObject
-            name="Contraseña"
-            id={"password"}
-            object={user}
-            editable={true}
-            onChange={_handleTextChange}
-            customStyle={bnbStyleSheet.bubbleContainer}
-          />
-          <Separator style={{ borderBottomWidth: 0 }} />
-          <BnbButton
-            title="Crear cuenta"
-            onPress={_handleCreateUserButtonPress}
-            style={styles.signIn}
-          />
+          <ScrollView>
+            <BnbTextInputObject
+              name="E-Mail"
+              id={"email"}
+              object={user}
+              editable={true}
+              onChange={_handleTextChange}
+              customStyle={bnbStyleSheet.bubbleContainer}
+            />
+            <Separator style={{ borderBottomWidth: 0 }} />
+            <BnbTextInputObject
+              name="Contraseña"
+              id={"password"}
+              object={user}
+              editable={true}
+              onChange={_handleTextChange}
+              customStyle={bnbStyleSheet.bubbleContainer}
+            />
+            <BnbTextInputObject
+              name="Nombre"
+              id={"firstname"}
+              object={user}
+              editable={true}
+              onChange={_handleTextChange}
+              customStyle={bnbStyleSheet.bubbleContainer}
+            />
+            <BnbTextInputObject
+              name="Apellido"
+              id={"lastname"}
+              object={user}
+              editable={true}
+              onChange={_handleTextChange}
+              customStyle={bnbStyleSheet.bubbleContainer}
+            />
+            <BnbTextInputObject
+              name="Numero de telefono"
+              id={"phonenumber"}
+              object={user}
+              editable={true}
+              onChange={_handleTextChange}
+              customStyle={bnbStyleSheet.bubbleContainer}
+            />
+            <BnbTextInputObject
+              name="Pais"
+              id={"country"}
+              object={user}
+              editable={true}
+              onChange={_handleTextChange}
+              customStyle={bnbStyleSheet.bubbleContainer}
+            />
+            <BnbTextInputObject
+              name="Fecha de nacimiento"
+              id={"birthdate"}
+              object={user}
+              editable={true}
+              onChange={_handleTextChange}
+              customStyle={bnbStyleSheet.bubbleContainer}
+            />
+            <Separator style={{ borderBottomWidth: 0 }} />
+            <BnbButton
+              title="Crear cuenta"
+              onPress={_handleCreateUserButtonPress}
+              style={styles.signIn}
+            />
+          </ScrollView>
 
           <Separator style={{ borderBottomWidth: 0 }}></Separator>
           {_sign_in_error != "" && (

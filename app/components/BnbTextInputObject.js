@@ -11,10 +11,11 @@ import Separator from "./Separator";
 const BnbTextInputObject = (props) => {
   return (
     <View style={styles.mainContainer}>
+      <Separator style={{ borderBottomWidth: 0 }}></Separator>
+
       <Text style={{ ...bnbStyleSheet.subTitle, ...props.keyText }}>
         {props.name}
       </Text>
-      <Separator style={{ borderBottomWidth: 0 }}></Separator>
       <View
         elevation={5}
         style={{ ...styles.customStyle, ...props.customStyle }}
