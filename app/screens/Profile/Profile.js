@@ -30,7 +30,7 @@ function Profile({ route, navigation }) {
   };
 
   const _handleRoomsInfoPress = () => {
-    navigation.navigate("RoomCreate");
+    navigation.navigate("ProfileRooms");
   };
 
   const _handleProfileImagePress = () => {
@@ -52,6 +52,7 @@ function Profile({ route, navigation }) {
     { id: 0, title: "Informacion de la cuenta" },
     { id: 1, title: "Habitaciones" },
   ];
+
   const ICONS = [PROFILE_ICON, ROOM_ICON];
   const HANDLERS = [_handleProfileInfoPress, _handleRoomsInfoPress];
 

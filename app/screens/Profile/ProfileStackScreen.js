@@ -8,6 +8,7 @@ import constants from "../../constant/constants";
 import BnbLoading from "../../components/BnbLoading";
 import BnbSecureStore from "../../classes/BnbSecureStore";
 import BnbHeaderUserInfo from "../../components/BnbHeaderUserInfo";
+import ProfileRoomsScreen from "./ProfileRoomsScreen";
 
 const ProfileStack = createStackNavigator();
 
@@ -32,6 +33,10 @@ function ProfileStackScreen(props) {
       >
         <ProfileStack.Screen name="Profile" component={Profile} />
         <ProfileStack.Screen name="ProfileInfo" component={ProfileInfoScreen} />
+        <ProfileStack.Screen
+          name="ProfileRooms"
+          component={ProfileRoomsScreen}
+        />
         <ProfileStack.Screen name="RoomCreate" component={RoomCreateScreen} />
         <ProfileStack.Screen name="ProfileImage" component={ImagePickScreen} />
       </ProfileStack.Navigator>
