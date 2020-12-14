@@ -18,6 +18,7 @@ function Profile({ route, navigation }) {
   const ROOM_ICON = require("../../assets/house_logo.png");
 
   const [storedUser, setStoredUser] = useState();
+
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
       setStoredUser(response);
@@ -43,6 +44,7 @@ function Profile({ route, navigation }) {
     firebase.auth
       .signOut()
       .then(() => console.log(storedUser.email + " Cerro sesion"));
+    //.then(BnbSecureStore.clear(constants.CACHE_USER_KEY));
     navigation.navigate("Welcome");
   };
 

@@ -29,14 +29,12 @@ const HomeStack = createStackNavigator();
 
 function HomeStackScreen() {
   /**https://stackoverflow.com/questions/61281739/how-do-i-access-promise-callback-value-outside-of-the-function */
+
+  /**Uso el observer en vez del SecureStore porque este screen no se aactualiza nunca
+   * por lo tanto queda el store de la sesion anterior
+   */
   const [user, initializing] = useGetCurrentSignedInUser();
 
-  /**const [storedUser, setStoredUser] = useState();
-  useEffect(() => {
-    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
-      setStoredUser(response);
-    });
-  }, []);*/
   if (initializing) {
     return <BnbLoading></BnbLoading>;
   } else {
@@ -71,6 +69,7 @@ function SearchStackScreen() {
       setStoredUser(response);
     });
   }, []);
+
   if (!storedUser) {
     return <BnbLoading></BnbLoading>;
   } else {

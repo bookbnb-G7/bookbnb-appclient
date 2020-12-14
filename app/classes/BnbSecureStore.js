@@ -17,9 +17,9 @@ class BnbSecureStore {
 
   static async remember(key, value) {
     try {
-      if (key == constants.CACHE_USER_KEY) {
+      /**if (key == constants.CACHE_USER_KEY) {
         value = value.toJSON();
-      }
+      }*/
       await SecureStore.setItemAsync(key, JSON.stringify(value));
     } catch (e) {
       console.log(e);

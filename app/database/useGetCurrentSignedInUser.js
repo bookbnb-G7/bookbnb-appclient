@@ -11,7 +11,15 @@ function useGetCurrentSignedInUser(props) {
     setUser(user);
     if (user) {
       /**Si el user no es null, es decir se logeo, lo guardo */
-      BnbSecureStore.remember(constants.CACHE_USER_KEY, user);
+      /**Guardo solo lo importante del user para poder instanciarlo correctamente */
+      user.getIdToken().then((id_token) => {
+        const store_user = {
+          email: user.email,
+          auth_token: id_token,
+        };
+        console.log("userGetCurrentSignedUser:" + JSON.stringify(store_user));
+        BnbSecureStore.remember(constants.CACHE_USER_KEY, store_user);
+      });
     }
     if (initializing) {
       setInitializing(false);

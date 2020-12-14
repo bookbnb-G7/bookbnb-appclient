@@ -13,10 +13,9 @@ import bnbStyleSheet from "../constant/bnbStyleSheet";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import isANumber from "../helpers/isANumber";
 import BnbLoading from "../components/BnbLoading";
-import firebase from "../database/firebase";
 import constants from "../constant/constants";
 import BnbSecureStore from "../classes/BnbSecureStore";
-import useGetCurrentSignedInUser from "../database/useGetCurrentSignedInUser";
+import urls from "../constant/urls";
 
 function RoomCreateScreen({ navigation }) {
   const [_room, setRoom] = useState({
@@ -24,57 +23,18 @@ function RoomCreateScreen({ navigation }) {
     price_per_day: "",
   });
   const [_is_awaiting, setIsAwaiting] = useState(false);
-  //const [_initializing, setInitializing] = useState(true);
-  //const [user, setUser] = useState();
-  const [_token, setToken] = useState("null");
-  const rooms_url = "https://bookbnb-appserver.herokuapp.com/rooms";
+  const [storedUser, setStoredUser] = useState();
+
+  useEffect(() => {
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
+      setStoredUser(response);
+    });
+  }, []);
 
   const _handleTextChange = (key, value) => {
     setRoom({ ..._room, [key]: value });
   };
 
-  const [user, initializing] = useGetCurrentSignedInUser();
-  useEffect(() => {
-    if (user) {
-      user.getIdToken().then((response) => {
-        setToken(response);
-        console.log("Auth: " + _token);
-      });
-    }
-  }, [user]);
-
-  /**Al parecer, storear el user en SecureStore hace que "pierda" los metodos */
-  const [storedUser, setStoredUser] = useState();
-  useEffect(() => {
-    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
-      setStoredUser(response);
-      if (storedUser) {
-        /**console.log(storedUser.getIdToken()).then((response) => {
-            setToken(response);
-            console.log("Auth token: " + _token);
-          });*/
-      }
-    });
-  }, []);
-
-  /**function onAuthStateChanged(user) {
-    setUser(user);
-    if (user) {
-      user.getIdToken().then((response) => {
-        setToken(response);
-        console.log("Auth token:" + token);
-      });
-    }
-    if (_initializing) {
-      setInitializing(false);
-    }
-  }
-
-  useEffect(() => {
-    const suscriber = firebase.auth.onAuthStateChanged(onAuthStateChanged);
-    return suscriber; // unsuscribe on unmount
-  }, []);
-*/
   const _handleApiResponse = (data) => {
     /**BnbAlert(
       "Creación de habitación",
@@ -103,14 +63,14 @@ function RoomCreateScreen({ navigation }) {
     if (isANumber(_room.price_per_day.toString())) {
       httpPostTokenRequest(
         "POST",
-        rooms_url,
+        urls.URL_ROOMS,
         {
           type: _room.type,
           price_per_day: _room.price_per_day,
         },
         {
           "Content-Type": "application/json",
-          "x-access-token": _token,
+          "x-access-token": storedUser.auth_token,
         },
         _handleApiResponse,
         _handleApiError
@@ -125,11 +85,14 @@ function RoomCreateScreen({ navigation }) {
     navigation.goBack();
   };
 
-  //if (!storedUser) return <BnbLoading></BnbLoading>;
-  if (initializing) return <BnbLoading></BnbLoading>;
+  /**
+   * if(continue){
+   * <PickAnImage>
+   * }
+   */
 
   if (_is_awaiting) {
-    return <BnbLoading text="Creando habitacion"></BnbLoading>;
+    return <BnbLoading text="Creando habitacion..."></BnbLoading>;
   } else {
     return (
       <BnbMainView>
@@ -159,14 +122,12 @@ function RoomCreateScreen({ navigation }) {
             <Text style={styles.titleText}>Vista previa</Text>
             <Text>Descripcion: {_room.type}</Text>
             <Text>Precio por dia: {_room.price_per_day}</Text>
-            <Text>Cuenta actual: {user.email}</Text>
           </View>
           <BnbContainer>
-            {_token != "null" && (
+            <BnbButton title="Cancelar" onPress={_handleGoBackButtonPress} />
+            {storedUser && (
               <BnbButton title="Continuar" onPress={_handleNextButtonPress} />
             )}
-
-            <BnbButton title="Cancelar" onPress={_handleGoBackButtonPress} />
           </BnbContainer>
         </BnbBodyView>
       </BnbMainView>
