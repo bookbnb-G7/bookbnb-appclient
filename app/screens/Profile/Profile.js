@@ -34,10 +34,7 @@ function Profile({ route, navigation }) {
   };
 
   const _handleProfileImagePress = () => {
-    //navigation.navigate("ProfileImage", { id: id, user: user });
-    /**const url =
-      "https://bookbnb-appserver.herokuapp.com/users/" + id + "/photo";
-    navigation.navigate("ProfileImage", { image_uri: user.photo, url: url });*/
+    //navigation.navigate("ImagePick", { image_uri: user.photo, url: url });
   };
 
   const _handleLogOutButton = () => {
@@ -67,7 +64,12 @@ function Profile({ route, navigation }) {
           <View style={styles.leftColumn}>
             <View style={styles.logoContainer}>
               <TouchableOpacity onPress={_handleProfileImagePress}>
-                <Image source={PROFILE_ICON} style={styles.userLogo}></Image>
+                {storedUser && (
+                  <Image
+                    source={{ uri: storedUser.userData.photo }}
+                    style={styles.userLogo}
+                  ></Image>
+                )}
               </TouchableOpacity>
             </View>
           </View>

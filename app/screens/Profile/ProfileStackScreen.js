@@ -38,7 +38,7 @@ function ProfileStackScreen(props) {
           component={ProfileRoomsScreen}
         />
         <ProfileStack.Screen name="RoomCreate" component={RoomCreateScreen} />
-        <ProfileStack.Screen name="ProfileImage" component={ImagePickScreen} />
+        <ProfileStack.Screen name="ImagePick" component={ImagePickScreen} />
       </ProfileStack.Navigator>
     );
   }

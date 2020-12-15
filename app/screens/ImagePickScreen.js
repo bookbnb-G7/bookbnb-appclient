@@ -10,13 +10,20 @@ import httpPostImage from "../helpers/httpPostImage";
 import pickAnImage from "../helpers/pickAnImage";
 import useRequestCameraPermissions from "../helpers/useRequestCameraPermissions";
 import BnbLoading from "../components/BnbLoading";
+import BnbSecureStore from "../classes/BnbSecureStore";
+import constants from "../constant/constants";
 
 /**Version mejorada, la idea es que al sleccionar una imagen, ya sea de perfil o de la lista
  * de fotos del room, me derive a esta pantalla para editarla
  */
 function ImagePickScreen({ route, navigation }) {
-  const { image_uri, url } = route.params;
-  const [image, setImage] = useState(image_uri);
+  const [storedUser, setStoredUser] = useState();
+
+  useEffect(() => {
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
+      setStoredUser(user);
+    });
+  }, []);
 
   const _handleApiResponse = () => {
     BnbAlert("Imagen", "Imagen actualizada con exito", "Entendido", false);
