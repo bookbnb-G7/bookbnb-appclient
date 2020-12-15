@@ -27,6 +27,7 @@ function CalendarScreen({ route, navigation }) {
         <BnbButton
           title="Siguiente"
           onPress={_handleNextButtonPress}
+          style={styles.button}
         ></BnbButton>
       </BnbBodyView>
     </BnbMainView>
@@ -43,6 +44,9 @@ const styles = StyleSheet.create({
   locationText: {
     alignSelf: "center",
     fontWeight: "bold",
+  },
+  button: {
+    width: "100%",
   },
 });
 

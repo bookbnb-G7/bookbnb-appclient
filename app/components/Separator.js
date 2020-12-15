@@ -4,7 +4,12 @@ import colors from "../config/colors";
 import styling from "../config/styling";
 
 const Separator = (props) => (
-  <View style={{ ...styles.separator, ...props.style }}></View>
+  <View
+    style={{
+      ...styles.separator,
+      ...props.style,
+    }}
+  ></View>
 );
 
 const styles = StyleSheet.create({

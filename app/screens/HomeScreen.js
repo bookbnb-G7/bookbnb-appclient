@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -10,39 +10,39 @@ import {
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
-import colors from "../config/colors";
+import styling from "../config/styling";
+import BnbSecureStore from "../classes/BnbSecureStore";
+import constants from "../constant/constants";
 
 const bnb_book_logo = require("../assets/Bookbnb_logo.png");
 const background = require("../assets/background_2.png");
 
 function HomeScreen({ navigation }) {
+  const [storedUser, setStoredUser] = useState();
+
+  useEffect(() => {
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
+      setStoredUser(response);
+    });
+  }, []);
+
   function _handleSearchRoomsButton() {
     navigation.navigate("SearchRooms");
   }
 
-  const _handleSearchUsersButton = () => {
-    navigation.navigate("SearchUsers");
-  };
-
-  const _handleRegisterButton = () => {
-    navigation.navigate("SignUp");
-  };
-
   return (
-    <BnbMainView style={styles.white}>
-      <Image style={styles.logo} source={bnb_book_logo}></Image>
-      <BnbBodyView style={styles.bodyContainer}>
-        <ImageBackground source={background} style={styles.background}>
-          <View style={styles.optionsContainer}>
+    <BnbMainView style={styles.mainContainer}>
+      <ImageBackground source={background} style={styles.background}>
+        <Image style={styles.logo} source={bnb_book_logo}></Image>
+        <View style={styles.optionsContainer}>
+          {storedUser && (
             <BnbButton
               onPress={_handleSearchRoomsButton}
               title={"Buscar Habitaciones"}
             />
-            <BnbButton onPress={_handleSearchUsersButton} title={"Ingresar"} />
-            <BnbButton onPress={_handleRegisterButton} title={"Registrarse"} />
-          </View>
-        </ImageBackground>
-      </BnbBodyView>
+          )}
+        </View>
+      </ImageBackground>
     </BnbMainView>
   );
 }
@@ -50,8 +50,8 @@ function HomeScreen({ navigation }) {
 const dimensions = Dimensions.get("window");
 
 const styles = StyleSheet.create({
-  white: {
-    backgroundColor: colors.graySoft,
+  mainContainer: {
+    //backgroundColor: colors.graySoft,
   },
   optionsContainer: {
     flex: 1,
@@ -69,9 +69,12 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     alignSelf: "center",
+    borderRadius: styling.bigCornerRadius,
+    backgroundColor: "white",
   },
   background: {
     flex: 1,
+    paddingVertical: 10,
     //width: "100%",
     //resizeMode: "repeat",
   },

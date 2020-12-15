@@ -5,6 +5,7 @@ export default {
   text: "black",
   subText: "grey",
   warning: "red",
+  error: "red",
   success: "green",
   white: "#fff",
   separator: "#737373",
