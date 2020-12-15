@@ -77,7 +77,7 @@ function SearchStackScreen() {
       <SearchStack.Navigator
         screenOptions={{
           headerRight: (props) => (
-            <BnbHeaderUserInfo userEmail={storedUser.email} />
+            <BnbHeaderUserInfo userEmail={storedUser.userData.email} />
           ),
         }}
       >

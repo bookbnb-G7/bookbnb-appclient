@@ -26,7 +26,7 @@ function Profile({ route, navigation }) {
   }, []);
 
   const _handleProfileInfoPress = () => {
-    //navigation.navigate("ProfileInfo", { user: user, is_owner: true, id: id });
+    navigation.navigate("ProfileInfo");
   };
 
   const _handleRoomsInfoPress = () => {
@@ -43,8 +43,7 @@ function Profile({ route, navigation }) {
   const _handleLogOutButton = () => {
     firebase.auth
       .signOut()
-      .then(() => console.log(storedUser.email + " Cerro sesion"));
-    //.then(BnbSecureStore.clear(constants.CACHE_USER_KEY));
+      .then(() => console.log(storedUser.userData.email + " Cerro sesion"));
     navigation.navigate("Welcome");
   };
 
@@ -74,7 +73,7 @@ function Profile({ route, navigation }) {
           </View>
           <View style={styles.rightColumn}>
             {storedUser && (
-              <Text style={styles.userName}>{storedUser.email}</Text>
+              <Text style={styles.userName}>{storedUser.userData.email}</Text>
             )}
           </View>
         </View>

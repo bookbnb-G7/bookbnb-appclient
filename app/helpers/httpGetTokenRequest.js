@@ -12,7 +12,7 @@ async function httpGetTokenRequest(method, url, header, onResponse, onError) {
       const data = await response.json();
       if (response.ok) {
         if (onResponse) onResponse(data);
-        console.log("httpGet:" + JSON.stringify(data));
+        //console.log("httpGet:" + JSON.stringify(data));
         return data;
       } else {
         const error = (data && JSON.stringify(data)) || response.statusText;

@@ -46,20 +46,15 @@ function UserLoginScreen({ navigation }) {
             );
             if (data) {
               const storeUser = {
-                email: userCredential.user.email,
                 auth_token: id_token,
-                user_id: data.id,
+                userData: data,
               };
-              BnbSecureStore.clear(constants.CACHE_USER_KEY).then(
-                BnbSecureStore.remember(
-                  constants.CACHE_USER_KEY,
-                  storeUser
-                ).then(() => {
+              BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser).then(
+                () => {
                   navigation.navigate("Home");
-                })
+                }
               );
             }
-            setIsAwaiting(false);
           });
         })
         .catch((error) => {

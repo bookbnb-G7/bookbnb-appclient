@@ -74,9 +74,8 @@ function SignUpScreen({ route, navigation }) {
             }).then((data) => {
               if (data) {
                 const storeUser = {
-                  email: userCredential.user.email,
                   auth_token: id_token,
-                  user_id: data.id,
+                  userData: data,
                 };
                 BnbSecureStore.remember(
                   constants.CACHE_USER_KEY,

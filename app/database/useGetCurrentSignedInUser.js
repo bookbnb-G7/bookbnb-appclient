@@ -13,6 +13,9 @@ function useGetCurrentSignedInUser(props) {
     setUser(user);
 
     /**TODO: ver de meter aca el BnbSecureStore del SignIn y del Login */
+    /**En signup hago un POST pero en login hago un GET y en el logout o
+     * cuando recien inicia user es null*/
+
     if (initializing) {
       setInitializing(false);
     }

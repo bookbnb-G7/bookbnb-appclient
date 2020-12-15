@@ -1,50 +1,82 @@
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-import { useScreens } from "react-native-screens";
 import BnbBodyView from "../../components/BnbBodyView";
 import BnbButton from "../../components/BnbButton";
 import BnbMainView from "../../components/BnbMainView";
 import BnbTitleText from "../../components/BnbTitleText";
 import colors from "../../config/colors";
 import fonts from "../../config/fonts";
-import styling from "../../config/styling";
 import Separator from "../../components/Separator";
-import httpPostRequest from "../../helpers/httpPostRequest";
-import httpGetRequest from "../../helpers/httpGetRequest";
 import BnbAlert from "../../components/BnbAlert";
+import BnbSecureStore from "../../classes/BnbSecureStore";
+import constants from "../../constant/constants";
+import httpPostTokenRequest from "../../helpers/httpPostTokenRequest";
+import urls from "../../constant/urls";
+import BnbTextInputObject from "../../components/BnbTextInputObject";
+import BnbLoading from "../../components/BnbLoading";
 
 function ProfileInfoScreen({ route, navigation }) {
-  const { user, is_owner, id } = route.params;
-
   const [_is_editing, setIsEditing] = useState(false);
+  const [_is_awaiting, setIsAwaiting] = useState(false);
+  const [storedUser, setStoredUser] = useState();
+  const [userNames, setUserNames] = useState({ firstname: "", lastname: "" });
+
+  const _handleApiResponse = (data) => {
+    /**copio */
+    let userData = storedUser.userData;
+
+    /**modifico */
+    userData["firstname"] = data.firstname;
+    userData["lastname"] = data.lastname;
+
+    /**armo de nuevo */
+    const storeUser = {
+      auth_token: storedUser.auth_token,
+      userData: userData,
+    };
+
+    /**guardo */
+    //console.log("\nNuevo storedUser:" + JSON.stringify(storeUser));
+    BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser).then(() => {
+      setIsAwaiting(false);
+      setIsEditing(false);
+    });
+  };
+
+  const _handleApiError = () => {
+    setIsAwaiting(false);
+    setIsEditing(false);
+  };
 
   const _handleToggleEditButtonPress = () => {
     setIsEditing(!_is_editing);
   };
 
-  const _handleApiResponse = (data) => {
-    //alert(JSON.stringify(data));
-  };
-
   const _handleFinishEditingButtonPress = () => {
     setIsEditing(false);
-    httpPostRequest(
+    setIsAwaiting(true);
+    httpPostTokenRequest(
       "PATCH",
-      "http://bookbnb-appserver.herokuapp.com/users/" + id,
-      user,
-      _handleApiResponse
+      urls.URL_USERS + "/" + storedUser.userData.id,
+      userNames,
+      {
+        "Content-Type": "application/json",
+        "x-access-token": storedUser.auth_token,
+      },
+      _handleApiResponse,
+      _handleApiError
     );
   };
 
   const _handleConfirmDelete = () => {
     setIsEditing(false);
-    httpGetRequest(
+    /**httpGetRequest(
       "DELETE",
       "http://bookbnb-appserver.herokuapp.com/users/" + id,
       _handleApiResponse
     );
-    navigation.navigate("Home");
+    navigation.navigate("Home");*/
   };
 
   const _handleDeleteAccountButtonPress = () => {
@@ -54,7 +86,7 @@ function ProfileInfoScreen({ route, navigation }) {
       "Si acepta la cuenta sera eliminada permanentemente",
       [
         {
-          text: "Cancel",
+          text: "Cancelar",
           style: "cancel",
         },
         { text: "OK", onPress: _handleConfirmDelete },
@@ -63,9 +95,27 @@ function ProfileInfoScreen({ route, navigation }) {
     );
   };
 
-  const _changeUserState = (key, value) => {
-    user[key] = value;
+  const _handleTextChange = (key, value) => {
+    setUserNames({ ...userNames, [key]: value });
   };
+
+  useEffect(() => {
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
+      setStoredUser(user);
+      setUserNames({
+        firstname: user.userData.firstname,
+        lastname: user.userData.lastname,
+      });
+    });
+  }, []);
+
+  if (!storedUser) {
+    return <BnbLoading></BnbLoading>;
+  }
+
+  if (_is_awaiting) {
+    return <BnbLoading text="Guardando cambios..."></BnbLoading>;
+  }
 
   return (
     <BnbMainView style={{ backgroundColor: "white" }}>
@@ -76,37 +126,32 @@ function ProfileInfoScreen({ route, navigation }) {
           </BnbTitleText>
           <View style={styles.userInfoContainer}>
             <View>
-              {Object.entries(user).map(([key, value]) => {
-                return (
-                  <View key={key}>
-                    <Separator />
-                    <View style={styles.row}>
-                      <Text style={styles.leftUserFieldText}>{key}: </Text>
-                      <TextInput
-                        style={styles.rightUserFieldText}
-                        defaultValue={value}
-                        editable={_is_editing}
-                        multiline
-                        onChangeText={(text) => _changeUserState(key, text)}
-                      ></TextInput>
-                    </View>
-                  </View>
-                );
-              })}
+              <BnbTextInputObject
+                name="Nombre"
+                id="firstname"
+                object={userNames}
+                onChange={_handleTextChange}
+                editable={_is_editing}
+              ></BnbTextInputObject>
+              <BnbTextInputObject
+                name="Apellido"
+                id="lastname"
+                object={userNames}
+                onChange={_handleTextChange}
+                editable={_is_editing}
+              ></BnbTextInputObject>
             </View>
           </View>
           <View style={styles.buttonContainer}>
-            {is_owner && (
-              <BnbButton
-                title={_is_editing ? "Aceptar cambios" : "Editar tus datos"}
-                onPress={
-                  _is_editing
-                    ? _handleFinishEditingButtonPress
-                    : _handleToggleEditButtonPress
-                }
-              />
-            )}
-            {is_owner && _is_editing && (
+            <BnbButton
+              title={_is_editing ? "Aceptar cambios" : "Editar tus datos"}
+              onPress={
+                _is_editing
+                  ? _handleFinishEditingButtonPress
+                  : _handleToggleEditButtonPress
+              }
+            />
+            {_is_editing && (
               <BnbButton
                 title="Cancelar cambios"
                 onPress={_handleToggleEditButtonPress}
@@ -114,7 +159,7 @@ function ProfileInfoScreen({ route, navigation }) {
             )}
           </View>
           <Separator></Separator>
-          {is_owner && _is_editing && (
+          {_is_editing && (
             <View style={styles.deleteAccountContainer}>
               <BnbTitleText style={styles.subTitle}>
                 Eliminar tu cuenta
