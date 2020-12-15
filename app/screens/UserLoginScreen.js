@@ -11,6 +11,9 @@ import firebase from "../database/firebase";
 import constants from "../constant/constants";
 import BnbLoading from "../components/BnbLoading";
 import colors from "../config/colors";
+import BnbSecureStore from "../classes/BnbSecureStore";
+import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
+import urls from "../constant/urls";
 
 function UserLoginScreen({ navigation }) {
   const [_user, setUser] = useState({
@@ -28,12 +31,36 @@ function UserLoginScreen({ navigation }) {
     if (_user.email == "" || _user.password == "") {
       setLoginError(constants.ERR_EMPTY_FIELD);
     } else {
+      setLoginError("");
       setIsAwaiting(true);
       firebase.auth
         .signInWithEmailAndPassword(_user.email, _user.password)
-        .then((userCredential) => {
-          //TODO crear una API que maneje los request de la database ApiDatabase
-          navigation.navigate("Home");
+        .then(async (userCredential) => {
+          return userCredential.user.getIdToken().then(async (id_token) => {
+            const data = await httpGetTokenRequest(
+              "GET",
+              urls.URL_USERS + "/me",
+              {
+                "x-access-token": id_token,
+              }
+            );
+            if (data) {
+              const storeUser = {
+                email: userCredential.user.email,
+                auth_token: id_token,
+                user_id: data.id,
+              };
+              BnbSecureStore.clear(constants.CACHE_USER_KEY).then(
+                BnbSecureStore.remember(
+                  constants.CACHE_USER_KEY,
+                  storeUser
+                ).then(() => {
+                  navigation.navigate("Home");
+                })
+              );
+            }
+            setIsAwaiting(false);
+          });
         })
         .catch((error) => {
           setIsAwaiting(false);

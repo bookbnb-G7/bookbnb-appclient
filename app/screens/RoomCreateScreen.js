@@ -36,27 +36,26 @@ function RoomCreateScreen({ navigation }) {
   };
 
   const _handleApiResponse = (data) => {
-    /**BnbAlert(
+    BnbAlert(
       "Creación de habitación",
       "Habitacion creada con exito",
       "Entendido",
       false
-    );*/
-    //navigation.navigate("Profile");
-    //TODO: navigation.navigate("ImageEditScreen")
-
+    );
     setIsAwaiting(false);
+    navigation.navigate("Profile");
+    //TODO: navigation.navigate("ImageEditScreen")
   };
 
   const _handleApiError = (error) => {
-    /**BnbAlert(
+    BnbAlert(
       "Creación de habitación",
       "No se pudo crear la habitación",
       "Entendido",
       false
-    );*/
+    );
     setIsAwaiting(false);
-    //navigation.navigate("Profile");
+    navigation.navigate("Profile");
   };
 
   const _handleNextButtonPress = () => {

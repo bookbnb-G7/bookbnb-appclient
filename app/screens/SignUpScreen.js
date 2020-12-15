@@ -36,15 +36,6 @@ function SignUpScreen({ route, navigation }) {
   const [_sign_in_error, setSignInError] = useState("");
   const [_is_awaiting, setIsAwaiting] = useState(false);
 
-  const _handleApiResponse = (data) => {
-    setIsAwaiting(false);
-    navigation.navigate("Home");
-  };
-
-  const _handleApiError = () => {
-    setIsAwaiting(false);
-  };
-
   const _handleTextChange = (key, value) => {
     setUser((prevState) => ({
       ...prevState,
@@ -77,17 +68,25 @@ function SignUpScreen({ route, navigation }) {
               photo:
                 "https://melmagazine.com/wp-content/uploads/2020/07/zuck_sunscreen.jpg",
             };
-            httpPostTokenRequest(
-              "POST",
-              urls.URL_USERS,
-              appServerUser,
-              {
-                "Content-Type": "application/json",
-                "x-access-token": id_token,
-              },
-              _handleApiResponse,
-              _handleApiError
-            );
+            httpPostTokenRequest("POST", urls.URL_USERS, appServerUser, {
+              "Content-Type": "application/json",
+              "x-access-token": id_token,
+            }).then((data) => {
+              if (data) {
+                const storeUser = {
+                  email: userCredential.user.email,
+                  auth_token: id_token,
+                  user_id: data.id,
+                };
+                BnbSecureStore.remember(
+                  constants.CACHE_USER_KEY,
+                  storeUser
+                ).then(() => {
+                  navigation.navigate("Home");
+                });
+              }
+              setIsAwaiting(false);
+            });
           });
         })
         .catch((error) => {

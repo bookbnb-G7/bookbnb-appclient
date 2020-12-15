@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
+import urls from "../constant/urls";
 import firebase from "../database/firebase";
+import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 
 function useGetCurrentSignedInUser(props) {
   const [user, setUser] = useState();
@@ -9,18 +11,8 @@ function useGetCurrentSignedInUser(props) {
 
   function _onAuthStateChanged(user) {
     setUser(user);
-    if (user) {
-      /**Si el user no es null, es decir se logeo, lo guardo */
-      /**Guardo solo lo importante del user para poder instanciarlo correctamente */
-      user.getIdToken().then((id_token) => {
-        const store_user = {
-          email: user.email,
-          auth_token: id_token,
-        };
-        console.log("userGetCurrentSignedUser:" + JSON.stringify(store_user));
-        BnbSecureStore.remember(constants.CACHE_USER_KEY, store_user);
-      });
-    }
+
+    /**TODO: ver de meter aca el BnbSecureStore del SignIn y del Login */
     if (initializing) {
       setInitializing(false);
     }
