@@ -18,7 +18,6 @@ function ProfileRoomsScreen({ navigation }) {
     <BnbMainView>
       <BnbBodyView>
         <ScrollView>
-          <Text>DEBUG: aca deberian aparecer los rooms del usuario</Text>
           <View style={styles.bodyContainer}>
             {ROOMS_OPTIONS.map((element) => (
               <View key={element.id}>

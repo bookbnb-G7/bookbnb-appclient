@@ -76,6 +76,7 @@ function RoomScreen({ route, navigation }) {
 
   const _handleRateRoomButtonPress = () => {
     if (_rating.quantity !== 0) {
+      setIsAwaiting(true);
       httpPostTokenRequest(
         "POST",
         urls.URL_ROOMS + "/" + room.id + "/ratings",
@@ -87,7 +88,8 @@ function RoomScreen({ route, navigation }) {
           "Content-Type": "application/json",
           "x-access-token": storedUser.auth_token,
         },
-        _handleApiResponse
+        _handleApiResponse,
+        _handleApiError
       );
       setRating({ quantity: 0 });
     } else {

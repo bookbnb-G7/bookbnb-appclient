@@ -24,8 +24,8 @@ function SignUpScreen({ route, navigation }) {
   const [user, setUser] = useState({
     email: "",
     password: "",
-    firstname: "App",
-    lastname: "App",
+    firstname: "",
+    lastname: "",
     phonenumber: "11-1111111",
     country: "USA",
     birthdate: "1999-11-11",

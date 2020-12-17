@@ -18,6 +18,7 @@ import BnbHeaderUserInfo from "./app/components/BnbHeaderUserInfo";
 import BnbSecureStore from "./app/classes/BnbSecureStore";
 import constants from "./app/constant/constants";
 import HomeStack from "./app/screens/HomeStack";
+import SearchDateTimePicker from "./app/screens/SearchDateTimePicker";
 
 const SearchStack = createStackNavigator();
 
@@ -39,11 +40,15 @@ function SearchStackScreen() {
           headerRight: (props) => (
             <BnbHeaderUserInfo userEmail={storedUser.userData.email} />
           ),
+          headerTitle: "Buscar",
         }}
       >
         <SearchStack.Screen name="SearchRooms" component={SearchRoomsScreen} />
         <SearchStack.Screen name="SearchInput" component={SearchInputScreen} />
-        <SearchStack.Screen name="SearchCalendar" component={CalendarScreen} />
+        <SearchStack.Screen
+          name="SearchDateTimePicker"
+          component={SearchDateTimePicker}
+        />
         <SearchStack.Screen
           name="SearchCounters"
           component={SearchCountersScreen}

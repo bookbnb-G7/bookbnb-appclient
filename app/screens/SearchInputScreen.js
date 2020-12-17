@@ -22,7 +22,8 @@ function SearchInputScreen({ navigation }) {
   });
 
   const _handleEndEditing = () => {
-    navigation.navigate("SearchCalendar", { location: _location_input });
+    //navigation.navigate("SearchCalendar", { location: _location_input });
+    navigation.navigate("SearchDateTimePicker", { location: _location_input });
   };
 
   return (

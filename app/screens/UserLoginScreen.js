@@ -51,6 +51,9 @@ function UserLoginScreen({ navigation }) {
               };
               BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
             } else {
+              /**OJO que si hay un error en el fetch esto CREO que genera un react state update
+               * en un componente desmontado
+               */
               setIsAwaiting(false);
             }
           });
