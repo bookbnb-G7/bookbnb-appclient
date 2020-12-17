@@ -12,52 +12,16 @@ import SearchInputScreen from "./app/screens/SearchInputScreen";
 import CalendarScreen from "./app/screens/CalendarScreen";
 import SearchCountersScreen from "./app/screens/SearchCountersScreen";
 import RoomScreen from "./app/screens/RoomScreen";
-import SearchUsersResultScreen from "./app/screens/SearchUsersResultScreen";
 import ProfileStackScreen from "./app/screens/Profile/ProfileStackScreen";
 import RoomEditScreen from "./app/screens/RoomEditScreen";
 import SignUpScreen from "./app/screens/SignUpScreen";
 import BnbLoading from "./app/components/BnbLoading";
-import BnbMainView from "./app/components/BnbMainView";
-import BnbButton from "./app/components/BnbButton";
 import WelcomeScreen from "./app/screens/WelcomeScreen";
 import useGetCurrentSignedInUser from "./app/database/useGetCurrentSignedInUser";
 import BnbHeaderUserInfo from "./app/components/BnbHeaderUserInfo";
 import BnbSecureStore from "./app/classes/BnbSecureStore";
 import constants from "./app/constant/constants";
-
-const HomeStack = createStackNavigator();
-
-function HomeStackScreen() {
-  /**https://stackoverflow.com/questions/61281739/how-do-i-access-promise-callback-value-outside-of-the-function */
-
-  /**Uso el observer en vez del SecureStore porque este screen no se aactualiza nunca
-   * por lo tanto queda el store de la sesion anterior
-   */
-  const [user, initializing] = useGetCurrentSignedInUser();
-
-  if (initializing) {
-    return <BnbLoading></BnbLoading>;
-  }
-
-  return (
-    <HomeStack.Navigator
-      screenOptions={{
-        headerRight: (props) => (
-          <BnbHeaderUserInfo userEmail={user ? user.email : ""} />
-        ),
-      }}
-    >
-      <HomeStack.Screen name="Welcome" component={WelcomeScreen} />
-      <HomeStack.Screen name="SignUp" component={SignUpScreen} />
-      <HomeStack.Screen name="UserLogin" component={UserLoginScreen} />
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-      <HomeStack.Screen
-        name="SearchUsersResult"
-        component={SearchUsersResultScreen}
-      />
-    </HomeStack.Navigator>
-  );
-}
+import HomeStack from "./app/screens/HomeStack";
 
 const SearchStack = createStackNavigator();
 
@@ -131,7 +95,7 @@ export default function App() {
       >
         <Tab.Screen
           name="HomeStack"
-          component={HomeStackScreen}
+          component={HomeStack}
           options={{ title: "Inicio" }}
         />
         {user && (

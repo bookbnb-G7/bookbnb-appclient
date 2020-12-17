@@ -65,8 +65,7 @@ function SignUpScreen({ route, navigation }) {
               phonenumber: user.phonenumber,
               country: user.country,
               birthdate: user.birthdate,
-              photo:
-                "https://melmagazine.com/wp-content/uploads/2020/07/zuck_sunscreen.jpg",
+              photo: "null",
             };
             httpPostTokenRequest("POST", urls.URL_USERS, appServerUser, {
               "Content-Type": "application/json",
@@ -77,14 +76,11 @@ function SignUpScreen({ route, navigation }) {
                   auth_token: id_token,
                   userData: data,
                 };
-                BnbSecureStore.remember(
-                  constants.CACHE_USER_KEY,
-                  storeUser
-                ).then(() => {
-                  navigation.navigate("Home");
-                });
+                BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
+              } else {
+                /**Si no pongo el else tengo un React update en un unmounted component */
+                setIsAwaiting(false);
               }
-              setIsAwaiting(false);
             });
           });
         })

@@ -49,11 +49,7 @@ function UserLoginScreen({ navigation }) {
                 auth_token: id_token,
                 userData: data,
               };
-              BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser).then(
-                () => {
-                  navigation.navigate("Home");
-                }
-              );
+              BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
             } else {
               setIsAwaiting(false);
             }

@@ -41,7 +41,7 @@ function Profile({ route, navigation }) {
     firebase.auth
       .signOut()
       .then(() => console.log(storedUser.userData.email + " Cerro sesion"));
-    navigation.navigate("Welcome");
+    navigation.navigate("HomeStack");
   };
 
   const PROFILE_OPTIONS = [
