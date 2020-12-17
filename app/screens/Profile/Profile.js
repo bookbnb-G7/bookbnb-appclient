@@ -34,7 +34,7 @@ function Profile({ route, navigation }) {
   };
 
   const _handleProfileImagePress = () => {
-    //navigation.navigate("ImagePick", { image_uri: user.photo, url: url });
+    navigation.navigate("ImagePick");
   };
 
   const _handleLogOutButton = () => {

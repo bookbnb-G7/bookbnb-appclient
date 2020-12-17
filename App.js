@@ -4,8 +4,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import HomeScreen from "./app/screens/HomeScreen";
-import UserLoginScreen from "./app/screens/UserLoginScreen";
 import SearchResultRooms from "./app/screens/SearchResultRooms";
 import SearchRoomsScreen from "./app/screens/SearchRoomsScreen";
 import SearchInputScreen from "./app/screens/SearchInputScreen";
@@ -14,9 +12,7 @@ import SearchCountersScreen from "./app/screens/SearchCountersScreen";
 import RoomScreen from "./app/screens/RoomScreen";
 import ProfileStackScreen from "./app/screens/Profile/ProfileStackScreen";
 import RoomEditScreen from "./app/screens/RoomEditScreen";
-import SignUpScreen from "./app/screens/SignUpScreen";
 import BnbLoading from "./app/components/BnbLoading";
-import WelcomeScreen from "./app/screens/WelcomeScreen";
 import useGetCurrentSignedInUser from "./app/database/useGetCurrentSignedInUser";
 import BnbHeaderUserInfo from "./app/components/BnbHeaderUserInfo";
 import BnbSecureStore from "./app/classes/BnbSecureStore";

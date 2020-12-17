@@ -23,8 +23,6 @@ const pickAnImage = async (props) => {
     };
     return file;
   }
-
-  return {};
 };
 
 export default pickAnImage;

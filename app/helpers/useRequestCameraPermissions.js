@@ -4,7 +4,7 @@ import * as ImagePicker from "expo-image-picker";
 /**El warning salta porque no se puede usar useState si el componente padre esta renderizando
  * hay que ponerle un renderizado condicional
  */
-function useRequestCameraPermissions(props) {
+function useRequestCameraPermissions(callback) {
   const [isGranted, setIsGranted] = useState(false);
   useEffect(() => {
     (async () => {
@@ -13,12 +13,11 @@ function useRequestCameraPermissions(props) {
           status,
         } = await ImagePicker.requestCameraRollPermissionsAsync();
         if (status === "granted") {
-          setIsGranted(true);
+          callback(true);
         }
       }
     })();
   }, []);
-  return isGranted;
 }
 
 export default useRequestCameraPermissions;
