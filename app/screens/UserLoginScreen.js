@@ -54,6 +54,8 @@ function UserLoginScreen({ navigation }) {
                   navigation.navigate("Home");
                 }
               );
+            } else {
+              setIsAwaiting(false);
             }
           });
         })

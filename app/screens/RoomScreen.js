@@ -14,6 +14,11 @@ import constants from "../constant/constants";
 import Separator from "../components/Separator";
 import Counter from "../components/Counter";
 import httpPostRequest from "../helpers/httpPostRequest";
+import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
+import urls from "../constant/urls";
+import BnbSecureStore from "../classes/BnbSecureStore";
+import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
+import BnbLoading from "../components/BnbLoading";
 
 const image = require("../assets/bookbnb_1.png");
 
@@ -23,19 +28,13 @@ function RoomScreen({ route, navigation }) {
   const [_reviews, setReviews] = useState({});
   const [_error, setError] = useState(false);
   const [_is_loaded, setIsLoaded] = useState(false);
+  const [_is_awaiting, setIsAwaiting] = useState(false);
 
   const [_average_rating, setAverageRating] = useState(0);
-
-  const [_review, setReview] = useState("string");
+  const [_review, setReview] = useState("");
   const [_rating, setRating] = useState({
     quantity: 0,
   });
-
-  const URL_REVIEWS =
-    "http://bookbnb-appserver.herokuapp.com/rooms/" + room.id + "/reviews";
-
-  const URL_RATINGS =
-    "http://bookbnb-appserver.herokuapp.com/rooms/" + room.id + "/ratings";
 
   const _handleRatingChange = (counter, offset) => {
     const new_quantity = _rating.quantity + offset;
@@ -46,21 +45,28 @@ function RoomScreen({ route, navigation }) {
   };
 
   const _handleApiResponse = (data) => {
-    //alert(JSON.stringify(data));
+    setIsAwaiting(false);
   };
 
-  /**TODO: @AgustinLeguizamon reviewer esta mockeado */
+  const _handleApiError = () => {
+    setIsAwaiting(false);
+  };
+
   const _handlePostAReview = () => {
     if (_review != "" || _review == "string") {
-      httpPostRequest(
+      setIsAwaiting(true);
+      httpPostTokenRequest(
         "POST",
-        URL_REVIEWS,
+        urls.URL_ROOMS + "/" + room.id + "/reviews",
         {
           review: _review,
-          reviewer: "App",
-          reviewer_id: 0,
         },
-        _handleApiResponse
+        {
+          "Content-Type": "application/json",
+          "x-access-token": storedUser.auth_token,
+        },
+        _handleApiResponse,
+        _handleApiError
       );
       setReview("");
     } else {
@@ -70,13 +76,16 @@ function RoomScreen({ route, navigation }) {
 
   const _handleRateRoomButtonPress = () => {
     if (_rating.quantity !== 0) {
-      httpPostRequest(
+      httpPostTokenRequest(
         "POST",
-        URL_RATINGS,
+        urls.URL_ROOMS + "/" + room.id + "/ratings",
         {
           rating: _rating.quantity,
-          reviewer: "App",
-          reviewer_id: 0,
+        },
+
+        {
+          "Content-Type": "application/json",
+          "x-access-token": storedUser.auth_token,
         },
         _handleApiResponse
       );
@@ -89,24 +98,25 @@ function RoomScreen({ route, navigation }) {
   const _handleRoomDetailsButtonPress = () => {
     navigation.navigate("RoomDetails", { room: room });
   };
-  /**TODO: este useEffect lo repito en muchos casos
-   * podria pasarle un handler por parametro y un
-   * dentro del handler defino un Object{response:{}, loaded:false, error:{}}
-   * con los argumentos del handler que me pasa el customHook e.g useComponentDidMount
-   */
+
+  const _handleGetReviewsResponse = (data) => {
+    setReviews(data);
+    setIsLoaded(true);
+  };
+
+  const _handleGetReviewsError = (error) => {
+    setError(error);
+    setIsLoaded(true);
+  };
+
   useEffect(() => {
-    fetch(URL_REVIEWS)
-      .then((response) => response.json())
-      .then(
-        (response) => {
-          setReviews(response);
-          setIsLoaded(true);
-        },
-        (error) => {
-          setError(error);
-          setIsLoaded(true);
-        }
-      );
+    httpGetTokenRequest(
+      "GET",
+      urls.URL_ROOMS + "/" + room.id + "/reviews",
+      {},
+      _handleGetReviewsResponse,
+      _handleGetReviewsError
+    );
   }, []);
 
   useEffect(() => {
@@ -121,18 +131,21 @@ function RoomScreen({ route, navigation }) {
     getAverageRating();
   }, []);
 
+  const [storedUser, setStoredUser] = useState();
+  useEffect(() => {
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
+      setStoredUser(storedUser);
+    });
+  }, []);
+
   if (_error) {
     return (
       <View>
         <Text>{_error.message}</Text>
       </View>
     );
-  } else if (!_is_loaded) {
-    return (
-      <View>
-        <Text>Cargando...</Text>
-      </View>
-    );
+  } else if (!_is_loaded || !storedUser || _is_awaiting) {
+    return <BnbLoading></BnbLoading>;
   } else {
     return (
       <BnbMainView>

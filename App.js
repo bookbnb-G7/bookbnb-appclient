@@ -37,26 +37,26 @@ function HomeStackScreen() {
 
   if (initializing) {
     return <BnbLoading></BnbLoading>;
-  } else {
-    return (
-      <HomeStack.Navigator
-        screenOptions={{
-          headerRight: (props) => (
-            <BnbHeaderUserInfo userEmail={user ? user.email : ""} />
-          ),
-        }}
-      >
-        <HomeStack.Screen name="Welcome" component={WelcomeScreen} />
-        <HomeStack.Screen name="SignUp" component={SignUpScreen} />
-        <HomeStack.Screen name="UserLogin" component={UserLoginScreen} />
-        <HomeStack.Screen name="Home" component={HomeScreen} />
-        <HomeStack.Screen
-          name="SearchUsersResult"
-          component={SearchUsersResultScreen}
-        />
-      </HomeStack.Navigator>
-    );
   }
+
+  return (
+    <HomeStack.Navigator
+      screenOptions={{
+        headerRight: (props) => (
+          <BnbHeaderUserInfo userEmail={user ? user.email : ""} />
+        ),
+      }}
+    >
+      <HomeStack.Screen name="Welcome" component={WelcomeScreen} />
+      <HomeStack.Screen name="SignUp" component={SignUpScreen} />
+      <HomeStack.Screen name="UserLogin" component={UserLoginScreen} />
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen
+        name="SearchUsersResult"
+        component={SearchUsersResultScreen}
+      />
+    </HomeStack.Navigator>
+  );
 }
 
 const SearchStack = createStackNavigator();
@@ -111,12 +111,12 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName="HomeStack"
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === "Home") {
+            if (route.name === "HomeStack") {
               iconName = "ios-home";
             } else if (route.name === "ProfileStack") {
               iconName = "ios-contact";
@@ -130,7 +130,7 @@ export default function App() {
         })}
       >
         <Tab.Screen
-          name="Home"
+          name="HomeStack"
           component={HomeStackScreen}
           options={{ title: "Inicio" }}
         />
