@@ -31,7 +31,7 @@ class SearchCountersScreen extends Component {
 
   render() {
     return (
-      <BnbMainView>
+      <BnbMainView style={styles.background}>
         <Text style={styles.bigText}>¿Cuantos van a hospedarse?</Text>
         <Separator style={{ borderBottomWidth: 0 }} />
         <BnbBodyView>
@@ -56,6 +56,9 @@ class SearchCountersScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  background: {
+    backgroundColor: colors.redBackground,
+  },
   bigText: {
     color: colors.graySoft,
     fontSize: fonts.bigBig,

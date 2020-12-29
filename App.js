@@ -1,68 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import SearchResultRooms from "./app/screens/SearchResultRooms";
-import SearchRoomsScreen from "./app/screens/SearchRoomsScreen";
-import SearchInputScreen from "./app/screens/SearchInputScreen";
-import CalendarScreen from "./app/screens/CalendarScreen";
-import SearchCountersScreen from "./app/screens/SearchCountersScreen";
-import RoomScreen from "./app/screens/RoomScreen";
 import ProfileStackScreen from "./app/screens/Profile/ProfileStackScreen";
-import RoomEditScreen from "./app/screens/RoomEditScreen";
 import BnbLoading from "./app/components/BnbLoading";
 import useGetCurrentSignedInUser from "./app/database/useGetCurrentSignedInUser";
-import BnbHeaderUserInfo from "./app/components/BnbHeaderUserInfo";
-import BnbSecureStore from "./app/classes/BnbSecureStore";
-import constants from "./app/constant/constants";
 import HomeStack from "./app/screens/HomeStack";
-import SearchDateTimePicker from "./app/screens/SearchDateTimePicker";
-
-const SearchStack = createStackNavigator();
-
-function SearchStackScreen() {
-  const [storedUser, setStoredUser] = useState();
-
-  useEffect(() => {
-    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
-      setStoredUser(response);
-    });
-  }, []);
-
-  if (!storedUser) {
-    return <BnbLoading></BnbLoading>;
-  } else {
-    return (
-      <SearchStack.Navigator
-        screenOptions={{
-          headerRight: (props) => (
-            <BnbHeaderUserInfo userEmail={storedUser.userData.email} />
-          ),
-          headerTitle: "Buscar",
-        }}
-      >
-        <SearchStack.Screen name="SearchRooms" component={SearchRoomsScreen} />
-        <SearchStack.Screen name="SearchInput" component={SearchInputScreen} />
-        <SearchStack.Screen
-          name="SearchDateTimePicker"
-          component={SearchDateTimePicker}
-        />
-        <SearchStack.Screen
-          name="SearchCounters"
-          component={SearchCountersScreen}
-        />
-        <SearchStack.Screen
-          name="SearchResultRooms"
-          component={SearchResultRooms}
-        />
-        <SearchStack.Screen name="Room" component={RoomScreen} />
-        <SearchStack.Screen name="RoomDetails" component={RoomEditScreen} />
-      </SearchStack.Navigator>
-    );
-  }
-}
+import SearchStack from "./app/screens/SearchStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -102,7 +47,7 @@ export default function App() {
         {user && (
           <Tab.Screen
             name="SearchRooms"
-            component={SearchStackScreen}
+            component={SearchStack}
             options={{ title: "Buscar" }}
           />
         )}

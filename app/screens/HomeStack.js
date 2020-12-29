@@ -7,14 +7,14 @@ import HomeScreen from "./HomeScreen";
 import SignUpScreen from "./SignUpScreen";
 import UserLoginScreen from "./UserLoginScreen";
 import WelcomeScreen from "./WelcomeScreen";
-import PasswordRecover from "./PasswordRecover"
+import PasswordRecover from "./PasswordRecover";
 
 const HomeStackNav = createStackNavigator();
 
 function HomeStack(props) {
   /**https://stackoverflow.com/questions/61281739/how-do-i-access-promise-callback-value-outside-of-the-function */
 
-  /**Uso el observer en vez del SecureStore porque este screen no se aactualiza nunca
+  /**Uso el observer en vez del SecureStore porque este screen no se actualiza nunca
    * por lo tanto queda el store de la sesion anterior
    */
   const [user, initializing] = useGetCurrentSignedInUser();
@@ -25,11 +25,14 @@ function HomeStack(props) {
 
   if (!user) {
     return (
-      <HomeStackNav.Navigator screenOptions={{headerShown: false}}>
+      <HomeStackNav.Navigator screenOptions={{ headerShown: false }}>
         <HomeStackNav.Screen name="Welcome" component={WelcomeScreen} />
         <HomeStackNav.Screen name="SignUp" component={SignUpScreen} />
         <HomeStackNav.Screen name="UserLogin" component={UserLoginScreen} />
-        <HomeStackNav.Screen name="PasswordRecover" component={PasswordRecover} />
+        <HomeStackNav.Screen
+          name="PasswordRecover"
+          component={PasswordRecover}
+        />
       </HomeStackNav.Navigator>
     );
   }

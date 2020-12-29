@@ -6,6 +6,7 @@ import BnbIconText from "../components/BnbIconText";
 import BnbMainView from "../components/BnbMainView";
 import fonts from "../config/fonts";
 import Separator from "../components/Separator";
+import colors from "../config/colors";
 
 const icon = require("../assets/bookbnb_1.png");
 
@@ -22,12 +23,11 @@ function SearchInputScreen({ navigation }) {
   });
 
   const _handleEndEditing = () => {
-    //navigation.navigate("SearchCalendar", { location: _location_input });
     navigation.navigate("SearchDateTimePicker", { location: _location_input });
   };
 
   return (
-    <BnbMainView>
+    <BnbMainView style={styles.background}>
       <Separator style={{ borderBottomWidth: 0 }}></Separator>
       <BnbBodyView>
         <TextInput
@@ -45,6 +45,9 @@ function SearchInputScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  background: {
+    backgroundColor: colors.redBackground,
+  },
   searchInputText: {
     fontSize: fonts.big,
   },

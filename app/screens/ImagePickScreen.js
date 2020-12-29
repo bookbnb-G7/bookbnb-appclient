@@ -6,7 +6,6 @@ import BnbBodyView from "../components/BnbBodyView";
 import Separator from "../components/Separator";
 import BnbAlert from "../components/BnbAlert";
 import styling from "../config/styling";
-import httpPostImage from "../helpers/httpPostImage";
 import pickAnImage from "../helpers/pickAnImage";
 import useRequestCameraPermissions from "../helpers/useRequestCameraPermissions";
 import BnbLoading from "../components/BnbLoading";
@@ -94,7 +93,6 @@ function ImagePickScreen({ route, navigation }) {
           _handleApiError,
           true
         );
-        //httpPostImage("PATCH", url, file, _handleApiResponse, _handleApiError);
       }
     });
   };

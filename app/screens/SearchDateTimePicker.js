@@ -45,7 +45,7 @@ function SearchDateTimePicker({ route, navigation }) {
   };
 
   return (
-    <BnbMainView>
+    <BnbMainView style={styles.background}>
       <Text style={styles.bigText}>¿Cuando vas a estar ahí?</Text>
       <BnbBodyView>
         <Text style={styles.locationText}> {location}</Text>
@@ -102,6 +102,9 @@ function SearchDateTimePicker({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  background: {
+    backgroundColor: colors.redBackground,
+  },
   bigText: {
     color: colors.graySoft,
     fontSize: fonts.bigBig,
