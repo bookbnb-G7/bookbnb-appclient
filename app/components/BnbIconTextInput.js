@@ -7,9 +7,9 @@ import fonts from "../config/fonts";
 
 
 const BnbIconTextInput = (props) => (
-    <View style={styles.container}>
+    <View style={{...styles.container, ...props.style}}>
         <Icon style={styles.icon} name={props.iconName} size={17} />
-        <TextInput style={styles.input} placeholder={props.placeholder} onChangeText={props.onChangeText} value={props.value} secureTextEntry={Boolean(props.secureTextEntry)}/>
+        <TextInput style={{...styles.input, ...props.inputStyle}} placeholder={props.placeholder} onChangeText={props.onChangeText} value={props.value} secureTextEntry={Boolean(props.secureTextEntry)}/>
     </View>
 );
 

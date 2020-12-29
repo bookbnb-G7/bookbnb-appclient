@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Button } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbBubbleView from "../components/BnbBubbleView";
@@ -27,6 +27,14 @@ function UserLoginScreen({ navigation }) {
   const _handleTextChange = (name, value) => {
     setUser({ ..._user, [name]: value });
   };
+
+  const _handleForgotPassword = () => {
+    navigation.navigate("PasswordRecover");
+  }
+
+  const _handleSignup = () => {
+    navigation.navigate("SignUp");
+  }
 
   const _handleLoginUserButtonPress = () => {
     if (_user.email == "" || _user.password == "") {
@@ -80,8 +88,30 @@ function UserLoginScreen({ navigation }) {
         <BnbBodyView style={styles.centerContainer}>
           <Image source={require("../assets/Bookbnb_logo.png")} style={styles.image} />
           <View style={styles.centerSubContainer}>
-            <BnbIconTextInput iconName="mail" placeholder="E-mail" onChangeText={(text) => _handleTextChange("email", text)} value={_user.email} />
-            <BnbIconTextInput iconName="lock" placeholder="Contraseña" onChangeText={(text) => _handleTextChange("password", text)} value={_user.password} secureTextEntry={true} />
+            <View>
+              <BnbIconTextInput 
+                iconName="mail" 
+                placeholder="E-mail" 
+                onChangeText={(text) => _handleTextChange("email", text)} 
+                value={_user.email} 
+                style={((_login_error == constants.ERR_EMAIL_INVALID) ? {borderColor: colors.error} : {})} />
+
+              <BnbIconTextInput 
+                iconName="lock" 
+                placeholder="Contraseña" 
+                onChangeText={(text) => _handleTextChange("password", text)} 
+                value={_user.password} 
+                secureTextEntry={true} 
+                style={((_login_error == constants.ERR_PASS_INVALID) ? {borderColor: colors.error} : {})} />
+                
+              <View>
+                <Text style={styles.errorText}> {(_login_error != "") ? _login_error : ""}</Text>
+              </View>
+            </View>
+
+            <TouchableOpacity onPress={_handleForgotPassword} style={styles.forgotPassText}>
+              <Text style={styles.clickableText}>{constants.FORGOT_PASSWORD_MESSAGE}</Text>
+            </TouchableOpacity>
 
             <BnbButton
               title="Ingresar"
@@ -89,11 +119,13 @@ function UserLoginScreen({ navigation }) {
               buttonStyle={styles.loginButton}
               onPress={_handleLoginUserButtonPress}
             />
-            {_login_error != "" && (
-              <View>
-                <Text style={styles.errorText}> {_login_error}</Text>
-              </View>
-            )}
+
+            <View style={styles.inlineTextButton}>
+              <Text>¿No tienes una cuenta?, </Text>
+              <TouchableOpacity onPress={_handleSignup}>
+                <Text style={styles.clickableText}>Registrate</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </BnbBodyView>
       </BnbMainView>
@@ -123,6 +155,11 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.error,
+    textAlign: "left",
+  },
+  clickableText: {
+    textDecorationLine: "underline",
+    textAlign: "center",
   },
   centerContainer: {
     flex: 1,
@@ -135,6 +172,15 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     alignSelf: "center",
   },
+  inlineTextButton: {
+    //flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    margin: 5,
+  },
+  forgotPassText: {
+    margin: 15,
+  }
 });
 
 export default UserLoginScreen;

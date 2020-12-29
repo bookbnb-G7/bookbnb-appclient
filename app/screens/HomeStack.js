@@ -7,6 +7,7 @@ import HomeScreen from "./HomeScreen";
 import SignUpScreen from "./SignUpScreen";
 import UserLoginScreen from "./UserLoginScreen";
 import WelcomeScreen from "./WelcomeScreen";
+import PasswordRecover from "./PasswordRecover"
 
 const HomeStackNav = createStackNavigator();
 
@@ -28,6 +29,7 @@ function HomeStack(props) {
         <HomeStackNav.Screen name="Welcome" component={WelcomeScreen} />
         <HomeStackNav.Screen name="SignUp" component={SignUpScreen} />
         <HomeStackNav.Screen name="UserLogin" component={UserLoginScreen} />
+        <HomeStackNav.Screen name="PasswordRecover" component={PasswordRecover} />
       </HomeStackNav.Navigator>
     );
   }
