@@ -24,7 +24,7 @@ function HomeStack(props) {
 
   if (!user) {
     return (
-      <HomeStackNav.Navigator>
+      <HomeStackNav.Navigator screenOptions={{headerShown: false}}>
         <HomeStackNav.Screen name="Welcome" component={WelcomeScreen} />
         <HomeStackNav.Screen name="SignUp" component={SignUpScreen} />
         <HomeStackNav.Screen name="UserLogin" component={UserLoginScreen} />
