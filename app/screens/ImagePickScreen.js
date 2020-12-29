@@ -14,6 +14,7 @@ import constants from "../constant/constants";
 import * as ImagePicker from "expo-image-picker";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import urls from "../constant/urls";
+import BnbImage from "../components/BnbImage";
 
 /**Version mejorada, la idea es que al sleccionar una imagen, ya sea de perfil o de la lista
  * de fotos del room, me derive a esta pantalla para editarla
@@ -105,15 +106,11 @@ function ImagePickScreen({ route, navigation }) {
     <BnbMainView>
       <Separator></Separator>
       <BnbBodyView>
-        {storedUser && (
-          <View>
-            <Image
-              source={{ uri: storedUser.userData.photo }}
-              style={styles.image}
-            />
-            <Separator />
-          </View>
-        )}
+        <BnbImage
+          imageStyle={styles.image}
+          uri={storedUser ? storedUser.userData.photo : ""}
+        ></BnbImage>
+
         <Text style={styles.textContainer}>
           Seleccione una imagen del rollo de la camara para cambiar la imagen
         </Text>

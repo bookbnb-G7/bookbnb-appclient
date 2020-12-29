@@ -12,6 +12,7 @@ import BnbSecureStore from "../../classes/BnbSecureStore";
 import constants from "../../constant/constants";
 import BnbButton from "../../components/BnbButton";
 import firebase from "../../database/firebase";
+import BnbImage from "../../components/BnbImage";
 
 function Profile({ route, navigation }) {
   const PROFILE_ICON = require("../../assets/profile_icon.png");
@@ -63,14 +64,11 @@ function Profile({ route, navigation }) {
         <View style={styles.twoColumns}>
           <View style={styles.leftColumn}>
             <View style={styles.logoContainer}>
-              <TouchableOpacity onPress={_handleProfileImagePress}>
-                {storedUser && (
-                  <Image
-                    source={{ uri: storedUser.userData.photo }}
-                    style={styles.userLogo}
-                  ></Image>
-                )}
-              </TouchableOpacity>
+              <BnbImage
+                onPress={_handleProfileImagePress}
+                imageStyle={styles.userLogo}
+                uri={storedUser ? storedUser.userData.photo : ""}
+              ></BnbImage>
             </View>
           </View>
           <View style={styles.rightColumn}>
