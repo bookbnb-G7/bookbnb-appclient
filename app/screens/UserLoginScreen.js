@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbBubbleView from "../components/BnbBubbleView";
 import BnbButton from "../components/BnbButton";
+import BnbIconTextInput from "../components/BnbIconTextInput";
 import BnbMainView from "../components/BnbMainView";
 import fonts from "../config/fonts";
 import Separator from "../components/Separator";
@@ -76,36 +77,20 @@ function UserLoginScreen({ navigation }) {
   } else {
     return (
       <BnbMainView>
-        <Separator style={{ borderBottomWidth: 0 }}></Separator>
-        <BnbBodyView>
-          <View style={styles.centerContainer}>
-            <BnbBubbleView style={styles.bubbleContainer}>
-              <TextInput
-                placeholder="E-mail"
-                style={styles.searchInputText}
-                onChangeText={(text) => _handleTextChange("email", text)}
-                value={_user.email}
-              />
-            </BnbBubbleView>
-            <Separator style={{ borderBottomWidth: 0 }} />
-            <BnbBubbleView style={styles.bubbleContainer}>
-              <TextInput
-                placeholder="Contraseña"
-                style={styles.searchInputText}
-                onChangeText={(text) => _handleTextChange("password", text)}
-                value={_user.password}
-                secureTextEntry={true}
-              />
-            </BnbBubbleView>
-            <Separator style={{ borderBottomWidth: 0 }} />
+        <BnbBodyView style={styles.centerContainer}>
+          <Image source={require("../assets/Bookbnb_logo.png")} style={styles.image} />
+          <View style={styles.centerSubContainer}>
+            <BnbIconTextInput iconName="mail" placeholder="E-mail" onChangeText={(text) => _handleTextChange("email", text)} value={_user.email} />
+            <BnbIconTextInput iconName="lock" placeholder="Contraseña" onChangeText={(text) => _handleTextChange("password", text)} value={_user.password} secureTextEntry={true} />
+
             <BnbButton
               title="Ingresar"
-              style={styles.loginButton}
+              style={styles.loginText}
+              buttonStyle={styles.loginButton}
               onPress={_handleLoginUserButtonPress}
             />
             {_login_error != "" && (
               <View>
-                <Separator style={{ borderBottomWidth: 0 }}></Separator>
                 <Text style={styles.errorText}> {_login_error}</Text>
               </View>
             )}
@@ -123,15 +108,32 @@ const styles = StyleSheet.create({
   bubbleContainer: {
     alignItems: "flex-start",
   },
-  loginButton: {
+  loginText: {
     width: "100%",
+    color: colors.white,
   },
-  centerContainer: {
-    flex: 1,
+  loginButton: {
+    borderColor: colors.greenSuccess,
+    backgroundColor: colors.greenSuccess,
+  },
+  centerSubContainer: {
+    //flex: 1,
     justifyContent: "center",
+    margin: 5,
   },
   errorText: {
     color: colors.error,
+  },
+  centerContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: "space-around",
+  },
+  image: {
+    //flex: 1,
+    height: "25%",
+    resizeMode: "contain",
+    alignSelf: "center",
   },
 });
 

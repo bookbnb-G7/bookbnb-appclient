@@ -2,6 +2,7 @@ import firebase from "firebase";
 
 import "firebase/auth";
 
+// TODO: Esto mepa iria mejor en variables de entorno porque es info privada
 // Your web app's Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyBCOf10elgsS0KcCiGTvfGvP5yODsXL8oU",
