@@ -16,7 +16,9 @@ export default {
   lBlueBg: "#3498db",
   redSoft: "#CA4F4F",
   redSoft2: "#DB5B5B",
+  redAirBNB: "#FF5A60",
   alpha02: "rgba(255, 255, 255, 0.2)",
   alpha03: "rgba(255, 255, 255, 0.3)",
   alpha08: "rgba(255, 255, 255, 0.8)",
+  greenSuccess: "#5CB85C",
 };

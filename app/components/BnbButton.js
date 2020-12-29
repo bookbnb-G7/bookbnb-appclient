@@ -6,24 +6,28 @@ import fonts from "../config/fonts";
 import styling from "../config/styling";
 
 const BnbButton = (props) => (
-  <TouchableOpacity onPress={props.onPress}>
+  <TouchableOpacity onPress={props.onPress} style={{...styles.buttonContainer, ...props.buttonStyle}}>
     <Text style={{ ...styles.buttonText, ...props.style }}>{props.title}</Text>
   </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
   buttonText: {
+    textAlign: "center",
+    fontSize: fonts.big,
+    textAlignVertical: "center",
+    color: colors.redAirBNB,
+  },
+  buttonContainer: {
+    alignItems: "center",
+    padding: 10,
+    marginTop: 5,
+    marginBottom: 5,
     paddingHorizontal: styling.buttonHPadding,
     borderRadius: styling.buttonBorderRadius,
     borderWidth: 1,
-    borderColor: colors.redSoft2,
-    color: colors.redSoft2,
+    borderColor: colors.redAirBNB,
     backgroundColor: colors.white,
-    textAlign: "center",
-    fontSize: fonts.big,
-    width: styling.buttonWidth,
-    height: styling.buttonHeight,
-    textAlignVertical: "center",
   },
 });
 

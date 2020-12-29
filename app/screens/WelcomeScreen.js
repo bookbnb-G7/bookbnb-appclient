@@ -1,8 +1,7 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { ImageBackground, StyleSheet, View, Image } from "react-native";
 import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
-import Separator from "../components/Separator";
 
 function WelcomeScreen({ navigation }) {
   const _handleLogIn = () => {
@@ -12,14 +11,15 @@ function WelcomeScreen({ navigation }) {
   const _handleSignIn = () => {
     navigation.navigate("SignUp");
   };
-
   return (
     <BnbMainView>
-      <View style={styles.centerContainer}>
-        <BnbButton title="Ingresar" onPress={_handleLogIn}></BnbButton>
-        <Separator style={{ borderBottomWidth: 0 }}></Separator>
-        <BnbButton title="Registrarse" onPress={_handleSignIn}></BnbButton>
-      </View>
+      <ImageBackground source={require("../assets/splash_screen_background.jpg")} style={styles.centerContainer} imageStyle={styles.backgroundImage}>
+        <Image source={require('../assets/BookBNBtextLogoWhite.png')} style={styles.image}/>
+        <View style={{margin: 13}}>
+          <BnbButton title="Ingresar" onPress={_handleLogIn}></BnbButton>
+          <BnbButton title="Registrarse" onPress={_handleSignIn}></BnbButton>
+        </View>
+      </ImageBackground>
     </BnbMainView>
   );
 }
@@ -27,8 +27,17 @@ function WelcomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   centerContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'column',
+    justifyContent: "space-around",
+  },
+  image: {
+    //flex: 1,
+    height: "25%",
+    resizeMode: "contain",
+    alignSelf: "center",
+  },
+  backgroundImage: {
+    flex: 1,
   },
 });
 
