@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
+import BnbAlertMultiButtons from "../components/BnbAlertMultiButtons";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
@@ -9,6 +10,7 @@ import Separator from "../components/Separator";
 import colors from "../config/colors";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
+import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import httpGetRequest from "../helpers/httpGetRequest";
 import httpPostRequest from "../helpers/httpPostRequest";
 
@@ -22,7 +24,7 @@ function RoomEditScreen({ route, navigation }) {
   };
 
   const _handleApiResponse = (data) => {
-    //alert(JSON.stringify(data));
+    navigation.navigate("Home");
   };
 
   const _handleFinishEditingButtonPress = () => {
@@ -38,6 +40,7 @@ function RoomEditScreen({ route, navigation }) {
     );
   };
 
+  /**TODO: reemplazar el Get por getToken */
   const _handleConfirmDelete = () => {
     setIsEditing(false);
     httpGetRequest(
@@ -45,10 +48,22 @@ function RoomEditScreen({ route, navigation }) {
       "http://bookbnb-appserver.herokuapp.com/rooms/" + room.id,
       _handleApiResponse
     );
-    navigation.navigate("Home");
   };
 
   const _handleDeleteRoomButtonPress = () => {
+    BnbAlertMultiButtons(
+      "Eliminar habitación",
+      "Si acepta la habitación sera eliminada permanentemente",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        { text: "Aceptar", onPress: _handleConfirmDelete },
+      ],
+      false
+    );
+    /**
     Alert.alert(
       "Eliminar habitación",
       "Si acepta la habitación sera eliminada permanentemente",
@@ -62,6 +77,7 @@ function RoomEditScreen({ route, navigation }) {
       ],
       { cancelable: false }
     );
+    */
   };
 
   return (
