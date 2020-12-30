@@ -23,13 +23,12 @@ import BnbLoading from "../components/BnbLoading";
 const image = require("../assets/bookbnb_1.png");
 
 function RoomScreen({ route, navigation }) {
-  const { room, ratings } = route.params;
+  //const { room, ratings } = route.params;
+  const { room_id } = route.params;
+  const [_room, setRoom] = useState();
+  const [_is_loading, setIsLoading] = useState(true);
 
-  const [_reviews, setReviews] = useState({});
-  const [_error, setError] = useState(false);
-  const [_is_loaded, setIsLoaded] = useState(false);
-  const [_is_awaiting, setIsAwaiting] = useState(false);
-
+  const [_reviews, setReviews] = useState(undefined);
   const [_average_rating, setAverageRating] = useState(0);
   const [_review, setReview] = useState("");
   const [_rating, setRating] = useState({
@@ -45,19 +44,19 @@ function RoomScreen({ route, navigation }) {
   };
 
   const _handleApiResponse = (data) => {
-    setIsAwaiting(false);
+    setIsLoading(false);
   };
 
   const _handleApiError = () => {
-    setIsAwaiting(false);
+    setIsLoading(false);
   };
 
   const _handlePostAReview = () => {
-    if (_review != "" || _review == "string") {
-      setIsAwaiting(true);
+    if (_review != "") {
+      setIsLoading(true);
       httpPostTokenRequest(
         "POST",
-        urls.URL_ROOMS + "/" + room.id + "/reviews",
+        urls.URL_ROOMS + "/" + room_id + "/reviews",
         {
           review: _review,
         },
@@ -76,10 +75,10 @@ function RoomScreen({ route, navigation }) {
 
   const _handleRateRoomButtonPress = () => {
     if (_rating.quantity !== 0) {
-      setIsAwaiting(true);
+      setIsLoading(true);
       httpPostTokenRequest(
         "POST",
-        urls.URL_ROOMS + "/" + room.id + "/ratings",
+        urls.URL_ROOMS + "/" + room_id + "/ratings",
         {
           rating: _rating.quantity,
         },
@@ -98,40 +97,47 @@ function RoomScreen({ route, navigation }) {
   };
 
   const _handleRoomDetailsButtonPress = () => {
-    navigation.navigate("RoomDetails", { room: room });
+    navigation.navigate("RoomDetails", { room: _room });
   };
 
-  const _handleGetReviewsResponse = (data) => {
-    setReviews(data);
-    setIsLoaded(true);
+  const getAverageRating = (ratings) => {
+    let average_rating = 0;
+    ratings.ratings.forEach(function (item, index, array) {
+      average_rating += item.rating;
+    });
+    average_rating = average_rating / ratings.ratings.length;
+    setAverageRating(average_rating);
   };
 
-  const _handleGetReviewsError = (error) => {
-    setError(error);
-    setIsLoaded(true);
-  };
+  useEffect(() => {
+    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id).then((room) => {
+      setRoom(room);
+      setIsLoading(false);
+    });
+  }, []);
 
   useEffect(() => {
     httpGetTokenRequest(
       "GET",
-      urls.URL_ROOMS + "/" + room.id + "/reviews",
-      {},
-      _handleGetReviewsResponse,
-      _handleGetReviewsError
-    );
+      urls.URL_ROOMS + "/" + room_id + "/reviews",
+      {}
+    ).then((data) => {
+      setReviews(data);
+    });
   }, []);
 
   useEffect(() => {
-    const getAverageRating = () => {
-      let average_rating = 0;
-      ratings.ratings.forEach(function (item, index, array) {
-        average_rating += item.rating;
-      });
-      average_rating = average_rating / ratings.ratings.length;
-      setAverageRating(average_rating);
-    };
-    getAverageRating();
-  }, []);
+    console.log("average rating");
+    httpGetTokenRequest(
+      "GET",
+      urls.URL_ROOMS + "/" + room_id + "/ratings",
+      {}
+    ).then((ratings) => {
+      if (ratings) {
+        getAverageRating(ratings);
+      }
+    });
+  }, [_is_loading]);
 
   const [storedUser, setStoredUser] = useState();
   useEffect(() => {
@@ -140,13 +146,7 @@ function RoomScreen({ route, navigation }) {
     });
   }, []);
 
-  if (_error) {
-    return (
-      <View>
-        <Text>{_error.message}</Text>
-      </View>
-    );
-  } else if (!_is_loaded || !storedUser || _is_awaiting) {
+  if (_is_loading || !storedUser) {
     return <BnbLoading></BnbLoading>;
   } else {
     return (
@@ -156,9 +156,9 @@ function RoomScreen({ route, navigation }) {
           <BnbBodyView>
             <View style={styles.roomInfoContainer}>
               <Text>{_average_rating} de 5 estrellas</Text>
-              <Text style={styles.roomTitleText}>{room.type}</Text>
+              <Text style={styles.roomTitleText}>{_room.type}</Text>
               <Text style={styles.priceText}>
-                Precio por dia: {room.price_per_day}
+                Precio por dia: {_room.price_per_day}
               </Text>
             </View>
             <View style={styles.roomDescriptionContainer}>
@@ -167,15 +167,19 @@ function RoomScreen({ route, navigation }) {
             <Separator></Separator>
             <View style={styles.reviewsContainer}>
               <BnbTitleText style={styles.titleText}>Reseñas</BnbTitleText>
-              {_reviews.reviews.map((item, index) => (
-                <View key={item.id}>
-                  <RoomReview
-                    reviewer={item.reviewer}
-                    date={item.created_at}
-                    review={item.review}
-                  ></RoomReview>
+              {_reviews !== undefined && (
+                <View>
+                  {_reviews.reviews.map((item, index) => (
+                    <View key={item.id}>
+                      <RoomReview
+                        reviewer={item.reviewer}
+                        date={item.created_at}
+                        review={item.review}
+                      ></RoomReview>
+                    </View>
+                  ))}
                 </View>
-              ))}
+              )}
             </View>
             <Separator />
             <View style={styles.writeAReviewContainer}>
