@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import BnbAlertMultiButtons from "../components/BnbAlertMultiButtons";
@@ -9,15 +9,28 @@ import BnbTitleText from "../components/BnbTitleText";
 import Separator from "../components/Separator";
 import colors from "../config/colors";
 import fonts from "../config/fonts";
-import styling from "../config/styling";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
-import httpGetRequest from "../helpers/httpGetRequest";
 import httpPostRequest from "../helpers/httpPostRequest";
+import urls from "../constant/urls";
+import constants from "../constant/constants";
+import BnbSecureStore from "../classes/BnbSecureStore";
+import BnbLoading from "../components/BnbLoading";
 
 function RoomEditScreen({ route, navigation }) {
   const { room } = route.params;
   const [_is_editing, setIsEditing] = useState(false);
+  /**TODO: borrar esto */
   const [_is_owner, setIsOwner] = useState(true);
+
+  const [_is_loading, setIsLoading] = useState(true);
+  const [storedUser, setStoredUser] = useState();
+
+  useEffect(() => {
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
+      setStoredUser(user);
+      setIsLoading(false);
+    });
+  }, []);
 
   const _handleToggleEditRoomButtonPress = () => {
     setIsEditing(!_is_editing);
@@ -25,6 +38,10 @@ function RoomEditScreen({ route, navigation }) {
 
   const _handleApiResponse = (data) => {
     navigation.navigate("Home");
+  };
+
+  const _handleApiError = () => {
+    setIsLoading(false);
   };
 
   const _handleFinishEditingButtonPress = () => {
@@ -40,13 +57,15 @@ function RoomEditScreen({ route, navigation }) {
     );
   };
 
-  /**TODO: reemplazar el Get por getToken */
   const _handleConfirmDelete = () => {
     setIsEditing(false);
-    httpGetRequest(
+    setIsLoading(true);
+    httpGetTokenRequest(
       "DELETE",
-      "http://bookbnb-appserver.herokuapp.com/rooms/" + room.id,
-      _handleApiResponse
+      urls.URL_ROOMS + "/" + room.id,
+      { "x-access-token": storedUser.auth_token },
+      _handleApiResponse,
+      _handleApiError
     );
   };
 
@@ -63,22 +82,11 @@ function RoomEditScreen({ route, navigation }) {
       ],
       false
     );
-    /**
-    Alert.alert(
-      "Eliminar habitación",
-      "Si acepta la habitación sera eliminada permanentemente",
-      [
-        {
-          text: "Cancelar",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        { text: "Aceptar", onPress: _handleConfirmDelete },
-      ],
-      { cancelable: false }
-    );
-    */
   };
+
+  if (_is_loading) {
+    return <BnbLoading></BnbLoading>;
+  }
 
   return (
     <BnbMainView style={styles.white}>
@@ -129,14 +137,13 @@ function RoomEditScreen({ route, navigation }) {
             ></BnbButton>
           )}
         </View>
-        <Separator></Separator>
         {_is_owner && _is_editing && (
           <View>
             <BnbTitleText style={styles.subTitle}>
               Eliminar Habitación
             </BnbTitleText>
+            <Separator></Separator>
             <BnbButton
-              style={styles.buttonsContainer}
               title="Eliminar habitación"
               onPress={_handleDeleteRoomButtonPress}
             />
@@ -169,9 +176,6 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     marginVertical: 20,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
   },
 });
 
