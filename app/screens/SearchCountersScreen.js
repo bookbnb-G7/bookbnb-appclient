@@ -11,6 +11,10 @@ import styling from "../config/styling";
 import Separator from "../components/Separator";
 
 class SearchCountersScreen extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   state = {
     counters: [
       { age_group: "adult", quantity: 0 },
@@ -26,7 +30,14 @@ class SearchCountersScreen extends Component {
   };
 
   _handleNextButtonPress = () => {
-    this.props.navigation.navigate("SearchResultRooms");
+    const amount_of_people =
+      this.state.counters[0].quantity + this.state.counters[1].quantity;
+    const { searchForm } = this.props.route.params;
+    searchForm["amount_of_people"] = amount_of_people;
+    console.log(JSON.stringify(searchForm));
+    this.props.navigation.navigate("SearchResultRooms", {
+      searchForm: searchForm,
+    });
   };
 
   render() {

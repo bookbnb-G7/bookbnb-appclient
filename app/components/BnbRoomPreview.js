@@ -19,7 +19,10 @@ const BnbRoomPreview = (props) => {
     /**Le paso el room, podria pasarle los ratings tambien */
     //props.navigation.navigate("Room", { room: props.room, ratings: _ratings });
     /**Paso solo el id asi el Room puede fetchear los cambios */
-    props.navigation.navigate("Room", { room_id: props.room.id });
+    props.navigation.navigate("Room", {
+      room_id: props.room.id,
+      searchForm: props.searchForm,
+    });
   };
 
   /**ComponentDidMount obtengo todos los datos a partir del

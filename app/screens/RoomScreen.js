@@ -24,7 +24,7 @@ const image = require("../assets/bookbnb_1.png");
 
 function RoomScreen({ route, navigation }) {
   //const { room, ratings } = route.params;
-  const { room_id } = route.params;
+  const { room_id, searchForm } = route.params;
   const [_room, setRoom] = useState();
   const [_is_loading, setIsLoading] = useState(true);
 
@@ -98,6 +98,20 @@ function RoomScreen({ route, navigation }) {
 
   const _handleRoomDetailsButtonPress = () => {
     navigation.navigate("RoomDetails", { room: _room });
+  };
+
+  const _handleRoomBooking = () => {
+    searchForm["user_id"] = storedUser.userData.id;
+    console.log(JSON.stringify(searchForm));
+    /**POST Add Booking To Room */
+    httpPostTokenRequest(
+      "POST",
+      urls.URL_ROOMS + "/" + room_id + "/bookings",
+      searchForm,
+      { "x-access-token": storedUser.auth_token },
+      _handleApiResponse,
+      _handleApiError
+    );
   };
 
   const getAverageRating = (ratings) => {
@@ -213,6 +227,12 @@ function RoomScreen({ route, navigation }) {
               style={styles.center}
               title="Detalles"
               onPress={_handleRoomDetailsButtonPress}
+            />
+            <Separator />
+            <BnbButton
+              style={styles.center}
+              title="Reservar"
+              onPress={_handleRoomBooking}
             />
           </BnbBodyView>
         </ScrollView>

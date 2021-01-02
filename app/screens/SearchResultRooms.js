@@ -8,6 +8,7 @@ import fonts from "../config/fonts";
 import Separator from "../components/Separator";
 
 function SearchResultRooms(props) {
+  const { searchForm } = props.route.params;
   const [_rooms, setRooms] = useState({});
   const [_error, setError] = useState(null);
   const [_is_loaded, setIsLoaded] = useState(false);
@@ -55,6 +56,7 @@ function SearchResultRooms(props) {
                 <BnbRoomPreview
                   navigation={props.navigation}
                   room={item}
+                  searchForm={searchForm}
                 ></BnbRoomPreview>
               </View>
             ))}
