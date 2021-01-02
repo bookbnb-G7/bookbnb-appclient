@@ -25,6 +25,7 @@ function RoomBookingScreen(props) {
   };
 
   const _handleAcceptBooking = () => {
+    setIsLoading(true);
     httpPostTokenRequest(
       "POST",
       urls.URL_ROOMS +
@@ -39,6 +40,7 @@ function RoomBookingScreen(props) {
   };
 
   const _handleRejectBooking = () => {
+    setIsLoading(true);
     httpPostTokenRequest(
       "POST",
       urls.URL_ROOMS +
