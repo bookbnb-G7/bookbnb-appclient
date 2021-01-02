@@ -11,8 +11,15 @@ function ProfileRoomsScreen({ navigation }) {
     navigation.navigate("RoomCreate");
   };
 
-  const ROOMS_OPTIONS = [{ id: 0, title: "Crear habitacion" }];
-  const HANDLERS = [_handleCreateRoomButtonPress];
+  const _handleBookingRequests = () => {
+    navigation.navigate("ProfileBookings");
+  };
+
+  const ROOMS_OPTIONS = [
+    { id: 0, title: "Crear habitacion" },
+    { id: 1, title: "Solicitudes de reserva" },
+  ];
+  const HANDLERS = [_handleCreateRoomButtonPress, _handleBookingRequests];
 
   return (
     <BnbMainView>
