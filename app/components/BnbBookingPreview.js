@@ -37,7 +37,9 @@ const BnbBookingPreview = (navigation, roomBooking) => {
     );
   };
 
-  const _handleGoToBookingDetails = () => {};
+  const _handleGoToBookingDetails = () => {
+    navigation.navigate("RoomBooking", { roomBooking: roomBooking });
+  };
 
   const _handleImagePress = () => {};
 
