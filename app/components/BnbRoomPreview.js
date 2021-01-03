@@ -16,19 +16,20 @@ const BnbRoomPreview = (props) => {
   const [_is_loaded, setIsLoaded] = useState(false);
 
   const _handleImagePress = () => {
-    /**Le paso el room, podria pasarle los ratings tambien */
-    //props.navigation.navigate("Room", { room: props.room, ratings: _ratings });
-    /**Paso solo el id asi el Room puede fetchear los cambios */
-    props.navigation.navigate("Room", {
-      room_id: props.room.id,
-      searchForm: props.searchForm,
-    });
+    /**Si recibir un searchForm es porque soy un guest buscando rooms */
+    if (props?.searchForm) {
+      props.navigation.navigate("Room", {
+        room_id: props.room.id,
+        searchForm: props.searchForm,
+      });
+    } else {
+      /**Caso contrario soy el dueño */
+      props.navigation.navigate("Room", {
+        room_id: props.room.id,
+      });
+    }
   };
 
-  /**ComponentDidMount obtengo todos los datos a partir del
-   * room que recibo por props (le saco el id)*/
-  /**Super importante el isLoaded porque caso contrario intentamos mostrar objetos indefinidos
-   */
   useEffect(() => {
     fetch(url_ratings)
       .then((response) => response.json())

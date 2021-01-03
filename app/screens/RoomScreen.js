@@ -3,7 +3,6 @@ import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
-import BnbFooterView from "../components/BnbFooterView";
 import BnbTitleText from "../components/BnbTitleText";
 import BnbMainView from "../components/BnbMainView";
 import RoomReview from "../components/RoomReview";
@@ -22,8 +21,8 @@ import BnbLoading from "../components/BnbLoading";
 const image = require("../assets/bookbnb_1.png");
 
 function RoomScreen({ route, navigation }) {
-  //const { room, ratings } = route.params;
-  const { room_id, searchForm } = route.params;
+  const room_id = route.params?.room_id;
+  const searchForm = route.params?.searchForm;
   const [_room, setRoom] = useState();
   const [_is_loading, setIsLoading] = useState(true);
 

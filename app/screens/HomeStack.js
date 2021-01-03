@@ -48,7 +48,7 @@ function HomeStack(props) {
       <HomeStackNav.Screen
         name="Home"
         component={HomeScreen}
-        initialParams={{ user: user }}
+        initialParams={{ user_email: user.email }}
       />
     </HomeStackNav.Navigator>
   );

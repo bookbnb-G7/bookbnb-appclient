@@ -31,7 +31,7 @@ function ProfileEditScreen({ route, navigation }) {
   };
 
   const _handleRoomsInfoPress = () => {
-    navigation.navigate("ProfileRooms");
+    navigation.navigate("ProfileRoomsOptions");
   };
 
   const _handleProfileImagePress = () => {
