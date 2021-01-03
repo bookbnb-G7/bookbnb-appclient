@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbButton from "../components/BnbButton";
 import BnbLoading from "../components/BnbLoading";
@@ -11,12 +11,20 @@ import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 
 function RoomBookingScreen(props) {
+  const { booking_id } = props.route.params;
+
+  const [storedUser, setStoredUser] = useState();
   const [_booking, setBooking] = useState();
   const [_is_loading, setIsLoading] = useState(true);
-  const [storedUser, setStoredUser] = useState();
+  const [_error, setError] = useState("");
 
   const _handleApiResponse = (data) => {
     setBooking(data);
+    setIsLoading(false);
+  };
+
+  const _handleApiError = (error) => {
+    setError(error);
     setIsLoading(false);
   };
 
@@ -26,14 +34,10 @@ function RoomBookingScreen(props) {
 
   const _handleAcceptBooking = () => {
     setIsLoading(true);
+    setError("");
     httpPostTokenRequest(
       "POST",
-      urls.URL_ROOMS +
-        "/" +
-        roomBooking.room_id +
-        "/bookings/" +
-        roomBooking.booking_id +
-        "/accept",
+      urls.URL_BOOKINGS + "/" + booking_id + "/accept",
       { "x-access-token": storedUser.auth_token },
       _handleBookingResponse
     );
@@ -41,14 +45,10 @@ function RoomBookingScreen(props) {
 
   const _handleRejectBooking = () => {
     setIsLoading(true);
+    setError("");
     httpPostTokenRequest(
       "POST",
-      urls.URL_ROOMS +
-        "/" +
-        roomBooking.room_id +
-        "/bookings/" +
-        roomBooking.booking_id +
-        "/reject",
+      urls.URL_BOOKINGS + "/" + booking_id + "/reject",
       { "x-access-token": storedUser.auth_token },
       _handleBookingResponse
     );
@@ -68,13 +68,10 @@ function RoomBookingScreen(props) {
       setStoredUser(user);
       httpGetTokenRequest(
         "GET",
-        urls.URL_ROOMS +
-          "/" +
-          roomBooking.room_id +
-          "/bookings/" +
-          roomBooking.booking_id,
+        urls.URL_BOOKINGS + "/" + booking_id,
         {},
-        _handleApiResponse
+        _handleApiResponse,
+        _handleApiError
       );
     });
   }, []);
@@ -86,12 +83,10 @@ function RoomBookingScreen(props) {
       <BnbMainView>
         <Text>Detalles de la reserva</Text>
         <View>{showBookingStatus(_booking.state)}</View>
+        <Text style={styles.bookingInfoText}>Desde: {_booking.date_from}</Text>
+        <Text style={styles.bookingInfoText}>Hasta: {_booking.date_to}</Text>
         <Text style={styles.bookingInfoText}>
-          Desde: {_booking.date_begins}
-        </Text>
-        <Text style={styles.bookingInfoText}>Hasta: {_booking.date_ends}</Text>
-        <Text style={styles.bookingInfoText}>
-          Cantidad de personas: {_booking.amount_of_people}
+          Estado de la reserva: {_booking.booking_status}
         </Text>
         <BnbButton
           style={styles.greenText}
@@ -103,6 +98,7 @@ function RoomBookingScreen(props) {
           title="Rechazar reserva"
           onPress={_handleRejectBooking}
         ></BnbButton>
+        {_error != "" && <Text style={styles.redText}>{_error}</Text>}
       </BnbMainView>
     );
   }

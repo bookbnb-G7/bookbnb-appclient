@@ -41,8 +41,8 @@ function ProfileEditScreen({ route, navigation }) {
   const _handleLogOutButton = () => {
     firebase.auth
       .signOut()
-      .then(() => console.log(storedUser.userData.email + " Cerro sesion"));
-    navigation.navigate("HomeStack");
+      .then(() => console.log(storedUser.userData.email + " Cerro sesion"))
+      .then(() => navigation.navigate("HomeStack"));
   };
 
   const PROFILE_OPTIONS = [

@@ -46,13 +46,9 @@ function UserLoginScreen({ navigation }) {
         .signInWithEmailAndPassword(_user.email, _user.password)
         .then(async (userCredential) => {
           return userCredential.user.getIdToken().then(async (id_token) => {
-            const data = await httpGetTokenRequest(
-              "GET",
-              urls.URL_USERS + "/me",
-              {
-                "x-access-token": id_token,
-              }
-            );
+            const data = await httpGetTokenRequest("GET", urls.URL_ME, {
+              "x-access-token": id_token,
+            });
             if (data) {
               const storeUser = {
                 auth_token: id_token,
@@ -65,7 +61,7 @@ function UserLoginScreen({ navigation }) {
                * data que ejecuta esta parte de caodigo pero el stack navigator ya cambio de pantalla
                *
                */
-              setIsAwaiting(false);
+              //setIsAwaiting(false);
             }
           });
         })

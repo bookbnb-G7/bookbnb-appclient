@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import BnbSecureStore from "../../classes/BnbSecureStore";
 import BnbLoading from "../../components/BnbLoading";
 import BnbMainView from "../../components/BnbMainView";
+import colors from "../../config/colors";
+import fonts from "../../config/fonts";
 import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
@@ -11,6 +14,7 @@ import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 function ProfileBookingsScreen({ navigation }) {
   const [_bookings, setBookings] = useState();
   const [_is_loading, setIsLoading] = useState(true);
+  const [_error, setError] = useState();
   const [storedUser, setStoredUser] = useState();
 
   const _handleApiResponse = (data) => {
@@ -18,8 +22,8 @@ function ProfileBookingsScreen({ navigation }) {
     setIsLoading(false);
   };
 
-  const _handleApiError = () => {
-    console.log("hola");
+  const _handleApiError = (error) => {
+    setError(error);
     setIsLoading(false);
   };
 
@@ -28,7 +32,8 @@ function ProfileBookingsScreen({ navigation }) {
       setStoredUser(user);
       httpGetTokenRequest(
         "GET",
-        urls.URL_USERS + "/" + user.userData.id + "/bookings",
+        urls.URL_ME + "/bookings",
+        { "x-access-token": user.auth_token },
         _handleApiResponse,
         _handleApiError
       );
@@ -40,17 +45,37 @@ function ProfileBookingsScreen({ navigation }) {
   } else {
     return (
       <BnbMainView>
-        {_bookings.bookings.map((item, index) => (
-          <View key={item.id}>
-            <BnbBookingPreview
-              navigation={props.navigation}
-              roomBooking={item}
-            ></BnbBookingPreview>
-          </View>
-        ))}
+        <View style={styles.centerContainer}>
+          <Text style={styles.title}>Reservas Hechas</Text>
+          {_error == "" && (
+            <View>
+              {_bookings.made.bookings.map((item, index) => (
+                <View key={item.id}>
+                  <BnbBookingPreview
+                    navigation={props.navigation}
+                    booking={item}
+                  ></BnbBookingPreview>
+                </View>
+              ))}
+            </View>
+          )}
+          {_error != "" && <Text style={styles.errorText}>{_error}</Text>}
+        </View>
       </BnbMainView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  centerContainer: {
+    alignItems: "center",
+  },
+  title: {
+    fontSize: fonts.big,
+  },
+  errorText: {
+    color: colors.error,
+  },
+});
 
 export default ProfileBookingsScreen;

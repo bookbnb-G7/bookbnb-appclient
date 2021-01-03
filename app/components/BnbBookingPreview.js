@@ -11,21 +11,14 @@ import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbButton from "./BnbButton";
 import BnbLoading from "./BnbLoading";
 
-const BnbBookingPreview = (navigation, roomBooking) => {
+const BnbBookingPreview = (navigation, booking) => {
+  /**Placeholder */
   const room_image = require("../assets/bookbnb_1.png");
-  const [_booking, setBooking] = useState();
-  const [_is_loading, setIsLoading] = useState(true);
-
-  const _handleApiResponse = (data) => {
-    setBooking(data);
-    setIsLoading(false);
-  };
 
   const showBookingStatus = (state) => {
     return (
       <View>
         {state === 1 && <Text style={styles.redText}>Pendiente</Text>}
-
         {state === 2 && <Text style={styles.greenText}>Aceptado</Text>}
         {state === 1 && (
           <BnbButton
@@ -38,52 +31,28 @@ const BnbBookingPreview = (navigation, roomBooking) => {
   };
 
   const _handleGoToBookingDetails = () => {
-    navigation.navigate("RoomBooking", { roomBooking: roomBooking });
+    navigation.navigate("RoomBooking", { booking_id: booking.id });
   };
 
   const _handleImagePress = () => {};
 
-  useEffect(() => {
-    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
-      setStoredUser(user);
-      httpGetTokenRequest(
-        "GET",
-        urls.URL_ROOMS +
-          "/" +
-          roomBooking.room_id +
-          "/bookings/" +
-          roomBooking.booking_id,
-        {},
-        _handleApiResponse
-      );
-    });
-  }, []);
-
-  if (_is_loading) {
-    return <BnbLoading text="Cargando Reserva"></BnbLoading>;
-  } else {
-    return (
-      <View style={styles.mainContainer}>
-        <TouchableOpacity onPress={_handleImagePress}>
-          <View style={styles.roomImageContainer}>
-            <Image source={room_image} style={styles.roomImage}></Image>
-          </View>
-          <View style={styles.roomDescriptionContainer}>
-            <View>{showBookingStatus(_booking.state)}</View>
-            <Text style={styles.bookingInfoText}>
-              Desde: {_booking.date_begins}
-            </Text>
-            <Text style={styles.bookingInfoText}>
-              Hasta: {_booking.date_ends}
-            </Text>
-            <Text style={styles.bookingInfoText}>
-              Cantidad de personas: {_booking.amount_of_people}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+  return (
+    <View style={styles.mainContainer}>
+      <TouchableOpacity onPress={_handleImagePress}>
+        <View style={styles.roomImageContainer}>
+          <Image source={room_image} style={styles.roomImage}></Image>
+        </View>
+        <View style={styles.roomDescriptionContainer}>
+          <View>{showBookingStatus(booking.state)}</View>
+          <Text style={styles.bookingInfoText}>Desde: {booking.date_from}</Text>
+          <Text style={styles.bookingInfoText}>Hasta: {booking.date_to}</Text>
+          <Text style={styles.bookingInfoText}>
+            Estado de reserva: {booking.booking_status}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
