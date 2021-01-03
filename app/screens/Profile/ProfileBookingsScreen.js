@@ -14,7 +14,7 @@ import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 function ProfileBookingsScreen({ navigation }) {
   const [_bookings, setBookings] = useState();
   const [_is_loading, setIsLoading] = useState(true);
-  const [_error, setError] = useState();
+  const [_error, setError] = useState("");
   const [storedUser, setStoredUser] = useState();
 
   const _handleApiResponse = (data) => {
@@ -40,6 +40,7 @@ function ProfileBookingsScreen({ navigation }) {
     });
   }, []);
 
+  /**OJO: no deberia poder intentar modificar las reservas hechas, solo las recibidas */
   if (_is_loading) {
     return <BnbLoading text="Cargando reservas"></BnbLoading>;
   } else {
@@ -59,7 +60,9 @@ function ProfileBookingsScreen({ navigation }) {
               ))}
             </View>
           )}
-          {_error != "" && <Text style={styles.errorText}>{_error}</Text>}
+          {_error != "" && (
+            <Text style={styles.errorText}>{JSON.stringify(_error)}</Text>
+          )}
         </View>
       </BnbMainView>
     );

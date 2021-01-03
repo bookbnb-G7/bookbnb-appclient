@@ -67,7 +67,13 @@ function ProfileEditScreen({ route, navigation }) {
               <BnbImage
                 onPress={_handleProfileImagePress}
                 imageStyle={styles.userLogo}
-                uri={storedUser ? storedUser.userData.photo : ""}
+                uri={
+                  route.params?.photo
+                    ? route.params.photo
+                    : storedUser
+                    ? storedUser.userData.photo
+                    : ""
+                }
               ></BnbImage>
             </View>
           </View>
@@ -119,6 +125,7 @@ const styles = StyleSheet.create({
   userLogo: {
     width: 100,
     height: 100,
+    backgroundColor: colors.graySoft,
   },
   rightColumn: {
     justifyContent: "center",

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbButton from "../components/BnbButton";
 import BnbLoading from "../components/BnbLoading";
@@ -18,8 +18,14 @@ function RoomBookingScreen(props) {
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState("");
 
+  const [_is_owner, setIsOwner] = useState(false);
+
   const _handleApiResponse = (data) => {
     setBooking(data);
+    /**Si coinciden los ids, es el owner por lo tanto habilito los botones*/
+    if (data.room_owner_id === storedUser.userData.id) {
+      setIsOwner(true);
+    }
     setIsLoading(false);
   };
 
@@ -88,17 +94,21 @@ function RoomBookingScreen(props) {
         <Text style={styles.bookingInfoText}>
           Estado de la reserva: {_booking.booking_status}
         </Text>
-        <BnbButton
-          style={styles.greenText}
-          title="Confirmar reserva"
-          onPress={_handleAcceptBooking}
-        ></BnbButton>
-        <BnbButton
-          style={styles.redText}
-          title="Rechazar reserva"
-          onPress={_handleRejectBooking}
-        ></BnbButton>
-        {_error != "" && <Text style={styles.redText}>{_error}</Text>}
+        {_is_owner && (
+          <View>
+            <BnbButton
+              style={styles.greenText}
+              title="Confirmar reserva"
+              onPress={_handleAcceptBooking}
+            ></BnbButton>
+            <BnbButton
+              style={styles.redText}
+              title="Rechazar reserva"
+              onPress={_handleRejectBooking}
+            ></BnbButton>
+            {_error != "" && <Text style={styles.redText}>{_error}</Text>}
+          </View>
+        )}
       </BnbMainView>
     );
   }
