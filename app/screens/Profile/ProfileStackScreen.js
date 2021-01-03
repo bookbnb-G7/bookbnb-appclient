@@ -11,6 +11,7 @@ import BnbHeaderUserInfo from "../../components/BnbHeaderUserInfo";
 import ProfileRoomsScreen from "./ProfileRoomsScreen";
 import ProfileBookingsScreen from "./ProfileBookingsScreen";
 import RoomBookingScreen from "../RoomBookingScreen";
+import ProfileEditScreen from "./ProfileEditScreen";
 
 const ProfileStack = createStackNavigator();
 
@@ -34,6 +35,7 @@ function ProfileStackScreen(props) {
         }}
       >
         <ProfileStack.Screen name="Profile" component={Profile} />
+        <ProfileStack.Screen name="ProfileEdit" component={ProfileEditScreen} />
         <ProfileStack.Screen name="ProfileInfo" component={ProfileInfoScreen} />
         <ProfileStack.Screen
           name="ProfileRooms"
