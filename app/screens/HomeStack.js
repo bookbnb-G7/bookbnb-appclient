@@ -8,6 +8,7 @@ import SignUpScreen from "./SignUpScreen";
 import UserLoginScreen from "./UserLoginScreen";
 import WelcomeScreen from "./WelcomeScreen";
 import PasswordRecover from "./PasswordRecover";
+import BnbImageSlider from "../components/BnbImageSlider";
 
 const HomeStackNav = createStackNavigator();
 
@@ -50,6 +51,7 @@ function HomeStack(props) {
         component={HomeScreen}
         initialParams={{ user_email: user.email }}
       />
+      <HomeStackNav.Screen name="ImageSlider" component={BnbImageSlider} />
     </HomeStackNav.Navigator>
   );
 }

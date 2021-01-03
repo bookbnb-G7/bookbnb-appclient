@@ -14,13 +14,14 @@ import styling from "../config/styling";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
 import firebase from "../database/firebase";
-
-const bnb_book_logo = require("../assets/Bookbnb_logo.png");
-const background = require("../assets/background_2.png");
+import BnbImageSlider from "../components/BnbImageSlider";
+import Separator from "../components/Separator";
 
 function HomeScreen({ route, navigation }) {
   const user_email = route.params.user_email;
   const [storedUser, setStoredUser] = useState();
+
+  const background = require("../assets/background_2.png");
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
@@ -39,10 +40,19 @@ function HomeScreen({ route, navigation }) {
       .then(() => navigation.navigate("HomeStack"));
   };
 
+  function _handleImageSlider() {
+    navigation.navigate("ImageSlider");
+  }
+
   return (
     <BnbMainView style={styles.mainContainer}>
       <ImageBackground source={background} style={styles.background}>
-        <Image style={styles.logo} source={bnb_book_logo}></Image>
+        <View style={styles.imageSlider}>
+          <BnbImageSlider
+            images={[require("../assets/Bookbnb_logo.png")]}
+            width={200}
+          ></BnbImageSlider>
+        </View>
         <View style={styles.optionsContainer}>
           {user_email && (
             <View>
@@ -67,6 +77,10 @@ const dimensions = Dimensions.get("window");
 const styles = StyleSheet.create({
   mainContainer: {
     //backgroundColor: colors.graySoft,
+  },
+  imageSlider: {
+    flex: 1,
+    alignItems: "center",
   },
   optionsContainer: {
     flex: 1,
