@@ -10,7 +10,7 @@ import Separator from "../components/Separator";
 import colors from "../config/colors";
 import fonts from "../config/fonts";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
-import httpPostRequest from "../helpers/httpPostRequest";
+import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import urls from "../constant/urls";
 import constants from "../constant/constants";
 import BnbSecureStore from "../classes/BnbSecureStore";
@@ -46,12 +46,15 @@ function RoomEditScreen({ route, navigation }) {
 
   const _handleFinishEditingButtonPress = () => {
     setIsEditing(false);
-    httpPostRequest(
+    httpPostTokenRequest(
       "PATCH",
-      "http://bookbnb-appserver.herokuapp.com/rooms/" + room.id,
+      urls.URL_ROOMS + "/" + room.id,
       {
-        type: room.type,
         price_per_day: room.price_per_day,
+      },
+      {
+        "x-access-token": storedUser.auth_token,
+        "Content-Type": "application/json",
       },
       _handleApiResponse
     );
@@ -94,17 +97,6 @@ function RoomEditScreen({ route, navigation }) {
         <BnbTitleText style={styles.subTitle}>
           Detalles de la habitacion
         </BnbTitleText>
-        <Separator />
-        <View style={styles.rowRoomElement}>
-          <Text style={styles.keyText}>Nombre(tipo): </Text>
-          <TextInput
-            style={styles.valueText}
-            defaultValue={room.type.toString()}
-            editable={_is_editing}
-            onChangeText={(text) => (room["type"] = text)}
-            multiline
-          ></TextInput>
-        </View>
         <Separator></Separator>
         <View style={styles.rowRoomElement}>
           <Text style={styles.keyText}>Precio por dia: </Text>

@@ -39,10 +39,12 @@ function ProfileEditScreen({ route, navigation }) {
   };
 
   const _handleLogOutButton = () => {
-    firebase.auth
-      .signOut()
-      .then(() => console.log(storedUser.userData.email + " Cerro sesion"))
-      .then(() => navigation.navigate("HomeStack"));
+    BnbSecureStore.clear(constants.CACHE_USER_KEY).then(() => {
+      firebase.auth
+        .signOut()
+        .then(() => console.log(storedUser.userData.email + " Cerro sesion"))
+        .then(() => navigation.navigate("HomeStack"));
+    });
   };
 
   const PROFILE_OPTIONS = [

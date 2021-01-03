@@ -13,7 +13,6 @@ import styling from "../config/styling";
 import constants from "../constant/constants";
 import Separator from "../components/Separator";
 import Counter from "../components/Counter";
-import httpPostRequest from "../helpers/httpPostRequest";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import urls from "../constant/urls";
 import BnbSecureStore from "../classes/BnbSecureStore";

@@ -45,7 +45,11 @@ function HomeStack(props) {
         ),
       }}
     >
-      <HomeStackNav.Screen name="Home" component={HomeScreen} />
+      <HomeStackNav.Screen
+        name="Home"
+        component={HomeScreen}
+        initialParams={{ user: user }}
+      />
     </HomeStackNav.Navigator>
   );
 }

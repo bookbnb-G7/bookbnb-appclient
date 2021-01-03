@@ -17,7 +17,8 @@ import constants from "../constant/constants";
 const bnb_book_logo = require("../assets/Bookbnb_logo.png");
 const background = require("../assets/background_2.png");
 
-function HomeScreen({ navigation }) {
+function HomeScreen({ route, navigation }) {
+  const user = route.params.user;
   const [storedUser, setStoredUser] = useState();
 
   useEffect(() => {
@@ -35,7 +36,7 @@ function HomeScreen({ navigation }) {
       <ImageBackground source={background} style={styles.background}>
         <Image style={styles.logo} source={bnb_book_logo}></Image>
         <View style={styles.optionsContainer}>
-          {storedUser && (
+          {user && (
             <BnbButton
               onPress={_handleSearchRoomsButton}
               title={"Buscar Habitaciones"}

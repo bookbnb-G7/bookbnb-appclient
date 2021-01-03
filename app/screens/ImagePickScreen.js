@@ -7,7 +7,6 @@ import Separator from "../components/Separator";
 import BnbAlert from "../components/BnbAlert";
 import styling from "../config/styling";
 import pickAnImage from "../helpers/pickAnImage";
-import useRequestCameraPermissions from "../helpers/useRequestCameraPermissions";
 import BnbLoading from "../components/BnbLoading";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
