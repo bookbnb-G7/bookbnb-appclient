@@ -3,11 +3,14 @@ import { StyleSheet, Text, View } from "react-native";
 import BnbSecureStore from "../../classes/BnbSecureStore";
 import BnbLoading from "../../components/BnbLoading";
 import BnbMainView from "../../components/BnbMainView";
+import BnbBookingPreview from "../../components/BnbBookingPreview";
+import Separator from "../../components/Separator";
 import colors from "../../config/colors";
 import fonts from "../../config/fonts";
 import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
+import { ScrollView } from "react-native-gesture-handler";
 
 /**Aca deberia aparecer una lista con todos los rooms del usuario y
  * que indique si estos tienen o no un booking esperando a ser aceptado/rechazado */
@@ -40,6 +43,10 @@ function ProfileBookingsScreen({ navigation }) {
     });
   }, []);
 
+  if (_error) {
+    return <Text> {_error.message} </Text>;
+  }
+
   /**OJO: no deberia poder intentar modificar las reservas hechas, solo las recibidas */
   if (_is_loading) {
     return <BnbLoading text="Cargando reservas"></BnbLoading>;
@@ -47,8 +54,10 @@ function ProfileBookingsScreen({ navigation }) {
     return (
       <BnbMainView>
         <View style={styles.centerContainer}>
-          <Text style={styles.title}>Reservas Hechas</Text>
-          {_error == "" && (
+          <ScrollView>
+            <Text style={styles.title}>
+              Tienes {_bookings.made.bookings.length} reservas hechas
+            </Text>
             <View>
               {_bookings.made.bookings.map((item, index) => (
                 <View key={item.id}>
@@ -59,10 +68,21 @@ function ProfileBookingsScreen({ navigation }) {
                 </View>
               ))}
             </View>
-          )}
-          {_error != "" && (
-            <Text style={styles.errorText}>{JSON.stringify(_error)}</Text>
-          )}
+            <Separator></Separator>
+            <Text style={styles.title}>
+              Tienes {_bookings.received.bookings.length} solicitudes de reserva
+            </Text>
+            <View>
+              {_bookings.made.bookings.map((item, index) => (
+                <View key={item.id}>
+                  <BnbBookingPreview
+                    navigation={props.navigation}
+                    booking={item}
+                  ></BnbBookingPreview>
+                </View>
+              ))}
+            </View>
+          </ScrollView>
         </View>
       </BnbMainView>
     );
@@ -75,6 +95,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: fonts.big,
+    alignSelf: "center",
   },
   errorText: {
     color: colors.error,

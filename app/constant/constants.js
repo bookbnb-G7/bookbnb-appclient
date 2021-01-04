@@ -11,4 +11,6 @@ export default {
   ERR_RATING_ZERO: "Puntaje no puede ser 0",
   FORGOT_PASSWORD_MESSAGE: "¿Olvidaste tu contraseña?",
   CACHE_USER_KEY: "loggedInUser",
+  STATE_PENDING: 1,
+  STATE_ACCEPTED: 2,
 };
