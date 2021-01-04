@@ -33,6 +33,8 @@ function RoomScreen({ route, navigation }) {
     quantity: 0,
   });
 
+  const [_photos, setPhotos] = useState();
+
   const _handleRatingChange = (counter, offset) => {
     const new_quantity = _rating.quantity + offset;
     setRating((prevState) => ({
@@ -47,6 +49,10 @@ function RoomScreen({ route, navigation }) {
 
   const _handleApiError = () => {
     setIsLoading(false);
+  };
+
+  const _handlePhotosResponse = (photos) => {
+    setPhotos(photos);
   };
 
   const _handlePostAReview = () => {
@@ -127,6 +133,16 @@ function RoomScreen({ route, navigation }) {
       setIsLoading(false);
     });
   }, []);
+
+  /**Obtengo fotos del room */
+  useEffect(() => {
+    httpGetTokenRequest(
+      "GET",
+      urls.URL_ROOMS + "/" + room_id + "/photos",
+      {},
+      _handlePhotosResponse
+    );
+  });
 
   useEffect(() => {
     httpGetTokenRequest(

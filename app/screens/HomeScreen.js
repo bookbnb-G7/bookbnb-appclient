@@ -40,10 +40,6 @@ function HomeScreen({ route, navigation }) {
       .then(() => navigation.navigate("HomeStack"));
   };
 
-  function _handleImageSlider() {
-    navigation.navigate("ImageSlider");
-  }
-
   return (
     <BnbMainView style={styles.mainContainer}>
       <ImageBackground source={background} style={styles.background}>
@@ -51,6 +47,9 @@ function HomeScreen({ route, navigation }) {
           <BnbImageSlider
             images={[require("../assets/Bookbnb_logo.png")]}
             width={200}
+            onPress={() => {
+              console.log("HOla");
+            }}
           ></BnbImageSlider>
         </View>
         <View style={styles.optionsContainer}>

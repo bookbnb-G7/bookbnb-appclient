@@ -3,10 +3,11 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
-
-const room_image = require("../assets/bookbnb_1.png");
+import urls from "../constant/urls";
+import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 
 const BnbRoomPreview = (props) => {
+  const room_image = require("../assets/bookbnb_1.png");
   const url_ratings =
     "http://bookbnb-appserver.herokuapp.com/rooms/" +
     props.room.id +
@@ -14,6 +15,17 @@ const BnbRoomPreview = (props) => {
   const [_ratings, setRatings] = useState({});
   const [_error, setError] = useState(null);
   const [_is_loaded, setIsLoaded] = useState(false);
+
+  const [_roomPhotos, setRoomPhotos] = useState({
+    amount: 0,
+    room_id: 0,
+    room_photos: [],
+  });
+
+  const _handleApiResponse = (photos) => {
+    setRoomPhotos(photos);
+    setIsLoaded(true);
+  };
 
   const _handleImagePress = () => {
     /**Si recibir un searchForm es porque soy un guest buscando rooms */
@@ -36,13 +48,21 @@ const BnbRoomPreview = (props) => {
       .then(
         (response) => {
           setRatings(response);
-          setIsLoaded(true);
         },
         (error) => {
           setError(error);
-          setIsLoaded(true);
         }
-      );
+      )
+      .then(() => {
+        if (!error) {
+          httpGetTokenRequest(
+            "GET",
+            urls.URL_ROOMS + "/" + props.room.id + "/photos",
+            {},
+            _handleApiResponse
+          );
+        }
+      });
   }, []);
 
   const getAverageRating = () => {
