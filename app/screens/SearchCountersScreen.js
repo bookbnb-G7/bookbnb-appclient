@@ -34,7 +34,6 @@ class SearchCountersScreen extends Component {
       this.state.counters[0].quantity + this.state.counters[1].quantity;
     const { searchForm } = this.props.route.params;
     searchForm["amount_of_people"] = amount_of_people;
-    console.log(JSON.stringify(searchForm));
     this.props.navigation.navigate("SearchResultRooms", {
       searchForm: searchForm,
     });

@@ -12,9 +12,6 @@ import BnbTitleText from "../components/BnbTitleText";
 
 function SearchDateTimePicker({ route, navigation }) {
   const { location, searchForm } = route.params;
-  const _handleNextButtonPress = () => {
-    navigation.navigate("SearchCounters", { searchForm: searchForm });
-  };
 
   const [dateBegin, setDateBegin] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
@@ -23,6 +20,11 @@ function SearchDateTimePicker({ route, navigation }) {
   const [showEnd, setShowEnd] = useState(false);
 
   const [pickedBeginDate, setPicked] = useState(false);
+  const [pickedEndDate, setPickedEnd] = useState(false);
+
+  const _handleNextButtonPress = () => {
+    navigation.navigate("SearchCounters", { searchForm: searchForm });
+  };
 
   const onChangeBegin = (event, selectedDate) => {
     const currentDate = selectedDate || dateBegin;
@@ -43,6 +45,7 @@ function SearchDateTimePicker({ route, navigation }) {
     if (currentDate > dateBegin) {
       setShowEnd(Platform.OS === "ios");
       setDateEnd(currentDate);
+      setPickedEnd(true);
       searchForm["date_ends"] = dateEnd.toISOString();
     } else {
       alert("No puede elegir una fecha de fin anterior a la fecha de comienzo");
@@ -116,11 +119,13 @@ function SearchDateTimePicker({ route, navigation }) {
           />
         )}
         <Separator></Separator>
-        <BnbButton
-          title="Siguiente"
-          onPress={_handleNextButtonPress}
-          style={styles.button}
-        ></BnbButton>
+        {pickedBeginDate && pickedEndDate && (
+          <BnbButton
+            title="Siguiente"
+            onPress={_handleNextButtonPress}
+            style={styles.button}
+          ></BnbButton>
+        )}
       </BnbBodyView>
     </BnbMainView>
   );

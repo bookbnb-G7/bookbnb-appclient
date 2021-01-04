@@ -3,6 +3,8 @@ import BnbMainView from "./BnbMainView";
 import { Component } from "react";
 import { SliderBox } from "react-native-image-slider-box";
 import { StyleSheet, View } from "react-native";
+import colors from "../config/colors";
+import styling from "../config/styling";
 
 class BnbImageSlider extends Component {
   constructor(props) {
