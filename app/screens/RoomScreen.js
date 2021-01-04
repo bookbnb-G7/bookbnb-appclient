@@ -107,8 +107,6 @@ function RoomScreen({ route, navigation }) {
 
   const _handleRoomBooking = () => {
     searchForm["user_id"] = storedUser.userData.id;
-    console.log(JSON.stringify(searchForm));
-    /**POST Add Booking To Room */
     httpPostTokenRequest(
       "POST",
       urls.URL_ROOMS + "/" + room_id + "/bookings",
@@ -148,7 +146,7 @@ function RoomScreen({ route, navigation }) {
             _handleApiError
           );
         })
-        .then(async (photos) => {
+        .then((photos) => {
           setPhotos(photos);
           return httpGetTokenRequest(
             "GET",
@@ -160,22 +158,17 @@ function RoomScreen({ route, navigation }) {
         })
         .then((reviews) => {
           setReviews(reviews);
+          return httpGetTokenRequest(
+            "GET",
+            urls.URL_ROOMS + "/" + room_id + "/ratings",
+            {}
+          );
+        })
+        .then((ratings) => {
+          getAverageRating(ratings);
           setIsLoading(false);
         });
     }
-  }, [_is_loading]);
-
-  useEffect(() => {
-    console.log("average rating");
-    httpGetTokenRequest(
-      "GET",
-      urls.URL_ROOMS + "/" + room_id + "/ratings",
-      {}
-    ).then((ratings) => {
-      if (ratings) {
-        getAverageRating(ratings);
-      }
-    });
   }, [_is_loading]);
 
   const [storedUser, setStoredUser] = useState();
