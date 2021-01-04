@@ -17,6 +17,7 @@ import urls from "../constant/urls";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbImageSlider from "../components/BnbImageSlider";
+import BnbLoading from "../components/BnbLoading";
 
 const image = require("../assets/bookbnb_1.png");
 
@@ -26,18 +27,14 @@ function RoomScreen({ route, navigation }) {
   const [_room, setRoom] = useState();
   const [_is_loading, setIsLoading] = useState(true);
 
-  const [_reviews, setReviews] = useState(undefined);
+  const [_reviews, setReviews] = useState();
   const [_average_rating, setAverageRating] = useState(0);
   const [_review, setReview] = useState("");
   const [_rating, setRating] = useState({
     quantity: 0,
   });
   const [_error, setError] = useState();
-  const [_photos, setPhotos] = useState({
-    amount: 0,
-    room_id: 0,
-    room_photos: [],
-  });
+  const [_photos, setPhotos] = useState();
 
   const _handleRatingChange = (counter, offset) => {
     const new_quantity = _rating.quantity + offset;
@@ -179,7 +176,7 @@ function RoomScreen({ route, navigation }) {
   }, []);
 
   if (_is_loading || !storedUser) {
-    return <Text>Cargando habitacion...</Text>;
+    return <BnbLoading>Cargando habitacion...</BnbLoading>;
   } else if (_error) {
     return <Text>{_error.message}</Text>;
   } else {
