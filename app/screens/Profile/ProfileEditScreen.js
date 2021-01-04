@@ -15,9 +15,6 @@ import firebase from "../../database/firebase";
 import BnbImage from "../../components/BnbImage";
 
 function ProfileEditScreen({ route, navigation }) {
-  const PROFILE_ICON = require("../../assets/profile_icon.png");
-  const ROOM_ICON = require("../../assets/house_logo.png");
-
   const [storedUser, setStoredUser] = useState();
 
   useEffect(() => {
@@ -38,6 +35,10 @@ function ProfileEditScreen({ route, navigation }) {
     navigation.navigate("ImagePick");
   };
 
+  const _handleWalletPress = () => {
+    navigation.navigate("ProfileWallet");
+  };
+
   const _handleLogOutButton = () => {
     BnbSecureStore.clear(constants.CACHE_USER_KEY).then(() => {
       firebase.auth
@@ -50,10 +51,15 @@ function ProfileEditScreen({ route, navigation }) {
   const PROFILE_OPTIONS = [
     { id: 0, title: "Informacion de la cuenta" },
     { id: 1, title: "Habitaciones" },
+    { id: 2, title: "Billetera" },
   ];
 
-  const ICONS = [PROFILE_ICON, ROOM_ICON];
-  const HANDLERS = [_handleProfileInfoPress, _handleRoomsInfoPress];
+  const ICONS_NAMES = ["ios-contact", "ios-home", "ios-wallet"];
+  const HANDLERS = [
+    _handleProfileInfoPress,
+    _handleRoomsInfoPress,
+    _handleWalletPress,
+  ];
 
   return (
     <BnbMainView
@@ -90,7 +96,7 @@ function ProfileEditScreen({ route, navigation }) {
             <View key={element.id}>
               <Separator />
               <TouchableOpacity onPress={HANDLERS[element.id]}>
-                <BnbIconText logo={ICONS[element.id]}>
+                <BnbIconText iconName={ICONS_NAMES[element.id]}>
                   {element.title}
                 </BnbIconText>
               </TouchableOpacity>

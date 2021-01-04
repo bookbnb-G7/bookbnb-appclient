@@ -2,7 +2,7 @@ import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
-import Ionicons from "@expo/vector-icons/MaterialCommunityIcons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const BnbIconText = (props) => (
   <View style={styles.mainContainer}>
