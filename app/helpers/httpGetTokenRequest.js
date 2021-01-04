@@ -23,7 +23,9 @@ async function httpGetTokenRequest(method, url, header, onResponse, onError) {
       }
     })
     .catch((error) => {
-      console.log("Error en la peticion fetch: " + error);
+      console.log(
+        "Error en la peticion fetch, url: " + url + " error:" + error
+      );
       if (onError) onError(error);
     });
 }

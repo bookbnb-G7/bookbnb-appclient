@@ -19,7 +19,11 @@ class BnbImageSlider extends Component {
     return (
       <View style={styles.container} onLayout={this.onLayout}>
         <SliderBox
-          images={this.props.images}
+          images={
+            this.props.images.length !== 0
+              ? this.props.images
+              : [require("../assets/Bookbnb_logo.png")]
+          }
           onCurrentImagePressed={() => {
             this.props.onPress ? this.props.onPress() : {};
           }}

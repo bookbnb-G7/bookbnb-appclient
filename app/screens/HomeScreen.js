@@ -36,7 +36,7 @@ function HomeScreen({ route, navigation }) {
   const _handleLogOutButton = () => {
     firebase.auth
       .signOut()
-      .then(() => console.log(storedUser.userData.email + " Cerro sesion"))
+      .then(() => console.log(user_email + " Cerro sesion"))
       .then(() => navigation.navigate("HomeStack"));
   };
 

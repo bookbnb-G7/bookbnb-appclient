@@ -5,6 +5,7 @@ import fonts from "../config/fonts";
 import styling from "../config/styling";
 import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
+import BnbLoading from "../components/BnbLoading";
 
 const BnbRoomPreview = (props) => {
   const room_image = require("../assets/bookbnb_1.png");
@@ -48,21 +49,17 @@ const BnbRoomPreview = (props) => {
       .then(
         (response) => {
           setRatings(response);
-        },
-        (error) => {
-          setError(error);
-        }
-      )
-      .then(() => {
-        if (!error) {
           httpGetTokenRequest(
             "GET",
             urls.URL_ROOMS + "/" + props.room.id + "/photos",
             {},
             _handleApiResponse
           );
+        },
+        (error) => {
+          setError(error);
         }
-      });
+      );
   }, []);
 
   const getAverageRating = () => {
@@ -75,11 +72,7 @@ const BnbRoomPreview = (props) => {
   };
 
   if (!_is_loaded) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <BnbLoading text="Cargando habitacion..."></BnbLoading>;
   } else if (_error) {
     return (
       <View>
