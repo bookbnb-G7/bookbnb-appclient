@@ -99,7 +99,7 @@ function RoomScreen({ route, navigation }) {
   };
 
   const _handleRoomDetailsButtonPress = () => {
-    navigation.navigate("RoomDetails", { room: _room });
+    navigation.navigate("RoomDetails", { room_id: _room.id });
   };
 
   const _handleRoomBooking = () => {
@@ -176,7 +176,7 @@ function RoomScreen({ route, navigation }) {
   }, []);
 
   if (_is_loading || !storedUser) {
-    return <BnbLoading>Cargando habitacion...</BnbLoading>;
+    return <BnbLoading text={"Cargando habitacion..."}></BnbLoading>;
   } else if (_error) {
     return <Text>{_error.message}</Text>;
   } else {
