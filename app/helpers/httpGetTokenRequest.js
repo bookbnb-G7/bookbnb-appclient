@@ -6,6 +6,8 @@ async function httpGetTokenRequest(method, url, header, onResponse, onError) {
     headers: header,
   };
 
+  console.log("Debug httpGetTokenRequest header:" + JSON.stringify(header));
+
   /**error captura los errores de red pero NO los errores de HTTP */
   return fetch(url, requestOptions)
     .then(async (response) => {
@@ -21,7 +23,9 @@ async function httpGetTokenRequest(method, url, header, onResponse, onError) {
       }
     })
     .catch((error) => {
-      console.log("Error en la peticion fetch: " + error);
+      console.log(
+        "Error en la peticion fetch, url: " + url + " error:" + error
+      );
       if (onError) onError(error);
     });
 }

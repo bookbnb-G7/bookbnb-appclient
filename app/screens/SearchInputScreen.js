@@ -14,16 +14,18 @@ function SearchInputScreen({ navigation }) {
   const [_location_input, setLocationInput] = useState("");
 
   /**Lo creo aca y lo voy pasando como props a cada screen que lo va completando */
-  const [_searchForm, setSearchForm] = useState({
-    location: "",
-    date_from: "",
-    date_until: "",
-    adult_qty: 0,
-    children_qty: 0,
+  const [searchForm, setSearchForm] = useState({
+    date_ends: "",
+    date_begins: "",
+    amount_of_people: 0,
+    user_id: 0,
   });
 
   const _handleEndEditing = () => {
-    navigation.navigate("SearchDateTimePicker", { location: _location_input });
+    navigation.navigate("SearchDateTimePicker", {
+      location: _location_input,
+      searchForm: searchForm,
+    });
   };
 
   return (

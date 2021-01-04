@@ -30,11 +30,11 @@ function UserLoginScreen({ navigation }) {
 
   const _handleForgotPassword = () => {
     navigation.navigate("PasswordRecover");
-  }
+  };
 
   const _handleSignup = () => {
     navigation.navigate("SignUp");
-  }
+  };
 
   const _handleLoginUserButtonPress = () => {
     if (_user.email == "" || _user.password == "") {
@@ -46,13 +46,9 @@ function UserLoginScreen({ navigation }) {
         .signInWithEmailAndPassword(_user.email, _user.password)
         .then(async (userCredential) => {
           return userCredential.user.getIdToken().then(async (id_token) => {
-            const data = await httpGetTokenRequest(
-              "GET",
-              urls.URL_USERS + "/me",
-              {
-                "x-access-token": id_token,
-              }
-            );
+            const data = await httpGetTokenRequest("GET", urls.URL_ME, {
+              "x-access-token": id_token,
+            });
             if (data) {
               const storeUser = {
                 auth_token: id_token,
@@ -62,8 +58,10 @@ function UserLoginScreen({ navigation }) {
             } else {
               /**OJO que si hay un error en el fetch esto CREO que genera un react state update
                * en un componente desmontado
+               * data que ejecuta esta parte de caodigo pero el stack navigator ya cambio de pantalla
+               *
                */
-              setIsAwaiting(false);
+              //setIsAwaiting(false);
             }
           });
         })
@@ -86,31 +84,52 @@ function UserLoginScreen({ navigation }) {
     return (
       <BnbMainView>
         <BnbBodyView style={styles.centerContainer}>
-          <Image source={require("../assets/Bookbnb_logo.png")} style={styles.image} />
+          <Image
+            source={require("../assets/Bookbnb_logo.png")}
+            style={styles.image}
+          />
           <View style={styles.centerSubContainer}>
             <View>
-              <BnbIconTextInput 
-                iconName="mail" 
-                placeholder="E-mail" 
-                onChangeText={(text) => _handleTextChange("email", text)} 
-                value={_user.email} 
-                style={((_login_error == constants.ERR_EMAIL_INVALID) ? {borderColor: colors.error} : {})} />
+              <BnbIconTextInput
+                iconName="mail"
+                placeholder="E-mail"
+                onChangeText={(text) => _handleTextChange("email", text)}
+                value={_user.email}
+                style={
+                  _login_error == constants.ERR_EMAIL_INVALID
+                    ? { borderColor: colors.error }
+                    : {}
+                }
+              />
 
-              <BnbIconTextInput 
-                iconName="lock" 
-                placeholder="Contraseña" 
-                onChangeText={(text) => _handleTextChange("password", text)} 
-                value={_user.password} 
-                secureTextEntry={true} 
-                style={((_login_error == constants.ERR_PASS_INVALID) ? {borderColor: colors.error} : {})} />
-                
+              <BnbIconTextInput
+                iconName="lock"
+                placeholder="Contraseña"
+                onChangeText={(text) => _handleTextChange("password", text)}
+                value={_user.password}
+                secureTextEntry={true}
+                style={
+                  _login_error == constants.ERR_PASS_INVALID
+                    ? { borderColor: colors.error }
+                    : {}
+                }
+              />
+
               <View>
-                <Text style={styles.errorText}> {(_login_error != "") ? _login_error : ""}</Text>
+                <Text style={styles.errorText}>
+                  {" "}
+                  {_login_error != "" ? _login_error : ""}
+                </Text>
               </View>
             </View>
 
-            <TouchableOpacity onPress={_handleForgotPassword} style={styles.forgotPassText}>
-              <Text style={styles.clickableText}>{constants.FORGOT_PASSWORD_MESSAGE}</Text>
+            <TouchableOpacity
+              onPress={_handleForgotPassword}
+              style={styles.forgotPassText}
+            >
+              <Text style={styles.clickableText}>
+                {constants.FORGOT_PASSWORD_MESSAGE}
+              </Text>
             </TouchableOpacity>
 
             <BnbButton
@@ -163,7 +182,7 @@ const styles = StyleSheet.create({
   },
   centerContainer: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: "column",
     justifyContent: "space-around",
   },
   image: {
@@ -180,7 +199,7 @@ const styles = StyleSheet.create({
   },
   forgotPassText: {
     margin: 15,
-  }
+  },
 });
 
 export default UserLoginScreen;

@@ -13,12 +13,15 @@ import BnbMainView from "../components/BnbMainView";
 import styling from "../config/styling";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
+import firebase from "../database/firebase";
+import BnbImageSlider from "../components/BnbImageSlider";
+import Separator from "../components/Separator";
 
-const bnb_book_logo = require("../assets/Bookbnb_logo.png");
-const background = require("../assets/background_2.png");
-
-function HomeScreen({ navigation }) {
+function HomeScreen({ route, navigation }) {
+  const user_email = route.params.user_email;
   const [storedUser, setStoredUser] = useState();
+
+  const background = require("../assets/background_2.png");
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
@@ -30,16 +33,37 @@ function HomeScreen({ navigation }) {
     navigation.navigate("SearchRooms");
   }
 
+  const _handleLogOutButton = () => {
+    firebase.auth
+      .signOut()
+      .then(() => console.log(user_email + " Cerro sesion"))
+      .then(() => navigation.navigate("HomeStack"));
+  };
+
   return (
     <BnbMainView style={styles.mainContainer}>
       <ImageBackground source={background} style={styles.background}>
-        <Image style={styles.logo} source={bnb_book_logo}></Image>
+        <View style={styles.imageSlider}>
+          <BnbImageSlider
+            images={[require("../assets/Bookbnb_logo.png")]}
+            width={200}
+            onPress={() => {
+              console.log("HOla");
+            }}
+          ></BnbImageSlider>
+        </View>
         <View style={styles.optionsContainer}>
-          {storedUser && (
-            <BnbButton
-              onPress={_handleSearchRoomsButton}
-              title={"Buscar Habitaciones"}
-            />
+          {user_email && (
+            <View>
+              <BnbButton
+                onPress={_handleSearchRoomsButton}
+                title={"Buscar Habitaciones"}
+              />
+              <BnbButton
+                title="DEBUG Cerrar sesion"
+                onPress={_handleLogOutButton}
+              ></BnbButton>
+            </View>
           )}
         </View>
       </ImageBackground>
@@ -52,6 +76,10 @@ const dimensions = Dimensions.get("window");
 const styles = StyleSheet.create({
   mainContainer: {
     //backgroundColor: colors.graySoft,
+  },
+  imageSlider: {
+    flex: 1,
+    alignItems: "center",
   },
   optionsContainer: {
     flex: 1,

@@ -11,27 +11,42 @@ import Separator from "../components/Separator";
 import BnbTitleText from "../components/BnbTitleText";
 
 function SearchDateTimePicker({ route, navigation }) {
-  const { location } = route.params;
+  const { location, searchForm } = route.params;
   const _handleNextButtonPress = () => {
-    navigation.navigate("SearchCounters");
+    navigation.navigate("SearchCounters", { searchForm: searchForm });
   };
 
-  const [dateBegin, setDateBegin] = useState(new Date(1598051730000));
-  const [dateEnd, setDateEnd] = useState(new Date(1598051730000));
+  const [dateBegin, setDateBegin] = useState(new Date());
+  const [dateEnd, setDateEnd] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [showBegin, setShowBegin] = useState(false);
   const [showEnd, setShowEnd] = useState(false);
 
+  const [pickedBeginDate, setPicked] = useState(false);
+
   const onChangeBegin = (event, selectedDate) => {
     const currentDate = selectedDate || dateBegin;
-    setShowBegin(Platform.OS === "ios");
-    setDateBegin(currentDate);
+    if (currentDate < dateEnd || !pickedBeginDate) {
+      setShowBegin(Platform.OS === "ios");
+      setDateBegin(currentDate);
+      setPicked(true);
+      searchForm["date_begins"] = dateBegin.toISOString();
+    } else {
+      alert(
+        "No puede elegir una fecha de comienzo posterior a la fecha de fin"
+      );
+    }
   };
 
   const onChangeEnd = (event, selectedDate) => {
     const currentDate = selectedDate || dateEnd;
-    setShowEnd(Platform.OS === "ios");
-    setDateEnd(currentDate);
+    if (currentDate > dateBegin) {
+      setShowEnd(Platform.OS === "ios");
+      setDateEnd(currentDate);
+      searchForm["date_ends"] = dateEnd.toISOString();
+    } else {
+      alert("No puede elegir una fecha de fin anterior a la fecha de comienzo");
+    }
   };
 
   const showDatepicker = () => {
@@ -44,6 +59,10 @@ function SearchDateTimePicker({ route, navigation }) {
     setShowEnd(true);
   };
 
+  const getMonth = (date) => {
+    return date.getMonth() + 1;
+  };
+
   return (
     <BnbMainView style={styles.background}>
       <Text style={styles.bigText}>¿Cuando vas a estar ahí?</Text>
@@ -53,7 +72,7 @@ function SearchDateTimePicker({ route, navigation }) {
         <View>
           <Text style={styles.date}>Fecha de inicio</Text>
           <Text style={styles.date}>
-            {dateBegin.getDate()}-{dateBegin.getMonth()}-
+            {dateBegin.getDate()}-{getMonth(dateBegin)}-
             {dateBegin.getFullYear()}
           </Text>
         </View>
@@ -61,15 +80,19 @@ function SearchDateTimePicker({ route, navigation }) {
           <Button onPress={showDatepicker} title="Fecha de inicio" />
         </View>
         <Separator></Separator>
-        <View>
-          <Text style={styles.date}>Fecha fin</Text>
-          <Text style={styles.date}>
-            {dateEnd.getDate()}-{dateEnd.getMonth()}-{dateEnd.getFullYear()}
-          </Text>
-        </View>
-        <View>
-          <Button onPress={showDatepickerEnd} title="Fecha fin" />
-        </View>
+        {pickedBeginDate && (
+          <View>
+            <View>
+              <Text style={styles.date}>Fecha fin</Text>
+              <Text style={styles.date}>
+                {dateEnd.getDate()}-{getMonth(dateEnd)}-{dateEnd.getFullYear()}
+              </Text>
+            </View>
+            <View>
+              <Button onPress={showDatepickerEnd} title="Fecha fin" />
+            </View>
+          </View>
+        )}
         {showBegin && (
           <DateTimePicker
             testID="dateTimePicker"
@@ -77,6 +100,7 @@ function SearchDateTimePicker({ route, navigation }) {
             mode={mode}
             is24Hour={true}
             display="default"
+            minimumDate={new Date()}
             onChange={onChangeBegin}
           />
         )}
@@ -87,6 +111,7 @@ function SearchDateTimePicker({ route, navigation }) {
             mode={mode}
             is24Hour={true}
             display="default"
+            minimumDate={new Date()}
             onChange={onChangeEnd}
           />
         )}

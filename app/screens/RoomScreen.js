@@ -3,7 +3,6 @@ import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
-import BnbFooterView from "../components/BnbFooterView";
 import BnbTitleText from "../components/BnbTitleText";
 import BnbMainView from "../components/BnbMainView";
 import RoomReview from "../components/RoomReview";
@@ -13,18 +12,17 @@ import styling from "../config/styling";
 import constants from "../constant/constants";
 import Separator from "../components/Separator";
 import Counter from "../components/Counter";
-import httpPostRequest from "../helpers/httpPostRequest";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import urls from "../constant/urls";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
-import BnbLoading from "../components/BnbLoading";
+import BnbImageSlider from "../components/BnbImageSlider";
 
 const image = require("../assets/bookbnb_1.png");
 
 function RoomScreen({ route, navigation }) {
-  //const { room, ratings } = route.params;
-  const { room_id } = route.params;
+  const room_id = route.params?.room_id;
+  const searchForm = route.params?.searchForm;
   const [_room, setRoom] = useState();
   const [_is_loading, setIsLoading] = useState(true);
 
@@ -33,6 +31,12 @@ function RoomScreen({ route, navigation }) {
   const [_review, setReview] = useState("");
   const [_rating, setRating] = useState({
     quantity: 0,
+  });
+  const [_error, setError] = useState();
+  const [_photos, setPhotos] = useState({
+    amount: 0,
+    room_id: 0,
+    room_photos: [],
   });
 
   const _handleRatingChange = (counter, offset) => {
@@ -47,7 +51,8 @@ function RoomScreen({ route, navigation }) {
     setIsLoading(false);
   };
 
-  const _handleApiError = () => {
+  const _handleApiError = (error) => {
+    setError(error);
     setIsLoading(false);
   };
 
@@ -100,6 +105,20 @@ function RoomScreen({ route, navigation }) {
     navigation.navigate("RoomDetails", { room: _room });
   };
 
+  const _handleRoomBooking = () => {
+    searchForm["user_id"] = storedUser.userData.id;
+    console.log(JSON.stringify(searchForm));
+    /**POST Add Booking To Room */
+    httpPostTokenRequest(
+      "POST",
+      urls.URL_ROOMS + "/" + room_id + "/bookings",
+      searchForm,
+      { "x-access-token": storedUser.auth_token },
+      _handleApiResponse,
+      _handleApiError
+    );
+  };
+
   const getAverageRating = (ratings) => {
     let average_rating = 0;
     ratings.ratings.forEach(function (item, index, array) {
@@ -109,22 +128,42 @@ function RoomScreen({ route, navigation }) {
     setAverageRating(average_rating);
   };
 
+  /**Fetcheo los datos del room */
   useEffect(() => {
-    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id).then((room) => {
-      setRoom(room);
-      setIsLoading(false);
-    });
-  }, []);
-
-  useEffect(() => {
-    httpGetTokenRequest(
-      "GET",
-      urls.URL_ROOMS + "/" + room_id + "/reviews",
-      {}
-    ).then((data) => {
-      setReviews(data);
-    });
-  }, []);
+    if (_is_loading === true) {
+      httpGetTokenRequest(
+        "GET",
+        urls.URL_ROOMS + "/" + room_id,
+        {},
+        null,
+        _handleApiError
+      )
+        .then((room) => {
+          setRoom(room);
+          return httpGetTokenRequest(
+            "GET",
+            urls.URL_ROOMS + "/" + room_id + "/photos",
+            {},
+            null,
+            _handleApiError
+          );
+        })
+        .then(async (photos) => {
+          setPhotos(photos);
+          return httpGetTokenRequest(
+            "GET",
+            urls.URL_ROOMS + "/" + room_id + "/reviews",
+            {},
+            null,
+            _handleApiError
+          );
+        })
+        .then((reviews) => {
+          setReviews(reviews);
+          setIsLoading(false);
+        });
+    }
+  }, [_is_loading]);
 
   useEffect(() => {
     console.log("average rating");
@@ -147,12 +186,19 @@ function RoomScreen({ route, navigation }) {
   }, []);
 
   if (_is_loading || !storedUser) {
-    return <BnbLoading></BnbLoading>;
+    return <Text>Cargando habitacion...</Text>;
+  } else if (_error) {
+    return <Text>{_error.message}</Text>;
   } else {
     return (
       <BnbMainView>
         <ScrollView>
-          <Image style={styles.roomImage} source={image}></Image>
+          <View style={styles.imageSlider}>
+            <BnbImageSlider
+              images={_photos.room_photos}
+              width={200}
+            ></BnbImageSlider>
+          </View>
           <BnbBodyView>
             <View style={styles.roomInfoContainer}>
               <Text>{_average_rating} de 5 estrellas</Text>
@@ -214,6 +260,12 @@ function RoomScreen({ route, navigation }) {
               title="Detalles"
               onPress={_handleRoomDetailsButtonPress}
             />
+            <Separator />
+            <BnbButton
+              style={styles.center}
+              title="Reservar"
+              onPress={_handleRoomBooking}
+            />
           </BnbBodyView>
         </ScrollView>
       </BnbMainView>
@@ -228,6 +280,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 200,
     borderRadius: styling.mediumCornerRadius,
+  },
+  imageSlider: {
+    flex: 1,
+    alignItems: "center",
   },
   roomInfoContainer: {
     marginVertical: styling.separator,

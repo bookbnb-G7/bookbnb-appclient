@@ -3,10 +3,12 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
-
-const room_image = require("../assets/bookbnb_1.png");
+import urls from "../constant/urls";
+import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
+import BnbLoading from "../components/BnbLoading";
 
 const BnbRoomPreview = (props) => {
+  const room_image = require("../assets/bookbnb_1.png");
   const url_ratings =
     "http://bookbnb-appserver.herokuapp.com/rooms/" +
     props.room.id +
@@ -15,28 +17,47 @@ const BnbRoomPreview = (props) => {
   const [_error, setError] = useState(null);
   const [_is_loaded, setIsLoaded] = useState(false);
 
-  const _handleImagePress = () => {
-    /**Le paso el room, podria pasarle los ratings tambien */
-    //props.navigation.navigate("Room", { room: props.room, ratings: _ratings });
-    /**Paso solo el id asi el Room puede fetchear los cambios */
-    props.navigation.navigate("Room", { room_id: props.room.id });
+  const [_roomPhotos, setRoomPhotos] = useState({
+    amount: 0,
+    room_id: 0,
+    room_photos: [],
+  });
+
+  const _handleApiResponse = (photos) => {
+    setRoomPhotos(photos);
+    setIsLoaded(true);
   };
 
-  /**ComponentDidMount obtengo todos los datos a partir del
-   * room que recibo por props (le saco el id)*/
-  /**Super importante el isLoaded porque caso contrario intentamos mostrar objetos indefinidos
-   */
+  const _handleImagePress = () => {
+    /**Si recibir un searchForm es porque soy un guest buscando rooms */
+    if (props?.searchForm) {
+      props.navigation.navigate("Room", {
+        room_id: props.room.id,
+        searchForm: props.searchForm,
+      });
+    } else {
+      /**Caso contrario soy el dueño */
+      props.navigation.navigate("Room", {
+        room_id: props.room.id,
+      });
+    }
+  };
+
   useEffect(() => {
     fetch(url_ratings)
       .then((response) => response.json())
       .then(
         (response) => {
           setRatings(response);
-          setIsLoaded(true);
+          httpGetTokenRequest(
+            "GET",
+            urls.URL_ROOMS + "/" + props.room.id + "/photos",
+            {},
+            _handleApiResponse
+          );
         },
         (error) => {
           setError(error);
-          setIsLoaded(true);
         }
       );
   }, []);
@@ -51,11 +72,7 @@ const BnbRoomPreview = (props) => {
   };
 
   if (!_is_loaded) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <BnbLoading text="Cargando habitacion..."></BnbLoading>;
   } else if (_error) {
     return (
       <View>

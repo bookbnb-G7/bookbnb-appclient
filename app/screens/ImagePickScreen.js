@@ -7,7 +7,6 @@ import Separator from "../components/Separator";
 import BnbAlert from "../components/BnbAlert";
 import styling from "../config/styling";
 import pickAnImage from "../helpers/pickAnImage";
-import useRequestCameraPermissions from "../helpers/useRequestCameraPermissions";
 import BnbLoading from "../components/BnbLoading";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
@@ -30,7 +29,6 @@ function ImagePickScreen({ route, navigation }) {
   }, []);
 
   const _handleApiResponse = (data) => {
-    BnbAlert("Imagen", "Imagen actualizada con exito", "Entendido", false);
     /**copio */
     let userData = storedUser.userData;
 
@@ -45,7 +43,7 @@ function ImagePickScreen({ route, navigation }) {
 
     /**guardo */
     BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser).then(() => {
-      setIsAwaiting(false);
+      navigation.navigate("ProfileEdit", { photo: data.photo });
     });
   };
 
