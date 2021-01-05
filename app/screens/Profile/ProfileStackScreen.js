@@ -13,6 +13,8 @@ import RoomBookingScreen from "../RoomBookingScreen";
 import ProfileEditScreen from "./ProfileEditScreen";
 import ProfileRoomsOptionsScreen from "./ProfileRoomsOptionsScreen";
 import ProfileRoomsScreen from "./ProfileRoomsScreen";
+import ProfileWalletScreen from "./ProfileWalletScreen";
+import ImagesEditScreen from "../ImagesEditScreen";
 
 const ProfileStack = createStackNavigator();
 
@@ -46,12 +48,17 @@ function ProfileStackScreen(props) {
           name="ProfileRooms"
           component={ProfileRoomsScreen}
         />
+        <ProfileStack.Screen name="ImagesEdit" component={ImagesEditScreen} />
         <ProfileStack.Screen name="RoomCreate" component={RoomCreateScreen} />
         <ProfileStack.Screen
           name="ProfileBookings"
           component={ProfileBookingsScreen}
         />
         <ProfileStack.Screen name="RoomBooking" component={RoomBookingScreen} />
+        <ProfileStack.Screen
+          name="ProfileWallet"
+          component={ProfileWalletScreen}
+        />
         <ProfileStack.Screen name="ImagePick" component={ImagePickScreen} />
       </ProfileStack.Navigator>
     );

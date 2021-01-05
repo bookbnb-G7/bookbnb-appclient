@@ -6,6 +6,7 @@ import BnbLoading from "../components/BnbLoading";
 import BnbMainView from "../components/BnbMainView";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
+import constants from "../constant/constants";
 import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
@@ -16,7 +17,7 @@ function RoomBookingScreen(props) {
   const [storedUser, setStoredUser] = useState();
   const [_booking, setBooking] = useState();
   const [_is_loading, setIsLoading] = useState(true);
-  const [_error, setError] = useState("");
+  const [_error, setError] = useState();
 
   const [_is_owner, setIsOwner] = useState(false);
 
@@ -63,8 +64,12 @@ function RoomBookingScreen(props) {
   const showBookingStatus = (state) => {
     return (
       <View>
-        {state === 1 && <Text style={styles.redText}>Pendiente</Text>}
-        {state === 2 && <Text style={styles.greenText}>Aceptado</Text>}
+        {state === constants.STATE_PENDING && (
+          <Text style={styles.redText}>Pendiente</Text>
+        )}
+        {state === constants.STATE_ACCEPTED && (
+          <Text style={styles.greenText}>Aceptado</Text>
+        )}
       </View>
     );
   };
@@ -81,6 +86,10 @@ function RoomBookingScreen(props) {
       );
     });
   }, []);
+
+  if (_error) {
+    <BnbLoading style={styles.redText}>{_error.message}</BnbLoading>;
+  }
 
   if (_is_loading) {
     <BnbLoading></BnbLoading>;
@@ -106,7 +115,6 @@ function RoomBookingScreen(props) {
               title="Rechazar reserva"
               onPress={_handleRejectBooking}
             ></BnbButton>
-            {_error != "" && <Text style={styles.redText}>{_error}</Text>}
           </View>
         )}
       </BnbMainView>
