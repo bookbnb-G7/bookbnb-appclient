@@ -2,12 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
-  Text,
-  Image,
   ImageBackground,
-  Dimensions,
 } from "react-native";
-import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
 import styling from "../config/styling";
@@ -15,13 +11,14 @@ import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
 import firebase from "../database/firebase";
 import BnbImageSlider from "../components/BnbImageSlider";
-import Separator from "../components/Separator";
+import colors from "../config/colors";
 
 function HomeScreen({ route, navigation }) {
   const user_email = route.params.user_email;
   const [storedUser, setStoredUser] = useState();
 
   const background = require("../assets/background_2.png");
+  const bnb_book_logo = require("../assets/Bookbnb_logo.png");
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
@@ -37,7 +34,9 @@ function HomeScreen({ route, navigation }) {
     firebase.auth
       .signOut()
       .then(() => console.log(user_email + " Cerro sesion"))
-      .then(() => navigation.navigate("HomeStack"));
+      .then(() => navigation.navigate("HomeStack"))
+      .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY))
+    ;
   };
 
   return (
@@ -50,7 +49,7 @@ function HomeScreen({ route, navigation }) {
             onPress={() => {
               console.log("HOla");
             }}
-          ></BnbImageSlider>
+          />
         </View>
         <View style={styles.optionsContainer}>
           {user_email && (
@@ -62,7 +61,7 @@ function HomeScreen({ route, navigation }) {
               <BnbButton
                 title="DEBUG Cerrar sesion"
                 onPress={_handleLogOutButton}
-              ></BnbButton>
+              />
             </View>
           )}
         </View>
@@ -71,11 +70,9 @@ function HomeScreen({ route, navigation }) {
   );
 }
 
-const dimensions = Dimensions.get("window");
-
 const styles = StyleSheet.create({
   mainContainer: {
-    //backgroundColor: colors.graySoft,
+    backgroundColor: colors.white,
   },
   imageSlider: {
     flex: 1,

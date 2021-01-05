@@ -12,7 +12,7 @@ const BnbIconText = (props) => (
         name={props.iconName}
         style={styles.ionIcon}
         size={50}
-      ></Ionicons>
+      />
     )}
 
     <Text style={{ ...styles.text, ...props.style }}>{props.children}</Text>

@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   },
   valueText: {
     fontSize: fonts.semi,
+    fontFamily: "Raleway_400Regular",
     //backgroundColor: colors.graySoft,
     /**borderWidth: 1,
     borderColor: colors.redSoft,

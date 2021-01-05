@@ -54,7 +54,7 @@ function ProfileEditScreen({ route, navigation }) {
     { id: 2, title: "Billetera" },
   ];
 
-  const ICONS_NAMES = ["ios-contact", "ios-home", "ios-wallet"];
+  const ICONS_NAMES = ["ios-person", "ios-home", "ios-wallet"];
   const HANDLERS = [
     _handleProfileInfoPress,
     _handleRoomsInfoPress,

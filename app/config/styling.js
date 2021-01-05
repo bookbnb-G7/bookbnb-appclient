@@ -5,7 +5,7 @@ export default {
   bigCornerRadius: 40,
   mediumCornerRadius: 20,
   textHPadding: 5,
-  buttonBorderRadius: 20,
+  buttonBorderRadius: 40,
   buttonHPadding: 10,
   buttonVPadding: 5,
   buttonHeight: 50,

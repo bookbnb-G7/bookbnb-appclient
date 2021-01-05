@@ -5,10 +5,9 @@ import constants from "../constant/constants";
 class BnbSecureStore {
   static async read(key) {
     try {
-      if (key == constants.CACHE_USER_KEY) {
+      if (key === constants.CACHE_USER_KEY) {
         const item = await SecureStore.getItemAsync(key);
-        const jsonItem = JSON.parse(item);
-        return jsonItem;
+        return JSON.parse(item);
       }
     } catch (e) {
       console.log(e);
