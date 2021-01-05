@@ -26,6 +26,10 @@ function RoomEditScreen({ route, navigation }) {
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
 
+  const _handleImagePress = () => {
+    navigation.navigate("ImagesEdit", { photos: _photos.room_photos });
+  };
+
   const _handleToggleEditRoomButtonPress = () => {
     setIsEditing(!_is_editing);
   };
@@ -129,6 +133,7 @@ function RoomEditScreen({ route, navigation }) {
             <BnbImageSlider
               images={_photos.room_photos}
               width={200}
+              onPress={_handleImagePress}
             ></BnbImageSlider>
           </View>
           <Separator></Separator>

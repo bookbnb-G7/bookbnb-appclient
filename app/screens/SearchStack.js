@@ -4,6 +4,7 @@ import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbHeaderUserInfo from "../components/BnbHeaderUserInfo";
 import BnbLoading from "../components/BnbLoading";
 import constants from "../constant/constants";
+import ImagesEditScreen from "./ImagesEditScreen";
 import RoomEditScreen from "./RoomEditScreen";
 import RoomScreen from "./RoomScreen";
 import SearchCountersScreen from "./SearchCountersScreen";
@@ -57,6 +58,7 @@ function SearchStack(props) {
         />
         <SearchStackNav.Screen name="Room" component={RoomScreen} />
         <SearchStackNav.Screen name="RoomDetails" component={RoomEditScreen} />
+        <SearchStackNav.Screen name="ImagesEdit" component={ImagesEditScreen} />
       </SearchStackNav.Navigator>
     );
   }
