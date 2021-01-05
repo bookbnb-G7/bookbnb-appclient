@@ -62,7 +62,7 @@ function ImagePickScreen({ route, navigation }) {
       if (Platform.OS !== "web") {
         const {
           status,
-        } = await ImagePicker.requestCameraRollPermissionsAsync();
+        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== "granted") {
           BnbAlert(
             "Permisos",

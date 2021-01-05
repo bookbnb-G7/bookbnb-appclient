@@ -54,11 +54,14 @@ function UserLoginScreen({ navigation }) {
                 auth_token: id_token,
                 userData: data,
               };
-              await BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
+              await BnbSecureStore.remember(
+                constants.CACHE_USER_KEY,
+                storeUser
+              );
             } else {
-              /**OJO que si hay un error en el fetch esto CREO que genera un react state update
+              /**OJO que si hay un error en el fetch esto GENERA un react state update
                * en un componente desmontado
-               * data que ejecuta esta parte de caodigo pero el stack navigator ya cambio de pantalla
+               * dado que ejecuta esta parte de codigo pero el stack navigator ya cambio de pantalla
                *
                */
               //setIsAwaiting(false);
@@ -79,7 +82,7 @@ function UserLoginScreen({ navigation }) {
   };
 
   if (_is_awaiting) {
-    return <BnbLoading/>;
+    return <BnbLoading />;
   } else {
     return (
       <BnbMainView>
@@ -101,7 +104,6 @@ function UserLoginScreen({ navigation }) {
                     : {}
                 }
                 inputStyle={styles.normalText}
-
               />
 
               <BnbIconTextInput
@@ -116,7 +118,6 @@ function UserLoginScreen({ navigation }) {
                     : {}
                 }
                 inputStyle={styles.normalText}
-
               />
 
               <View>
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
   },
   normalText: {
     fontFamily: "Raleway_400Regular",
-  }
+  },
 });
 
 export default UserLoginScreen;

@@ -21,7 +21,7 @@ function HomeStack(props) {
   const [user, initializing] = useGetCurrentSignedInUser();
 
   if (initializing) {
-    return <BnbLoading/>;
+    return <BnbLoading />;
   }
 
   if (!user) {
@@ -51,7 +51,6 @@ function HomeStack(props) {
         component={HomeScreen}
         initialParams={{ user_email: user.email }}
       />
-      <HomeStackNav.Screen name="ImageSlider" component={BnbImageSlider} />
     </HomeStackNav.Navigator>
   );
 }

@@ -40,12 +40,12 @@ async function httpPostTokenRequest(
       } else {
         const error = (data && JSON.stringify(data)) || response.statusText;
         console.log("Respuesta de red OK pero HTTP no:" + error);
-        if (onError) onError();
+        if (onError) onError(error);
       }
     })
     .catch((error) => {
       console.log("Error en la peticion fetch: " + error);
-      if (onError) onError();
+      if (onError) onError(error);
     });
 }
 

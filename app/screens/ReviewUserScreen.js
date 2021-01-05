@@ -64,7 +64,7 @@ function ReviewUserScreen({ route, navigation }) {
     }
   };
 
-  const _handleRateRoomButtonPress = () => {
+  const _handleRateUserButtonPress = () => {
     if (_rating.quantity !== 0) {
       setIsLoading(true);
       const url =
@@ -117,7 +117,7 @@ function ReviewUserScreen({ route, navigation }) {
           counter={_rating}
           maxCount={constants.maxRating}
         ></Counter>
-        <BnbButton title="Puntuar" onPress={_handleRateRoomButtonPress} />
+        <BnbButton title="Puntuar" onPress={_handleRateUserButtonPress} />
       </View>
     </BnbMainView>
   );

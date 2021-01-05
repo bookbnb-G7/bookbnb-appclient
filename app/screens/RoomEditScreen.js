@@ -27,7 +27,7 @@ function RoomEditScreen({ route, navigation }) {
   const [_error, setError] = useState();
 
   const _handleImagePress = () => {
-    navigation.navigate("ImagesEdit", { photos: _photos.room_photos });
+    navigation.navigate("ImagesEdit", { photos: _photos });
   };
 
   const _handleToggleEditRoomButtonPress = () => {

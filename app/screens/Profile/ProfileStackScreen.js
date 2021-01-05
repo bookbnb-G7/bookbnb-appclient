@@ -15,6 +15,7 @@ import ProfileRoomsOptionsScreen from "./ProfileRoomsOptionsScreen";
 import ProfileRoomsScreen from "./ProfileRoomsScreen";
 import ProfileWalletScreen from "./ProfileWalletScreen";
 import ImagesEditScreen from "../ImagesEditScreen";
+import { Text } from "react-native";
 
 const ProfileStack = createStackNavigator();
 
@@ -27,7 +28,7 @@ function ProfileStackScreen(props) {
   }, []);
 
   if (!storedUser) {
-    return <BnbLoading></BnbLoading>;
+    return <Text>Cargando...</Text>;
   } else {
     return (
       <ProfileStack.Navigator

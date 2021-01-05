@@ -1,5 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
+import { Text } from "react-native";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbHeaderUserInfo from "../components/BnbHeaderUserInfo";
 import BnbLoading from "../components/BnbLoading";
@@ -25,7 +26,7 @@ function SearchStack(props) {
   }, []);
 
   if (!storedUser) {
-    return <BnbLoading></BnbLoading>;
+    return <Text>Cargando...</Text>;
   } else {
     return (
       <SearchStackNav.Navigator
