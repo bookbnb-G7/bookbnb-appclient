@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Profiler } from "react";
-import { Text, View, StyleSheet } from "react-native";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
-import { color } from "react-native-reanimated";
+import React, {useRef, useState} from "react";
+import {Text, View, StyleSheet, Image} from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import CountryPicker from 'react-native-country-picker-modal'
 import BnbSecureStore from "../classes/BnbSecureStore";
-import BnbAlert from "../components/BnbAlert";
 import BnbBodyView from "../components/BnbBodyView";
-import BnbBubbleView from "../components/BnbBubbleView";
 import BnbButton from "../components/BnbButton";
-import BnbFooterView from "../components/BnbFooterView";
 import BnbLoading from "../components/BnbLoading";
 import BnbMainView from "../components/BnbMainView";
-import BnbTextInputObject from "../components/BnbTextInputObject";
+import BnbFloatingTextInput from "../components/BnbFloatingTextInput";
 import Separator from "../components/Separator";
 import colors from "../config/colors";
-import bnbStyleSheet from "../constant/bnbStyleSheet";
 import constants from "../constant/constants";
 import firebase from "../database/firebase";
 import urls from "../constant/urls";
@@ -24,11 +19,11 @@ function SignUpScreen({ route, navigation }) {
   const [user, setUser] = useState({
     email: "",
     password: "",
-    firstname: "App",
-    lastname: "App",
-    phonenumber: "11-1111111",
-    country: "USA",
-    birthdate: "1999-11-11",
+    firstname: "",
+    lastname: "",
+    phonenumber: "",
+    country: "",
+    birthdate: "",
     photo: "",
   });
   /**TODO: crear un formulario para completar estos campos, photo??? */
@@ -45,10 +40,10 @@ function SignUpScreen({ route, navigation }) {
 
   const _handleCreateUserButtonPress = () => {
     if (
-      user.email == "" ||
-      user.password == "" ||
-      user.firstname == "" ||
-      user.lastname == ""
+      user.email === "" ||
+      user.password === "" ||
+      user.firstname === "" ||
+      user.lastname === ""
     ) {
       setSignInError(constants.ERR_EMPTY_FIELD);
     } else {
@@ -65,8 +60,7 @@ function SignUpScreen({ route, navigation }) {
               phonenumber: user.phonenumber,
               country: user.country,
               birthdate: user.birthdate,
-              photo:
-                "https://melmagazine.com/wp-content/uploads/2020/07/zuck_sunscreen.jpg",
+              photo: "null",
             };
             httpPostTokenRequest("POST", urls.URL_USERS, appServerUser, {
               "Content-Type": "application/json",
@@ -77,14 +71,11 @@ function SignUpScreen({ route, navigation }) {
                   auth_token: id_token,
                   userData: data,
                 };
-                BnbSecureStore.remember(
-                  constants.CACHE_USER_KEY,
-                  storeUser
-                ).then(() => {
-                  navigation.navigate("Home");
-                });
+                BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
+              } else {
+                /**Si no pongo el else tengo un React update en un unmounted component */
+                setIsAwaiting(false);
               }
-              setIsAwaiting(false);
             });
           });
         })
@@ -100,87 +91,107 @@ function SignUpScreen({ route, navigation }) {
         });
     }
   };
+  const [password, setPassword] = useState('');
+  const ref_mail = useRef();
+  const ref_password = useRef();
+  const ref_name = useRef();
+  const ref_surname = useRef();
+  const ref_phone = useRef();
+  const ref_country = useRef();
+  const ref_birthdate = useRef();
+
 
   if (_is_awaiting) {
-    return <BnbLoading></BnbLoading>;
+    return <BnbLoading/>;
   } else {
     return (
       <BnbMainView>
-        <Separator style={{ borderBottomWidth: 0 }}></Separator>
-        <BnbBodyView>
-          <ScrollView>
-            <BnbTextInputObject
+        <BnbBodyView style={styles.bodyView}>
+          <Image source={require("../assets/Bookbnb_logo.png")} style={styles.image} />
+          <ScrollView
+            keyboardShouldPersistTaps="always"
+            style={{paddingRight: 10}}>
+            <BnbFloatingTextInput
               name="E-Mail"
               id={"email"}
               object={user}
-              editable={true}
               onChange={_handleTextChange}
-              customStyle={bnbStyleSheet.bubbleContainer}
+              onSubmit={() => ref_password.current?.focus()}
+              returnKeyType="next"
+              autoFocus={true}
             />
-            <Separator style={{ borderBottomWidth: 0 }} />
-            <BnbTextInputObject
+            <BnbFloatingTextInput
               name="Contraseña"
               id={"password"}
               object={user}
-              editable={true}
               onChange={_handleTextChange}
-              customStyle={bnbStyleSheet.bubbleContainer}
+              isPassword={true}
+              inputRef={ref_password}
+              onSubmit={() => ref_name.current?.focus()}
+              returnKeyType="next"
             />
-            <BnbTextInputObject
+            <BnbFloatingTextInput
               name="Nombre"
               id={"firstname"}
               object={user}
-              editable={true}
               onChange={_handleTextChange}
-              customStyle={bnbStyleSheet.bubbleContainer}
+              inputRef={ref_name}
+              onSubmit={() => ref_surname.current?.focus()}
+              returnKeyType="next"
             />
-            <BnbTextInputObject
+            <BnbFloatingTextInput
               name="Apellido"
               id={"lastname"}
               object={user}
-              editable={true}
               onChange={_handleTextChange}
-              customStyle={bnbStyleSheet.bubbleContainer}
+              inputRef={ref_surname}
+              onSubmit={() => ref_phone.current?.focus()}
+              returnKeyType="next"
             />
-            <BnbTextInputObject
+            <BnbFloatingTextInput
               name="Numero de telefono"
               id={"phonenumber"}
               object={user}
-              editable={true}
               onChange={_handleTextChange}
-              customStyle={bnbStyleSheet.bubbleContainer}
+              inputRef={ref_phone}
+              onSubmit={() => ref_country.current?.focus()}
+              returnKeyType="next"
+              keyboardType="numeric"
             />
-            <BnbTextInputObject
+            <BnbFloatingTextInput
               name="Pais"
               id={"country"}
               object={user}
-              editable={true}
               onChange={_handleTextChange}
-              customStyle={bnbStyleSheet.bubbleContainer}
+              inputRef={ref_country}
+              onSubmit={() => ref_birthdate.current?.focus()}
+              returnKeyType="next"
             />
-            <BnbTextInputObject
+            <BnbFloatingTextInput
               name="Fecha de nacimiento"
               id={"birthdate"}
               object={user}
-              editable={true}
               onChange={_handleTextChange}
-              customStyle={bnbStyleSheet.bubbleContainer}
+              mask="9999-99-99"
+              hint="YYYY-MM-DD"
+              inputRef={ref_birthdate}
+              onSubmit={_handleCreateUserButtonPress}
+              keyboardType="numeric"
             />
             <Separator style={{ borderBottomWidth: 0 }} />
             <BnbButton
               title="Crear cuenta"
               onPress={_handleCreateUserButtonPress}
               style={styles.signIn}
+              buttonStyle={styles.loginButton}
             />
           </ScrollView>
-
-          <Separator style={{ borderBottomWidth: 0 }}></Separator>
-          {_sign_in_error != "" && (
-            <View>
-              <Text style={styles.errorText}>{_sign_in_error}</Text>
-            </View>
-          )}
         </BnbBodyView>
+        {_sign_in_error !== "" && (
+          <View style={styles.errorMessageView}>
+            <Text style={styles.errorText}>{_sign_in_error}</Text>
+          </View>
+        )}
       </BnbMainView>
     );
   }
@@ -196,7 +207,31 @@ const styles = StyleSheet.create({
   },
   signIn: {
     width: "100%",
+    fontFamily: "Raleway_400Regular",
+    color: colors.white,
   },
+  image: {
+    marginTop: 25,
+    height: "15%",
+    width: "15%",
+  },
+  loginButton: {
+    borderColor: colors.redAirBNB,
+    backgroundColor: colors.redAirBNB,
+  },
+  bodyView: {
+    paddingVertical: 0,
+  },
+  normalText: {
+    fontFamily: "Raleway_400Regular",
+  },
+  errorMessageView: {
+    borderTopWidth: 1,
+    borderColor: colors.black,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+  }
 });
 
 export default SignUpScreen;

@@ -24,5 +24,6 @@ export default StyleSheet.create({
   subTitle: {
     fontSize: fonts.semi,
     fontWeight: fonts.bold,
+    fontFamily: "Raleway_400Regular",
   },
 });

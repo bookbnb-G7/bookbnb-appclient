@@ -11,8 +11,8 @@ const BnbMainView = (props) => (
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: colors.redSoft2,
-    //padding: 6,
+    //height: "100%",
+    //backgroundColor: colors.white,
   },
 });
 

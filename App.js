@@ -1,143 +1,70 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useFonts, Raleway_700Bold, Raleway_400Regular } from '@expo-google-fonts/raleway';
 
-import HomeScreen from "./app/screens/HomeScreen";
-import UserLoginScreen from "./app/screens/UserLoginScreen";
-import SearchResultRooms from "./app/screens/SearchResultRooms";
-import SearchRoomsScreen from "./app/screens/SearchRoomsScreen";
-import SearchInputScreen from "./app/screens/SearchInputScreen";
-import CalendarScreen from "./app/screens/CalendarScreen";
-import SearchCountersScreen from "./app/screens/SearchCountersScreen";
-import RoomScreen from "./app/screens/RoomScreen";
-import SearchUsersResultScreen from "./app/screens/SearchUsersResultScreen";
 import ProfileStackScreen from "./app/screens/Profile/ProfileStackScreen";
-import RoomEditScreen from "./app/screens/RoomEditScreen";
-import SignUpScreen from "./app/screens/SignUpScreen";
 import BnbLoading from "./app/components/BnbLoading";
-import BnbMainView from "./app/components/BnbMainView";
-import BnbButton from "./app/components/BnbButton";
-import WelcomeScreen from "./app/screens/WelcomeScreen";
 import useGetCurrentSignedInUser from "./app/database/useGetCurrentSignedInUser";
-import BnbHeaderUserInfo from "./app/components/BnbHeaderUserInfo";
-import BnbSecureStore from "./app/classes/BnbSecureStore";
-import constants from "./app/constant/constants";
+import HomeStack from "./app/screens/HomeStack";
+import SearchStack from "./app/screens/SearchStack";
+import colors from "./app/config/colors";
 
-const HomeStack = createStackNavigator();
-
-function HomeStackScreen() {
-  /**https://stackoverflow.com/questions/61281739/how-do-i-access-promise-callback-value-outside-of-the-function */
-
-  /**Uso el observer en vez del SecureStore porque este screen no se aactualiza nunca
-   * por lo tanto queda el store de la sesion anterior
-   */
-  const [user, initializing] = useGetCurrentSignedInUser();
-
-  if (initializing) {
-    return <BnbLoading></BnbLoading>;
-  } else {
-    return (
-      <HomeStack.Navigator
-        screenOptions={{
-          headerRight: (props) => (
-            <BnbHeaderUserInfo userEmail={user ? user.email : ""} />
-          ),
-        }}
-      >
-        <HomeStack.Screen name="Welcome" component={WelcomeScreen} />
-        <HomeStack.Screen name="SignUp" component={SignUpScreen} />
-        <HomeStack.Screen name="UserLogin" component={UserLoginScreen} />
-        <HomeStack.Screen name="Home" component={HomeScreen} />
-        <HomeStack.Screen
-          name="SearchUsersResult"
-          component={SearchUsersResultScreen}
-        />
-      </HomeStack.Navigator>
-    );
-  }
-}
-
-const SearchStack = createStackNavigator();
-
-function SearchStackScreen() {
-  const [storedUser, setStoredUser] = useState();
-
-  useEffect(() => {
-    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
-      setStoredUser(response);
-    });
-  }, []);
-
-  if (!storedUser) {
-    return <BnbLoading></BnbLoading>;
-  } else {
-    return (
-      <SearchStack.Navigator
-        screenOptions={{
-          headerRight: (props) => (
-            <BnbHeaderUserInfo userEmail={storedUser.userData.email} />
-          ),
-        }}
-      >
-        <SearchStack.Screen name="SearchRooms" component={SearchRoomsScreen} />
-        <SearchStack.Screen name="SearchInput" component={SearchInputScreen} />
-        <SearchStack.Screen name="SearchCalendar" component={CalendarScreen} />
-        <SearchStack.Screen
-          name="SearchCounters"
-          component={SearchCountersScreen}
-        />
-        <SearchStack.Screen
-          name="SearchResultRooms"
-          component={SearchResultRooms}
-        />
-        <SearchStack.Screen name="Room" component={RoomScreen} />
-        <SearchStack.Screen name="RoomDetails" component={RoomEditScreen} />
-      </SearchStack.Navigator>
-    );
-  }
-}
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [user, initializing] = useGetCurrentSignedInUser();
+  useFonts({
+    Raleway_700Bold,
+    Raleway_400Regular,
+  });
+
   console.log("##############");
   if (initializing) {
-    return <BnbLoading></BnbLoading>;
+    return <BnbLoading/>;
   }
 
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName="HomeStack"
+        tabBarOptions={{
+          activeTintColor: colors.redAirBNB,
+          labelStyle: {
+            fontFamily: "Raleway_700Bold",
+          },
+          keyboardHidesTabBar: true,
+        }}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === "Home") {
-              iconName = "ios-home";
+            if (route.name === "HomeStack") {
+              iconName = "home";
             } else if (route.name === "ProfileStack") {
-              iconName = "ios-contact";
+              iconName = "person";
             } else if (route.name === "SearchRooms") {
-              iconName = "ios-search";
+              iconName = "search";
             }
 
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-        })}
+        })
+
+        }
       >
         <Tab.Screen
-          name="Home"
-          component={HomeStackScreen}
+          name="HomeStack"
+          component={HomeStack}
           options={{ title: "Inicio" }}
         />
         {user && (
           <Tab.Screen
             name="SearchRooms"
-            component={SearchStackScreen}
+            component={SearchStack}
             options={{ title: "Buscar" }}
           />
         )}

@@ -21,6 +21,9 @@ function RoomCreateScreen({ navigation }) {
   const [_room, setRoom] = useState({
     type: "",
     price_per_day: "",
+    latitude: 0,
+    longitude: 0,
+    capacity: 1,
   });
   const [_is_awaiting, setIsAwaiting] = useState(false);
   const [storedUser, setStoredUser] = useState();
@@ -63,10 +66,7 @@ function RoomCreateScreen({ navigation }) {
       httpPostTokenRequest(
         "POST",
         urls.URL_ROOMS,
-        {
-          type: _room.type,
-          price_per_day: _room.price_per_day,
-        },
+        _room,
         {
           "Content-Type": "application/json",
           "x-access-token": storedUser.auth_token,

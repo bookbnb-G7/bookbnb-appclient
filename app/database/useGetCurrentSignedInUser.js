@@ -3,7 +3,6 @@ import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
 import urls from "../constant/urls";
 import firebase from "../database/firebase";
-import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 
 function useGetCurrentSignedInUser(props) {
   const [user, setUser] = useState();

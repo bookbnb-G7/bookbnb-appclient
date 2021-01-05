@@ -6,20 +6,45 @@ import BnbBodyView from "../components/BnbBodyView";
 import Separator from "../components/Separator";
 import BnbAlert from "../components/BnbAlert";
 import styling from "../config/styling";
-import httpPostImage from "../helpers/httpPostImage";
 import pickAnImage from "../helpers/pickAnImage";
-import useRequestCameraPermissions from "../helpers/useRequestCameraPermissions";
 import BnbLoading from "../components/BnbLoading";
+import BnbSecureStore from "../classes/BnbSecureStore";
+import constants from "../constant/constants";
+import * as ImagePicker from "expo-image-picker";
+import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
+import urls from "../constant/urls";
+import BnbImage from "../components/BnbImage";
 
 /**Version mejorada, la idea es que al sleccionar una imagen, ya sea de perfil o de la lista
  * de fotos del room, me derive a esta pantalla para editarla
  */
 function ImagePickScreen({ route, navigation }) {
-  const { image_uri, url } = route.params;
-  const [image, setImage] = useState(image_uri);
+  const [storedUser, setStoredUser] = useState();
+  const [_is_awaiting, setIsAwaiting] = useState(false);
 
-  const _handleApiResponse = () => {
-    BnbAlert("Imagen", "Imagen actualizada con exito", "Entendido", false);
+  useEffect(() => {
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
+      setStoredUser(user);
+    });
+  }, []);
+
+  const _handleApiResponse = (data) => {
+    /**copio */
+    let userData = storedUser.userData;
+
+    /**modifico */
+    userData["photo"] = data.photo;
+
+    /**armo de nuevo */
+    const storeUser = {
+      auth_token: storedUser.auth_token,
+      userData: userData,
+    };
+
+    /**guardo */
+    BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser).then(() => {
+      navigation.navigate("ProfileEdit", { photo: data.photo });
+    });
   };
 
   const _handleApiError = () => {
@@ -29,53 +54,72 @@ function ImagePickScreen({ route, navigation }) {
       "Entendido",
       false
     );
+    setIsAwaiting(false);
   };
 
-  const isGranted = useRequestCameraPermissions();
-
-  if (!isGranted) {
-    BnbAlert(
-      "Permisos",
-      "Se necesitan permisos de la camara para poder continuar",
-      "entendido",
-      false
-    );
-    navigation.goBack();
-  }
+  useEffect(() => {
+    async () => {
+      if (Platform.OS !== "web") {
+        const {
+          status,
+        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          BnbAlert(
+            "Permisos",
+            "Se necesitan permisos de la camara para poder continuar",
+            "entendido",
+            false
+          );
+          navigation.goBack();
+        }
+      }
+    };
+  }, []);
 
   const pickImage = () => {
-    const file = pickAnImage();
-    if (file) {
-      setImage(file.uri);
-      httpPostImage("PATCH", url, file, _handleApiResponse, _handleApiError);
-    }
+    setIsAwaiting(true);
+    pickAnImage().then((file) => {
+      if (file) {
+        httpPostTokenRequest(
+          "PATCH",
+          urls.URL_USERS + "/" + storedUser.userData.id + "/photo",
+          file,
+          {
+            "Content-Type": "multipart/form-data",
+            "x-access-token": storedUser.auth_token,
+          },
+          _handleApiResponse,
+          _handleApiError,
+          true
+        );
+      }
+    });
   };
 
-  if (!isGranted) {
-    return <BnbLoading></BnbLoading>;
-  } else {
-    return (
-      <BnbMainView>
-        <Separator></Separator>
-        <BnbBodyView>
-          {image && (
-            <View>
-              <Image source={{ uri: image }} style={styles.image} />
-              <Separator />
-            </View>
-          )}
-          <Text style={styles.textContainer}>
-            Seleccione una imagen del rollo de la camara para cambiar la imagen
-          </Text>
-          <BnbButton
-            style={styles.button}
-            title={"Cambiar imagen"}
-            onPress={pickImage}
-          ></BnbButton>
-        </BnbBodyView>
-      </BnbMainView>
-    );
+  if (_is_awaiting) {
+    return <BnbLoading text="Actualizando imagen..."></BnbLoading>;
   }
+
+  return (
+    <BnbMainView>
+      <Separator></Separator>
+      <BnbBodyView>
+        <BnbImage
+          imageStyle={styles.image}
+          uri={storedUser ? storedUser.userData.photo : ""}
+        ></BnbImage>
+
+        <Text style={styles.textContainer}>
+          Seleccione una imagen del rollo de la camara para cambiar la imagen
+        </Text>
+        <BnbButton
+          style={styles.button}
+          title={"Cambiar imagen"}
+          onPress={pickImage}
+        ></BnbButton>
+      </BnbBodyView>
+    </BnbMainView>
+  );
 }
 
 const styles = StyleSheet.create({

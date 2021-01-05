@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image, Button } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbBubbleView from "../components/BnbBubbleView";
 import BnbButton from "../components/BnbButton";
+import BnbIconTextInput from "../components/BnbIconTextInput";
 import BnbMainView from "../components/BnbMainView";
 import fonts from "../config/fonts";
 import Separator from "../components/Separator";
@@ -27,8 +28,16 @@ function UserLoginScreen({ navigation }) {
     setUser({ ..._user, [name]: value });
   };
 
+  const _handleForgotPassword = () => {
+    navigation.navigate("PasswordRecover");
+  };
+
+  const _handleSignup = () => {
+    navigation.navigate("SignUp");
+  };
+
   const _handleLoginUserButtonPress = () => {
-    if (_user.email == "" || _user.password == "") {
+    if (_user.email === "" || _user.password === "") {
       setLoginError(constants.ERR_EMPTY_FIELD);
     } else {
       setLoginError("");
@@ -37,23 +46,25 @@ function UserLoginScreen({ navigation }) {
         .signInWithEmailAndPassword(_user.email, _user.password)
         .then(async (userCredential) => {
           return userCredential.user.getIdToken().then(async (id_token) => {
-            const data = await httpGetTokenRequest(
-              "GET",
-              urls.URL_USERS + "/me",
-              {
-                "x-access-token": id_token,
-              }
-            );
+            const data = await httpGetTokenRequest("GET", urls.URL_ME, {
+              "x-access-token": id_token,
+            });
             if (data) {
               const storeUser = {
                 auth_token: id_token,
                 userData: data,
               };
-              BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser).then(
-                () => {
-                  navigation.navigate("Home");
-                }
+              await BnbSecureStore.remember(
+                constants.CACHE_USER_KEY,
+                storeUser
               );
+            } else {
+              /**OJO que si hay un error en el fetch esto GENERA un react state update
+               * en un componente desmontado
+               * dado que ejecuta esta parte de codigo pero el stack navigator ya cambio de pantalla
+               *
+               */
+              //setIsAwaiting(false);
             }
           });
         })
@@ -71,43 +82,74 @@ function UserLoginScreen({ navigation }) {
   };
 
   if (_is_awaiting) {
-    return <BnbLoading></BnbLoading>;
+    return <BnbLoading />;
   } else {
     return (
       <BnbMainView>
-        <Separator style={{ borderBottomWidth: 0 }}></Separator>
-        <BnbBodyView>
-          <View style={styles.centerContainer}>
-            <BnbBubbleView style={styles.bubbleContainer}>
-              <TextInput
+        <BnbBodyView style={styles.centerContainer}>
+          <Image
+            source={require("../assets/Bookbnb_logo.png")}
+            style={styles.image}
+          />
+          <View style={styles.centerSubContainer}>
+            <View>
+              <BnbIconTextInput
+                iconName="mail"
                 placeholder="E-mail"
-                style={styles.searchInputText}
                 onChangeText={(text) => _handleTextChange("email", text)}
                 value={_user.email}
+                style={
+                  _login_error === constants.ERR_EMAIL_INVALID
+                    ? { borderColor: colors.error }
+                    : {}
+                }
+                inputStyle={styles.normalText}
               />
-            </BnbBubbleView>
-            <Separator style={{ borderBottomWidth: 0 }} />
-            <BnbBubbleView style={styles.bubbleContainer}>
-              <TextInput
+
+              <BnbIconTextInput
+                iconName="lock"
                 placeholder="Contraseña"
-                style={styles.searchInputText}
                 onChangeText={(text) => _handleTextChange("password", text)}
                 value={_user.password}
                 secureTextEntry={true}
+                style={
+                  _login_error === constants.ERR_PASS_INVALID
+                    ? { borderColor: colors.error }
+                    : {}
+                }
+                inputStyle={styles.normalText}
               />
-            </BnbBubbleView>
-            <Separator style={{ borderBottomWidth: 0 }} />
+
+              <View>
+                <Text style={styles.errorText}>
+                  {" "}
+                  {_login_error !== "" ? _login_error : ""}
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              onPress={_handleForgotPassword}
+              style={styles.forgotPassText}
+            >
+              <Text style={styles.clickableText}>
+                {constants.FORGOT_PASSWORD_MESSAGE}
+              </Text>
+            </TouchableOpacity>
+
             <BnbButton
               title="Ingresar"
-              style={styles.loginButton}
+              style={styles.loginText}
+              buttonStyle={styles.loginButton}
               onPress={_handleLoginUserButtonPress}
             />
-            {_login_error != "" && (
-              <View>
-                <Separator style={{ borderBottomWidth: 0 }}></Separator>
-                <Text style={styles.errorText}> {_login_error}</Text>
-              </View>
-            )}
+
+            <View style={styles.inlineTextButton}>
+              <Text style={styles.normalText}>¿No tienes una cuenta?, </Text>
+              <TouchableOpacity onPress={_handleSignup}>
+                <Text style={styles.clickableText}>Registrate</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </BnbBodyView>
       </BnbMainView>
@@ -122,15 +164,53 @@ const styles = StyleSheet.create({
   bubbleContainer: {
     alignItems: "flex-start",
   },
-  loginButton: {
+  loginText: {
     width: "100%",
+    color: colors.white,
+    fontFamily: "Raleway_400Regular",
   },
-  centerContainer: {
-    flex: 1,
+  loginButton: {
+    borderColor: colors.redAirBNB,
+    backgroundColor: colors.redAirBNB,
+  },
+  centerSubContainer: {
+    //flex: 1,
     justifyContent: "center",
+    margin: 5,
   },
   errorText: {
     color: colors.error,
+    textAlign: "left",
+    fontFamily: "Raleway_400Regular",
+  },
+  clickableText: {
+    textDecorationLine: "underline",
+    textAlign: "center",
+    fontFamily: "Raleway_400Regular",
+  },
+  centerContainer: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-around",
+  },
+  image: {
+    //flex: 1,
+    height: "25%",
+    resizeMode: "contain",
+    alignSelf: "center",
+  },
+  inlineTextButton: {
+    //flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    margin: 5,
+    fontFamily: "Raleway_400Regular",
+  },
+  forgotPassText: {
+    margin: 15,
+  },
+  normalText: {
+    fontFamily: "Raleway_400Regular",
   },
 });
 

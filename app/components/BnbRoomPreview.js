@@ -3,57 +3,69 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
-
-const room_image = require("../assets/bookbnb_1.png");
+import urls from "../constant/urls";
+import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
+import BnbLoading from "../components/BnbLoading";
+import BnbImageSlider from "./BnbImageSlider";
+import getAverage from "../helpers/getAverage";
 
 const BnbRoomPreview = (props) => {
-  const url_ratings =
-    "http://bookbnb-appserver.herokuapp.com/rooms/" +
-    props.room.id +
-    "/ratings";
   const [_ratings, setRatings] = useState({});
-  const [_error, setError] = useState(null);
+  const [_error, setError] = useState();
   const [_is_loaded, setIsLoaded] = useState(false);
 
-  const _handleImagePress = () => {
-    /**Le paso el room, podria pasarle los ratings tambien */
-    props.navigation.navigate("Room", { room: props.room, ratings: _ratings });
+  const [_photos, setPhotos] = useState({
+    amount: 0,
+    room_id: 0,
+    room_photos: [],
+  });
+
+  const _handleApiError = (error) => {
+    setError(error);
+    setIsLoaded(true);
   };
 
-  /**ComponentDidMount obtengo todos los datos a partir del
-   * room que recibo por props (le saco el id)*/
-  /**Super importante el isLoaded porque caso contrario intentamos mostrar objetos indefinidos
-   */
+  const _handleImagePress = () => {
+    /**Si recibir un searchForm es porque soy un guest buscando rooms */
+    if (props?.searchForm) {
+      props.navigation.navigate("Room", {
+        room_id: props.room.id,
+        searchForm: props.searchForm,
+      });
+    } else {
+      /**Caso contrario soy el dueño */
+      props.navigation.navigate("Room", {
+        room_id: props.room.id,
+      });
+    }
+  };
+
   useEffect(() => {
-    fetch(url_ratings)
-      .then((response) => response.json())
-      .then(
-        (response) => {
-          setRatings(response);
-          setIsLoaded(true);
-        },
-        (error) => {
-          setError(error);
-          setIsLoaded(true);
-        }
-      );
+    httpGetTokenRequest(
+      "GET",
+      urls.URL_ROOMS + "/" + props.room.id + "/ratings",
+      {},
+      null,
+      _handleApiError
+    )
+      .then((ratings) => {
+        setRatings(ratings);
+        return httpGetTokenRequest(
+          "GET",
+          urls.URL_ROOMS + "/" + props.room.id + "/photos",
+          {},
+          null,
+          _handleApiError
+        );
+      })
+      .then((photos) => {
+        setPhotos(photos);
+        setIsLoaded(true);
+      });
   }, []);
 
-  const getAverageRating = () => {
-    let average_rating = 0;
-    _ratings.ratings.forEach(function (item, index, array) {
-      average_rating += item.rating;
-    });
-    average_rating = average_rating / _ratings.ratings.length;
-    return average_rating;
-  };
-
   if (!_is_loaded) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <BnbLoading text="Cargando habitacion..."></BnbLoading>;
   } else if (_error) {
     return (
       <View>
@@ -64,12 +76,15 @@ const BnbRoomPreview = (props) => {
     return (
       <View style={styles.mainContainer}>
         <TouchableOpacity onPress={_handleImagePress}>
-          <View style={styles.roomImageContainer}>
-            <Image source={room_image} style={styles.roomImage}></Image>
+          <View style={styles.imageSlider}>
+            <BnbImageSlider
+              images={_photos.room_photos}
+              width={250}
+            ></BnbImageSlider>
           </View>
           <View style={styles.roomDescriptionContainer}>
             <Text style={styles.roomReviewScore}>
-              {getAverageRating()} de 5 estrellas
+              {getAverage(_ratings.ratings, "rating")} de 5 estrellas
             </Text>
             <Text style={styles.roomTitleText}>{props.room.type}</Text>
             <Text style={styles.roomPriceText}>
@@ -88,7 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginVertical: styling.separator,
   },
-  roomImageContainer: {
+  imageSlider: {
     justifyContent: "center",
     alignItems: "center",
     //borderWidth: 1,

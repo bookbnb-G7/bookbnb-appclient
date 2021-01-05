@@ -6,16 +6,29 @@ async function httpPostTokenRequest(
   body,
   header,
   onResponse,
-  onError
+  onError,
+  is_image
 ) {
-  const requestOptions = {
+  let requestOptions = {
     method: method,
     headers: header,
     body: JSON.stringify(body),
   };
+
+  if (is_image) {
+    const formData = new FormData();
+    formData.append("file", body);
+
+    requestOptions = {
+      method: method,
+      headers: header,
+      body: formData,
+    };
+  }
+
   console.log("Debug httpPostTokenRequest header:" + JSON.stringify(header));
   console.log("Debug httpPostTokenRequest body:" + JSON.stringify(body));
-  /**error captura los errores de red pero NO los errores de HTTP */
+
   return fetch(url, requestOptions)
     .then(async (response) => {
       const data = await response.json();
@@ -26,13 +39,13 @@ async function httpPostTokenRequest(
         return data;
       } else {
         const error = (data && JSON.stringify(data)) || response.statusText;
-        alert("Respuesta de red OK pero HTTP no:" + error);
-        if (onError) onError();
+        console.log("Respuesta de red OK pero HTTP no:" + error);
+        if (onError) onError(error);
       }
     })
     .catch((error) => {
       console.log("Error en la peticion fetch: " + error);
-      if (onError) onError();
+      if (onError) onError(error);
     });
 }
 

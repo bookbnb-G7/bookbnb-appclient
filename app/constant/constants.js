@@ -7,5 +7,10 @@ export default {
   ERR_EMAIL_INVALID: "El email es invalido",
   ERR_PASS_INVALID: "Contraseña incorrecta",
   ERR_EMPTY_FIELD: "Uno o mas campos no han sido completados",
+  ERR_EMPTY_REVIEW: "No puede publicar una reseña vacia",
+  ERR_RATING_ZERO: "Puntaje no puede ser 0",
+  FORGOT_PASSWORD_MESSAGE: "¿Olvidaste tu contraseña?",
   CACHE_USER_KEY: "loggedInUser",
+  STATE_PENDING: 1,
+  STATE_ACCEPTED: 2,
 };

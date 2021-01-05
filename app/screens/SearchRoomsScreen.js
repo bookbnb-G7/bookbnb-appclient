@@ -12,7 +12,7 @@ function SearchRoomsScreen({ navigation }) {
   };
   return (
     <BnbMainView>
-      <Separator style={{ borderBottomWidth: 0 }}></Separator>
+      <Separator style={{borderBottomWidth: 0}}/>
       <BnbBodyView>
         <BnbBubbleView>
           <TouchableOpacity onPress={_handleSearchButtonPress}>
