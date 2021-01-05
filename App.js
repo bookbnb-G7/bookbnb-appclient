@@ -2,42 +2,59 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useFonts, Raleway_700Bold, Raleway_400Regular } from '@expo-google-fonts/raleway';
 
 import ProfileStackScreen from "./app/screens/Profile/ProfileStackScreen";
 import BnbLoading from "./app/components/BnbLoading";
 import useGetCurrentSignedInUser from "./app/database/useGetCurrentSignedInUser";
 import HomeStack from "./app/screens/HomeStack";
 import SearchStack from "./app/screens/SearchStack";
+import colors from "./app/config/colors";
+
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [user, initializing] = useGetCurrentSignedInUser();
+  useFonts({
+    Raleway_700Bold,
+    Raleway_400Regular,
+  });
+
   console.log("##############");
   if (initializing) {
-    return <BnbLoading></BnbLoading>;
+    return <BnbLoading/>;
   }
 
   return (
     <NavigationContainer>
       <Tab.Navigator
         initialRouteName="HomeStack"
+        tabBarOptions={{
+          activeTintColor: colors.redAirBNB,
+          labelStyle: {
+            fontFamily: "Raleway_700Bold",
+          },
+          keyboardHidesTabBar: true,
+        }}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
             if (route.name === "HomeStack") {
-              iconName = "ios-home";
+              iconName = "home";
             } else if (route.name === "ProfileStack") {
-              iconName = "ios-contact";
+              iconName = "person";
             } else if (route.name === "SearchRooms") {
-              iconName = "ios-search";
+              iconName = "search";
             }
 
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-        })}
+        })
+
+        }
       >
         <Tab.Screen
           name="HomeStack"
