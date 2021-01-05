@@ -21,7 +21,7 @@ function HomeStack(props) {
   const [user, initializing] = useGetCurrentSignedInUser();
 
   if (initializing) {
-    return <BnbLoading></BnbLoading>;
+    return <BnbLoading/>;
   }
 
   if (!user) {

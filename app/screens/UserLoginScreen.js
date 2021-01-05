@@ -37,7 +37,7 @@ function UserLoginScreen({ navigation }) {
   };
 
   const _handleLoginUserButtonPress = () => {
-    if (_user.email == "" || _user.password == "") {
+    if (_user.email === "" || _user.password === "") {
       setLoginError(constants.ERR_EMPTY_FIELD);
     } else {
       setLoginError("");
@@ -54,7 +54,7 @@ function UserLoginScreen({ navigation }) {
                 auth_token: id_token,
                 userData: data,
               };
-              BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
+              await BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
             } else {
               /**OJO que si hay un error en el fetch esto CREO que genera un react state update
                * en un componente desmontado
@@ -79,7 +79,7 @@ function UserLoginScreen({ navigation }) {
   };
 
   if (_is_awaiting) {
-    return <BnbLoading></BnbLoading>;
+    return <BnbLoading/>;
   } else {
     return (
       <BnbMainView>
@@ -96,10 +96,12 @@ function UserLoginScreen({ navigation }) {
                 onChangeText={(text) => _handleTextChange("email", text)}
                 value={_user.email}
                 style={
-                  _login_error == constants.ERR_EMAIL_INVALID
+                  _login_error === constants.ERR_EMAIL_INVALID
                     ? { borderColor: colors.error }
                     : {}
                 }
+                inputStyle={styles.normalText}
+
               />
 
               <BnbIconTextInput
@@ -109,16 +111,18 @@ function UserLoginScreen({ navigation }) {
                 value={_user.password}
                 secureTextEntry={true}
                 style={
-                  _login_error == constants.ERR_PASS_INVALID
+                  _login_error === constants.ERR_PASS_INVALID
                     ? { borderColor: colors.error }
                     : {}
                 }
+                inputStyle={styles.normalText}
+
               />
 
               <View>
                 <Text style={styles.errorText}>
                   {" "}
-                  {_login_error != "" ? _login_error : ""}
+                  {_login_error !== "" ? _login_error : ""}
                 </Text>
               </View>
             </View>
@@ -140,7 +144,7 @@ function UserLoginScreen({ navigation }) {
             />
 
             <View style={styles.inlineTextButton}>
-              <Text>¿No tienes una cuenta?, </Text>
+              <Text style={styles.normalText}>¿No tienes una cuenta?, </Text>
               <TouchableOpacity onPress={_handleSignup}>
                 <Text style={styles.clickableText}>Registrate</Text>
               </TouchableOpacity>
@@ -162,10 +166,11 @@ const styles = StyleSheet.create({
   loginText: {
     width: "100%",
     color: colors.white,
+    fontFamily: "Raleway_400Regular",
   },
   loginButton: {
-    borderColor: colors.greenSuccess,
-    backgroundColor: colors.greenSuccess,
+    borderColor: colors.redAirBNB,
+    backgroundColor: colors.redAirBNB,
   },
   centerSubContainer: {
     //flex: 1,
@@ -175,10 +180,12 @@ const styles = StyleSheet.create({
   errorText: {
     color: colors.error,
     textAlign: "left",
+    fontFamily: "Raleway_400Regular",
   },
   clickableText: {
     textDecorationLine: "underline",
     textAlign: "center",
+    fontFamily: "Raleway_400Regular",
   },
   centerContainer: {
     flex: 1,
@@ -196,10 +203,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     margin: 5,
+    fontFamily: "Raleway_400Regular",
   },
   forgotPassText: {
     margin: 15,
   },
+  normalText: {
+    fontFamily: "Raleway_400Regular",
+  }
 });
 
 export default UserLoginScreen;
