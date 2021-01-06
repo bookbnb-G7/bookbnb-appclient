@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useFonts, Raleway_700Bold, Raleway_400Regular } from '@expo-google-fonts/raleway';
+import { useFonts, Raleway_700Bold, Raleway_400Regular, Raleway_500Medium, Raleway_600SemiBold } from '@expo-google-fonts/raleway';
 
 import ProfileStackScreen from "./app/screens/Profile/ProfileStackScreen";
 import BnbLoading from "./app/components/BnbLoading";
@@ -19,6 +19,8 @@ export default function App() {
   useFonts({
     Raleway_700Bold,
     Raleway_400Regular,
+    Raleway_500Medium,
+    Raleway_600SemiBold
   });
 
   console.log("##############");
@@ -59,7 +61,10 @@ export default function App() {
         <Tab.Screen
           name="HomeStack"
           component={HomeStack}
-          options={{ title: "Inicio" }}
+          options={{
+            title: "Inicio",
+            tabBarVisible: Boolean(user)
+          }}
         />
         {user && (
           <Tab.Screen

@@ -28,7 +28,7 @@ const GooglePlacesInput = (props) => {
         props.onPress(data.description);
       }}
       enablePoweredByContainer={false}
-      minLength={4}
+      minLength={3}
       textInputProps={{
         InputComp: Input,
         placeholder: props.placeholder,

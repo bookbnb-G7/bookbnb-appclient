@@ -18,7 +18,6 @@ function HomeScreen({ route, navigation }) {
   const [storedUser, setStoredUser] = useState();
 
   const background = require("../assets/background_2.png");
-  const bnb_book_logo = require("../assets/Bookbnb_logo.png");
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
@@ -41,7 +40,6 @@ function HomeScreen({ route, navigation }) {
 
   return (
     <BnbMainView style={styles.mainContainer}>
-      <ImageBackground source={background} style={styles.background}>
         <View style={styles.imageSlider}>
           <BnbImageSlider
             images={[require("../assets/Bookbnb_logo.png")]}
@@ -65,7 +63,6 @@ function HomeScreen({ route, navigation }) {
             </View>
           )}
         </View>
-      </ImageBackground>
     </BnbMainView>
   );
 }

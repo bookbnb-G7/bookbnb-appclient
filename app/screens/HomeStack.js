@@ -41,9 +41,10 @@ function HomeStack(props) {
   return (
     <HomeStackNav.Navigator
       screenOptions={{
-        headerRight: (props) => (
-          <BnbHeaderUserInfo userEmail={user ? user.email : ""} />
-        ),
+        headerTitleStyle: {
+          fontFamily: "Raleway_700Bold",
+        },
+        headerTitleAlign: "center"
       }}
     >
       <HomeStackNav.Screen
