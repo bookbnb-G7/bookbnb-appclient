@@ -33,9 +33,10 @@ function ProfileStackScreen(props) {
     return (
       <ProfileStack.Navigator
         screenOptions={{
-          headerRight: (props) => (
-            <BnbHeaderUserInfo userEmail={storedUser.userData.email} />
-          ),
+          headerTitleStyle: {
+            fontFamily: "Raleway_700Bold",
+          },
+          headerTitleAlign: "center"
         }}
       >
         <ProfileStack.Screen name="Profile" component={Profile} />

@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, Dimensions } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import fonts from "../config/fonts";
 import constants from "../constant/constants";
+import Ionicons from "@expo/vector-icons/MaterialCommunityIcons"
+import colors from "../config/colors";
 
 class Counter extends Component {
   render() {
@@ -18,9 +20,9 @@ class Counter extends Component {
               )
             }
           >
-            <Text style={styles.button}> - </Text>
+            <Ionicons name="minus-circle-outline" size={25}/>
           </TouchableOpacity>
-          <Text> {this.props.counter.quantity} </Text>
+          <Text style={styles.counter}> {this.props.counter.quantity} </Text>
           <TouchableOpacity
             onPress={() =>
               this.props.onIncrement(
@@ -29,7 +31,7 @@ class Counter extends Component {
               )
             }
           >
-            <Text style={styles.button}> + </Text>
+            <Ionicons name="plus-circle-outline" size={25} />
           </TouchableOpacity>
         </View>
       </View>
@@ -48,6 +50,7 @@ const styles = StyleSheet.create({
   counterContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
   },
   counterText: {
     flex: 1,
@@ -62,6 +65,10 @@ const styles = StyleSheet.create({
     fontSize: fonts.bigBig,
     marginHorizontal: dimensions.width * 0.03,
   },
+  counter: {
+    paddingHorizontal: 3,
+    fontSize: 15
+  }
 });
 
 export default Counter;
