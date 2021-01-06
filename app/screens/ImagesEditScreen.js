@@ -14,12 +14,15 @@ import pickAnImage from "../helpers/pickAnImage";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbAlert from "../components/BnbAlert";
 import useRequestMediaLibraryPermissionsAsync from "../helpers/useRequestMediaLibraryPermissionsAsync";
+import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 
 function ImagesEditScreen({ route, navigation }) {
   const photos = route.params.photos;
   const [storedUser, setStoredUser] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
+
+  const [_photos_urls, setPhotosUrl] = useState([]);
 
   const _handleApiResponse = () => {
     setIsLoading(false);
@@ -110,6 +113,10 @@ function ImagesEditScreen({ route, navigation }) {
     });
   }, []);
 
+  useEffect(() => {
+    setPhotosUrl(getUrlFromPhotos(photos.room_photos));
+  }, []);
+
   if (_is_loading) {
     return <BnbLoading></BnbLoading>;
   } else if (_error) {
@@ -119,7 +126,7 @@ function ImagesEditScreen({ route, navigation }) {
       <BnbMainView>
         <View style={styles.imageSlider}>
           <BnbImageSlider
-            images={photos.room_photos}
+            images={_photos_urls}
             width={200}
             onPress={_handleRemoveImage}
           ></BnbImageSlider>
