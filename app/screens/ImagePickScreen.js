@@ -110,7 +110,8 @@ function ImagePickScreen({ route, navigation }) {
         ></BnbImage>
 
         <Text style={styles.textContainer}>
-          Seleccione una imagen del rollo de la camara para cambiar la imagen
+          Seleccione una imagen del rollo de la camara para cambiar su foto de
+          perfil
         </Text>
         <BnbButton
           style={styles.button}
