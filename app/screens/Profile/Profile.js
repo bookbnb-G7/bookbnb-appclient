@@ -32,7 +32,10 @@ function Profile({ route, navigation }) {
   };
 
   const _handleReviewUser = () => {
-    navigation.navigate("ReviewUser", { is_guest: true, reviewed_id: user_id });
+    navigation.navigate("ReviewUser", {
+      is_guest: false,
+      reviewed_id: user_id,
+    });
   };
 
   useEffect(() => {
@@ -56,29 +59,28 @@ function Profile({ route, navigation }) {
   }, []);
 
   return (
-    <BnbMainView
-      style={{
-        paddingTop: StatusBar.currentHeight,
-        backgroundColor: "white",
-      }}
-    >
-      <BnbBodyView>
-        <View style={styles.twoColumns}>
-          <View style={styles.leftColumn}>
-            <View style={styles.logoContainer}>
-              {user && (
-                <BnbImage
-                  imageStyle={styles.userLogo}
-                  uri={user ? user.photo : ""}
-                ></BnbImage>
-              )}
-            </View>
-          </View>
-          <View style={styles.rightColumn}>
-            {user && <Text style={styles.userName}>{user.email}</Text>}
+    <BnbMainView style={styles.mainContainer}>
+      <View>
+        <View style={styles.center}>
+          <View>
+            {user && (
+              <BnbImage
+                imageStyle={styles.userLogo}
+                uri={user.photo}
+              ></BnbImage>
+            )}
           </View>
         </View>
-        <Separator></Separator>
+        <View style={styles.center}>
+          {user && (
+            <Text style={styles.userName}>
+              {user.firstname} {user.lastname}
+            </Text>
+          )}
+          {user && <Text style={styles.userName}>{user.email}</Text>}
+        </View>
+      </View>
+      <View style={styles.buttonsContainer}>
         {user_id === 0 && (
           <BnbButton
             style={styles.center}
@@ -92,45 +94,30 @@ function Profile({ route, navigation }) {
             onPress={_handleReviewUser}
           ></BnbButton>
         )}
-      </BnbBodyView>
+      </View>
     </BnbMainView>
   );
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    justifyContent: "space-evenly",
+  },
   center: {
     alignSelf: "center",
   },
-  twoColumns: {
-    //flex: 1,
-    flexDirection: "row",
-  },
-  leftColumn: {
-    //flex: 2,
-    backgroundColor: colors.white,
-    //alignItems: "center",
-    //justifyContent: "center",
-  },
-  logoContainer: {
-    //alignItems: "center",
+  userContainer: {
+    alignItems: "center",
   },
   userLogo: {
     width: 100,
     height: 100,
     backgroundColor: colors.graySoft,
-  },
-  rightColumn: {
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-    paddingHorizontal: 20,
+    borderRadius: 50,
   },
   userName: {
+    textAlign: "center",
     fontSize: fonts.big,
-  },
-  bodyContainer: {
-    flex: 1,
-    backgroundColor: colors.white,
   },
 });
 

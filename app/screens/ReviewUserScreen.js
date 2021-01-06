@@ -24,6 +24,7 @@ function ReviewUserScreen({ route, navigation }) {
   const [_is_loading, setIsLoading] = useState(true);
   const [_review_text, setReviewText] = useState("");
   const [_rating, setRating] = useState({ quantity: 0 });
+  const [_error, setError] = useState();
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
@@ -44,6 +45,11 @@ function ReviewUserScreen({ route, navigation }) {
     setIsLoading(false);
   };
 
+  const _handleApiError = (error) => {
+    setError(error);
+    setIsLoading(false);
+  };
+
   const _handlePostReview = () => {
     if (_review_text != "") {
       setIsLoading(true);
@@ -56,14 +62,16 @@ function ReviewUserScreen({ route, navigation }) {
         url,
         {
           review: _review_text,
-          reviewer: storedUser.userData.firstname,
+          reviewer:
+            storedUser.userData.firstname + " " + storedUser.userData.lastname,
           reviewer_id: storedUser.userData.id,
         },
         {
           "Content-Type": "application/json",
           "x-access-token": storedUser.auth_token,
         },
-        _handleApiResponse
+        _handleApiResponse,
+        _handleApiError
       );
     } else {
       alert(constants.ERR_EMPTY_REVIEW);
@@ -81,22 +89,27 @@ function ReviewUserScreen({ route, navigation }) {
         "POST",
         url,
         {
-          rating: _rating,
+          rating: _rating.quantity,
           reviewer:
-            storedUser.userData.firstname + storedUser.userData.lastname,
+            storedUser.userData.firstname + " " + storedUser.userData.lastname,
           reviewer_id: storedUser.userData.id,
         },
         {
           "Content-Type": "application/json",
           "x-access-token": storedUser.auth_token,
         },
-        _handleApiResponse
+        _handleApiResponse,
+        _handleApiError
       );
       setRating({ quantity: 0 });
     } else {
       alert(constants.ERR_RATING_ZERO);
     }
   };
+
+  if (_error) {
+    <Text style={bnbStyleSheet.centerText}>{_error.message}</Text>;
+  }
 
   if (_is_loading) {
     return <Text style={bnbStyleSheet.centerText}>Cargando...</Text>;
