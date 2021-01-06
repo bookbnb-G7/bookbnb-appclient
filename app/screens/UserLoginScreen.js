@@ -59,12 +59,11 @@ function UserLoginScreen({ navigation }) {
                 storeUser
               );
             } else {
-              /**OJO que si hay un error en el fetch esto GENERA un react state update
-               * en un componente desmontado
-               * dado que ejecuta esta parte de codigo pero el stack navigator ya cambio de pantalla
-               *
+              /**Si ocurre un error en el request, cierro sesion
+               * Esto es un fix temporal hasta que encuentre una manera de
+               * evitar el logeo en firebase si el request falla
                */
-              //setIsAwaiting(false);
+              firebase.auth.signOut();
             }
           });
         })

@@ -6,12 +6,9 @@ import fonts from "../../config/fonts";
 import Separator from "../../components/Separator";
 import BnbMainView from "../../components/BnbMainView";
 import BnbBodyView from "../../components/BnbBodyView";
-import BnbIconText from "../../components/BnbIconText";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import BnbSecureStore from "../../classes/BnbSecureStore";
 import constants from "../../constant/constants";
 import BnbButton from "../../components/BnbButton";
-import firebase from "../../database/firebase";
 import BnbImage from "../../components/BnbImage";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 import urls from "../../constant/urls";
@@ -23,11 +20,19 @@ function Profile({ route, navigation }) {
   /**user_id es el id del perfil del usuario que queremos ver */
   const user_id = route?.params?.user_id ? route.params.user_id : 0;
   const [user, setUser] = useState();
-  const [_is_loading, setIsLoading] = useState(true);
+  const [_is_loading, setIsLoading] = useState(user_id === 0);
 
   const _handleApiResponse = (user) => {
     setUser(user);
     setIsLoading(false);
+  };
+
+  const _handleProfileEdit = () => {
+    navigation.navigate("ProfileEdit");
+  };
+
+  const _handleReviewUser = () => {
+    navigation.navigate("ReviewUser", { is_guest: true, reviewed_id: user_id });
   };
 
   useEffect(() => {
@@ -49,10 +54,6 @@ function Profile({ route, navigation }) {
       });
     }
   }, []);
-
-  const _handleProfileEdit = () => {
-    navigation.navigate("ProfileEdit");
-  };
 
   return (
     <BnbMainView
@@ -83,6 +84,12 @@ function Profile({ route, navigation }) {
             style={styles.center}
             title="Editar perfil"
             onPress={_handleProfileEdit}
+          ></BnbButton>
+        )}
+        {user_id === 0 && (
+          <BnbButton
+            title="Escribir una reseña"
+            onPress={_handleReviewUser}
           ></BnbButton>
         )}
       </BnbBodyView>

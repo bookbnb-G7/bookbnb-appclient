@@ -5,13 +5,14 @@ import BnbMainView from "../components/BnbMainView";
 import fonts from "../config/fonts";
 import colors from "../config/colors";
 import GooglePlacesInput from "../components/GooglePlacesInput";
+import bnbStyleSheet from "../constant/bnbStyleSheet";
+import BnbButton from "../components/BnbButton";
 
 function SearchInputScreen({ navigation }) {
   const [tempLocation, setTempLocation] = useState("");
   const [_location_input, setLocationInput] = useState("");
 
-
-/**
+  /**
   Lo creo aca y lo voy pasando como props a cada screen que lo va completando
   const [searchForm, setSearchForm] = useState({
     date_ends: "",
@@ -23,7 +24,7 @@ function SearchInputScreen({ navigation }) {
 
   const _handleEndEditing = () => {
     navigation.navigate("SearchDateTimePicker", {
-      "location": _location_input,
+      location: _location_input,
     });
   };
 
@@ -49,14 +50,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.redAirBNB,
     paddingLeft: 5,
     paddingRight: 5,
-    alignItems: "center"
+    alignItems: "center",
   },
   searchInputText: {
     fontSize: fonts.big,
   },
   bodyView: {
-    paddingHorizontal: 0,
-    paddingVertical: 0,
     paddingTop: 10,
     borderTopStartRadius: 10,
     borderTopEndRadius: 10,

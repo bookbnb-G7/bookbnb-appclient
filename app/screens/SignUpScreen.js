@@ -1,7 +1,7 @@
-import React, {useRef, useState} from "react";
-import {Text, View, StyleSheet, Image} from "react-native";
+import React, { useRef, useState } from "react";
+import { Text, View, StyleSheet, Image } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import CountryPicker from 'react-native-country-picker-modal'
+import CountryPicker from "react-native-country-picker-modal";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
@@ -73,8 +73,8 @@ function SignUpScreen({ route, navigation }) {
                 };
                 BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
               } else {
-                /**Si no pongo el else tengo un React update en un unmounted component */
-                setIsAwaiting(false);
+                /**Ver UserLoginScreen.js */
+                firebase.auth.signOut();
               }
             });
           });
@@ -91,7 +91,7 @@ function SignUpScreen({ route, navigation }) {
         });
     }
   };
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const ref_mail = useRef();
   const ref_password = useRef();
   const ref_name = useRef();
@@ -100,17 +100,20 @@ function SignUpScreen({ route, navigation }) {
   const ref_country = useRef();
   const ref_birthdate = useRef();
 
-
   if (_is_awaiting) {
-    return <BnbLoading/>;
+    return <BnbLoading />;
   } else {
     return (
       <BnbMainView>
         <BnbBodyView style={styles.bodyView}>
-          <Image source={require("../assets/Bookbnb_logo.png")} style={styles.image} />
+          <Image
+            source={require("../assets/Bookbnb_logo.png")}
+            style={styles.image}
+          />
           <ScrollView
             keyboardShouldPersistTaps="always"
-            style={{paddingRight: 10}}>
+            style={{ paddingRight: 10 }}
+          >
             <BnbFloatingTextInput
               name="E-Mail"
               id={"email"}
@@ -231,7 +234,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
-  }
+  },
 });
 
 export default SignUpScreen;

@@ -21,9 +21,41 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
   },
+  background: {
+    backgroundColor: colors.redAirBNB,
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  bodyBackground: {
+    backgroundColor: colors.redAirBNBSoft,
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  headerText: {
+    fontFamily: "Raleway_700Bold",
+    fontSize: 25,
+    paddingLeft: 11,
+    paddingVertical: 15,
+    color: colors.white,
+  },
+  headerTextBlack: {
+    fontFamily: "Raleway_700Bold",
+    fontSize: 25,
+    paddingLeft: 11,
+    paddingVertical: 15,
+    color: "black",
+  },
   subTitle: {
     fontSize: fonts.semi,
     fontWeight: fonts.bold,
     fontFamily: "Raleway_400Regular",
+  },
+  centerView: {
+    alignSelf: "center",
+    justifyContent: "center",
+  },
+  centerText: {
+    textAlign: "center",
+    textAlignVertical: "center",
   },
 });

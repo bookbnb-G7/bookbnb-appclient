@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     //height: "100%",
-    //backgroundColor: colors.white,
+    backgroundColor: colors.white,
   },
 });
 
