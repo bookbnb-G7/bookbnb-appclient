@@ -32,19 +32,18 @@ class SearchCountersScreen extends Component {
   _handleNextButtonPress = () => {
     const amount_of_people =
       this.state.counters[0].quantity + this.state.counters[1].quantity;
-    const { searchForm } = this.props.route.params;
-    searchForm["amount_of_people"] = amount_of_people;
-    this.props.navigation.navigate("SearchResultRooms", {
-      searchForm: searchForm,
-    });
+    const searchForm = {
+      ...this.props.route.params,
+      "amount_of_people": amount_of_people
+    };
+    this.props.navigation.navigate("SearchResultRooms", searchForm);
   };
 
   render() {
     return (
       <BnbMainView style={styles.background}>
-        <Text style={styles.bigText}>¿Cuantos van a hospedarse?</Text>
-        <Separator style={{ borderBottomWidth: 0 }} />
-        <BnbBodyView>
+        <Text style={styles.headerText}>¿Cuantos van a hospedarse?</Text>
+        <BnbBodyView style={styles.bodyView}>
           <Counter
             title="Adultos"
             onIncrement={this._handleIncrement}
@@ -67,13 +66,32 @@ class SearchCountersScreen extends Component {
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: colors.redBackground,
+    backgroundColor: colors.redAirBNB,
+    paddingLeft: 5,
+    paddingRight: 5,
+    alignItems: "center",
   },
   bigText: {
     color: colors.graySoft,
     fontSize: fonts.bigBig,
     width: "60%",
     marginHorizontal: styling.bodyHPadding,
+  },
+  bodyView: {
+    width: "100%",
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    borderTopStartRadius: 10,
+    borderTopEndRadius: 10,
+    paddingTop: 10,
+    paddingHorizontal: 10,
+  },
+  headerText: {
+    fontFamily: "Raleway_700Bold",
+    fontSize: 23,
+    paddingLeft: 11,
+    paddingVertical: 15,
+    color: colors.white,
   },
 });
 

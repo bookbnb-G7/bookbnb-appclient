@@ -221,8 +221,7 @@ const styles = StyleSheet.create({
     borderTopStartRadius: 10,
     borderTopEndRadius: 10,
     paddingTop: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingHorizontal: 10,
   },
   inlineIconText: {
     flexDirection: "row",
