@@ -5,22 +5,11 @@ import BnbMainView from "../components/BnbMainView";
 import fonts from "../config/fonts";
 import colors from "../config/colors";
 import GooglePlacesInput from "../components/GooglePlacesInput";
-import bnbStyleSheet from "../constant/bnbStyleSheet";
-import BnbButton from "../components/BnbButton";
 
 function SearchInputScreen({ navigation }) {
   const [tempLocation, setTempLocation] = useState("");
   const [_location_input, setLocationInput] = useState("");
-
-  /**
-  Lo creo aca y lo voy pasando como props a cada screen que lo va completando
-  const [searchForm, setSearchForm] = useState({
-    date_ends: "",
-    date_begins: "",
-    amount_of_people: 0,
-    user_id: 0,
-  });
-  **/
+  const [coordinates, setCoordinates] = useState({})
 
   const _handleEndEditing = () => {
     navigation.navigate("SearchDateTimePicker", {
@@ -37,6 +26,7 @@ function SearchInputScreen({ navigation }) {
           onChangeText={setTempLocation}
           onEndEditing={_handleEndEditing}
           onPress={setLocationInput}
+          setCoordinates={setCoordinates}
           value={tempLocation}
           stateVar={_location_input}
         />

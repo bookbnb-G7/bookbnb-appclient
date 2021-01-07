@@ -1,16 +1,14 @@
 import React, { useState } from "react";
 import BnbMainView from "../components/BnbMainView";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Button, Platform, StyleSheet, Text, View } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import BnbBodyView from "../components/BnbBodyView";
 import colors from "../config/colors";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
 import BnbButton from "../components/BnbButton";
 import Separator from "../components/Separator";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Raleway_400Regular, Raleway_500Medium, Raleway_500Medium_Italic, Raleway_600SemiBold, Raleway_700Bold } from "@expo-google-fonts/raleway";
+import BnbFormBubbleInfo from "../components/BnbFormBubbleInfo";
 
 function SearchDateTimePicker({ route, navigation }) {
   const { location } = route.params;
@@ -75,11 +73,12 @@ function SearchDateTimePicker({ route, navigation }) {
         <Text style={styles.headerText}>¿Cuando vas a estar ahí?</Text>
 
       <View style={styles.innerContainer}>
-        <View style={styles.inlineIconText}>
-          <Ionicons name="location-sharp" color={colors.white} />
-          <Text style={styles.locationText}> {location}</Text>
-        </View>
-
+        <BnbFormBubbleInfo
+          iconName="location-sharp"
+          iconColor={colors.white}
+          text={location}
+          style={styles.locationContainer}
+        />
         <BnbBodyView style={styles.bodyView}>
           <View style={styles.dateTextAndButton}>
             <View style={styles.dateTextContainer}>
@@ -170,13 +169,6 @@ const styles = StyleSheet.create({
     width: "60%",
     marginHorizontal: styling.bodyHPadding,
   },
-  locationText: {
-    alignSelf: "center",
-    fontFamily: "Raleway_400Regular",
-    fontWeight: "bold",
-    fontSize: 15,
-    color: colors.white,
-  },
   date: {
     fontSize: fonts.semi,
     fontFamily: "Raleway_500Medium",
@@ -223,16 +215,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 10,
   },
-  inlineIconText: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 2,
-    paddingLeft: 5,
-    paddingRight: 5,
-    alignSelf: "center",
-    marginVertical: 5,
-  },
   headersContainer: {
     alignItems: "center",
     paddingVertical: 10,
@@ -246,6 +228,10 @@ const styles = StyleSheet.create({
   },
   dateTextAndButton: {
     paddingVertical: 5,
+  },
+  locationContainer: {
+    justifyContent: "center",
+    alignSelf: "center",
   }
 });
 

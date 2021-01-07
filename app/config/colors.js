@@ -24,4 +24,5 @@ export default {
   alpha03: "rgba(255, 255, 255, 0.3)",
   alpha08: "rgba(255, 255, 255, 0.8)",
   greenSuccess: "#5CB85C",
+  golden: "#FFDF00",
 };
