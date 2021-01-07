@@ -9,11 +9,11 @@ import GooglePlacesInput from "../components/GooglePlacesInput";
 function SearchInputScreen({ navigation }) {
   const [tempLocation, setTempLocation] = useState("");
   const [_location_input, setLocationInput] = useState("");
-  const [coordinates, setCoordinates] = useState({})
 
-  const _handleEndEditing = () => {
+  const _handleEndEditing = (_location_input, _coordinates_input) => {
     navigation.navigate("SearchDateTimePicker", {
-      location: _location_input,
+      "location": _location_input,
+      "coordinates": _coordinates_input,
     });
   };
 
@@ -26,7 +26,6 @@ function SearchInputScreen({ navigation }) {
           onChangeText={setTempLocation}
           onEndEditing={_handleEndEditing}
           onPress={setLocationInput}
-          setCoordinates={setCoordinates}
           value={tempLocation}
           stateVar={_location_input}
         />

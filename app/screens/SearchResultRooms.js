@@ -19,7 +19,7 @@ function SearchResultRooms({ route, navigation }) {
   const [_rooms, setRooms] = useState({});
   const [_error, setError] = useState(null);
   const [_is_loaded, setIsLoaded] = useState(false);
-  const URL_ROOMS = "http://bookbnb-appserver.herokuapp.com/rooms/";
+  const URL_ROOMS = "http://bookbnb-appserver.herokuapp.com/rooms";
 
   const _handleApiResponse = (response) => {
     setRooms(response);
@@ -35,7 +35,11 @@ function SearchResultRooms({ route, navigation }) {
     httpGetTokenRequest(
       "GET",
       URL_ROOMS + "?" + new URLSearchParams({
-        
+        "latitude": searchForm.coordinates.latitude,
+        "longitude": searchForm.coordinates.longitude,
+        "date_begins": searchForm.dateBegin,
+        "date_ends": searchForm.dateEnd,
+        "people": searchForm.amount_of_people,
       }),
       {},
       _handleApiResponse,
