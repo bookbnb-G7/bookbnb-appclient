@@ -1,3 +1,4 @@
+import { Raleway_400Regular, Raleway_500Medium, Raleway_700Bold } from "@expo-google-fonts/raleway";
 import React from "react";
 import { StyleSheet, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -15,8 +16,9 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: "center",
     fontSize: fonts.big,
+    fontFamily: "Raleway_500Medium",
     textAlignVertical: "center",
-    color: colors.redAirBNB,
+    color: colors.redAirBNBSoft,
   },
   buttonContainer: {
     alignItems: "center",

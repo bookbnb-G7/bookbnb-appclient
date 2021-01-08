@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbLoading from "../components/BnbLoading";
@@ -8,6 +8,12 @@ import Separator from "../components/Separator";
 import constants from "../constant/constants";
 import urls from "../constant/urls";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
+import bnbStyleSheet from "../constant/bnbStyleSheet";
+import styling from "../config/styling";
+import colors from "../config/colors";
+import BnbButton from "../components/BnbButton";
+import Counter from "../components/Counter";
+import BnbBodyView from "../components/BnbBodyView";
 
 /**Esta pantalla sirve para tanto Guest como Host e incluye reviews cualitativos y cuantitativos */
 function ReviewUserScreen({ route, navigation }) {
@@ -18,6 +24,7 @@ function ReviewUserScreen({ route, navigation }) {
   const [_is_loading, setIsLoading] = useState(true);
   const [_review_text, setReviewText] = useState("");
   const [_rating, setRating] = useState({ quantity: 0 });
+  const [_error, setError] = useState();
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
@@ -38,26 +45,33 @@ function ReviewUserScreen({ route, navigation }) {
     setIsLoading(false);
   };
 
+  const _handleApiError = (error) => {
+    setError(error);
+    setIsLoading(false);
+  };
+
   const _handlePostReview = () => {
     if (_review_text != "") {
       setIsLoading(true);
       const url =
         urls.URL_USERS + "/" + reviewed_id + is_guest
-          ? "/guest_review"
+          ? "/guest_reviews"
           : "/host_reviews";
       httpPostTokenRequest(
         "POST",
         url,
         {
           review: _review_text,
-          reviewer: storedUser.userData.firstname,
+          reviewer:
+            storedUser.userData.firstname + " " + storedUser.userData.lastname,
           reviewer_id: storedUser.userData.id,
         },
         {
           "Content-Type": "application/json",
           "x-access-token": storedUser.auth_token,
         },
-        _handleApiResponse
+        _handleApiResponse,
+        _handleApiError
       );
     } else {
       alert(constants.ERR_EMPTY_REVIEW);
@@ -75,15 +89,17 @@ function ReviewUserScreen({ route, navigation }) {
         "POST",
         url,
         {
-          rating: _rating,
-          reviewer: storedUser.userData.firstname,
+          rating: _rating.quantity,
+          reviewer:
+            storedUser.userData.firstname + " " + storedUser.userData.lastname,
           reviewer_id: storedUser.userData.id,
         },
         {
           "Content-Type": "application/json",
           "x-access-token": storedUser.auth_token,
         },
-        _handleApiResponse
+        _handleApiResponse,
+        _handleApiError
       );
       setRating({ quantity: 0 });
     } else {
@@ -91,25 +107,31 @@ function ReviewUserScreen({ route, navigation }) {
     }
   };
 
+  if (_error) {
+    <Text style={bnbStyleSheet.centerText}>{_error.message}</Text>;
+  }
+
   if (_is_loading) {
-    return <BnbLoading></BnbLoading>;
+    return <Text style={bnbStyleSheet.centerText}>Cargando...</Text>;
   }
 
   return (
     <BnbMainView>
-      <Text>Reseña sobre un usuario</Text>
+      <View style={bnbStyleSheet.centerView}>
+        <Text style={bnbStyleSheet.headerTextBlack}>
+          Escriba una reseña al {is_guest ? "inquilino" : "dueño"}
+        </Text>
+      </View>
       <TextInput
         multiline
-        placeholder={
-          "Escriba una reseña sobre el " + is_guest ? "inquilino" : "dueño"
-        }
         style={styles.reviewText}
         value={_review_text}
         onChangeText={setReviewText}
       ></TextInput>
       <BnbButton title="Publicar Reseña" onPress={_handlePostReview} />
-      <Separator></Separator>
-      <Text>Puntuar a un usuario</Text>
+      <Text style={bnbStyleSheet.headerTextBlack}>
+        Puntuar {is_guest ? "inquilino" : "dueño"}
+      </Text>
       <View>
         <Counter
           title="Rating"
@@ -124,15 +146,12 @@ function ReviewUserScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  titleText: {
-    alignSelf: "center",
-    color: "black",
-  },
   reviewText: {
     borderRadius: styling.smallCornerRadius,
     backgroundColor: colors.graySoft,
     borderWidth: 1,
     marginVertical: styling.separator,
+    padding: 1,
   },
 });
 

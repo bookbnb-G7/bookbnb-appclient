@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import BnbMainView from "../components/BnbMainView";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Button, Platform, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import BnbBodyView from "../components/BnbBodyView";
 import colors from "../config/colors";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
 import BnbButton from "../components/BnbButton";
 import Separator from "../components/Separator";
-import BnbTitleText from "../components/BnbTitleText";
+import BnbFormBubbleInfo from "../components/BnbFormBubbleInfo";
 
 function SearchDateTimePicker({ route, navigation }) {
-  const { location, searchForm } = route.params;
+  const { location, coordinates } = route.params;
 
   const [dateBegin, setDateBegin] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
@@ -22,8 +22,17 @@ function SearchDateTimePicker({ route, navigation }) {
   const [pickedBeginDate, setPicked] = useState(false);
   const [pickedEndDate, setPickedEnd] = useState(false);
 
+  console.log("Las coordendas: " + coordinates.longitude + " " + coordinates.latitude);
+  console.log("La ubicacion: " + location);
+
+
   const _handleNextButtonPress = () => {
-    navigation.navigate("SearchCounters", { searchForm: searchForm });
+    navigation.navigate("SearchCounters", {
+      "location": location,
+      "dateBegin": dateBegin.toISOString(),
+      "dateEnd": dateEnd.toISOString(),
+      "coordinates": coordinates,
+    });
   };
 
   const onChangeBegin = (event, selectedDate) => {
@@ -32,7 +41,6 @@ function SearchDateTimePicker({ route, navigation }) {
       setShowBegin(Platform.OS === "ios");
       setDateBegin(currentDate);
       setPicked(true);
-      searchForm["date_begins"] = dateBegin.toISOString();
     } else {
       alert(
         "No puede elegir una fecha de comienzo posterior a la fecha de fin"
@@ -46,7 +54,6 @@ function SearchDateTimePicker({ route, navigation }) {
       setShowEnd(Platform.OS === "ios");
       setDateEnd(currentDate);
       setPickedEnd(true);
-      searchForm["date_ends"] = dateEnd.toISOString();
     } else {
       alert("No puede elegir una fecha de fin anterior a la fecha de comienzo");
     }
@@ -68,72 +75,98 @@ function SearchDateTimePicker({ route, navigation }) {
 
   return (
     <BnbMainView style={styles.background}>
-      <Text style={styles.bigText}>¿Cuando vas a estar ahí?</Text>
-      <BnbBodyView>
-        <Text style={styles.locationText}> {location}</Text>
+        <Text style={styles.headerText}>¿Cuando vas a estar ahí?</Text>
 
-        <View>
-          <Text style={styles.date}>Fecha de inicio</Text>
-          <Text style={styles.date}>
-            {dateBegin.getDate()}-{getMonth(dateBegin)}-
-            {dateBegin.getFullYear()}
-          </Text>
-        </View>
-        <View>
-          <Button onPress={showDatepicker} title="Fecha de inicio" />
-        </View>
-        <Separator></Separator>
-        {pickedBeginDate && (
-          <View>
-            <View>
-              <Text style={styles.date}>Fecha fin</Text>
+      <View style={styles.innerContainer}>
+        <BnbFormBubbleInfo
+          iconName="location-sharp"
+          iconColor={colors.white}
+          text={location}
+          style={styles.locationContainer}
+        />
+        <BnbBodyView style={styles.bodyView}>
+          <View style={styles.dateTextAndButton}>
+            <View style={styles.dateTextContainer}>
+              <Text style={styles.dateTitle}>Fecha de inicio:</Text>
               <Text style={styles.date}>
-                {dateEnd.getDate()}-{getMonth(dateEnd)}-{dateEnd.getFullYear()}
+                {dateBegin.getDate()}-{getMonth(dateBegin)}-
+                {dateBegin.getFullYear()}
               </Text>
             </View>
             <View>
-              <Button onPress={showDatepickerEnd} title="Fecha fin" />
-            </View>
+              <BnbButton
+                onPress={showDatepicker}
+                title="Fecha de inicio"
+                buttonStyle={styles.dateButton}
+                style={styles.dateButtonText}
+              />
           </View>
-        )}
-        {showBegin && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={dateBegin}
-            mode={mode}
-            is24Hour={true}
-            display="default"
-            minimumDate={new Date()}
-            onChange={onChangeBegin}
-          />
-        )}
-        {showEnd && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={dateEnd}
-            mode={mode}
-            is24Hour={true}
-            display="default"
-            minimumDate={new Date()}
-            onChange={onChangeEnd}
-          />
-        )}
-        <Separator></Separator>
-        {pickedBeginDate && pickedEndDate && (
-          <BnbButton
-            title="Siguiente"
-            onPress={_handleNextButtonPress}
-            style={styles.button}
-          ></BnbButton>
-        )}
-      </BnbBodyView>
+          </View>
+          <Separator />
+          {pickedBeginDate && (
+            <View style={styles.dateTextAndButton}>
+              <View style={styles.dateTextContainer}>
+                <Text style={styles.dateTitle}>Fecha de fin:</Text>
+                <Text style={styles.date}>
+                  {dateEnd.getDate()}-{getMonth(dateEnd)}-{dateEnd.getFullYear()}
+                </Text>
+              </View>
+              <View>
+                <BnbButton
+                  onPress={showDatepickerEnd}
+                  title="Fecha de fin"
+                  buttonStyle={styles.dateButton}
+                  style={styles.dateButtonText}
+                />
+              </View>
+            </View>
+          )}
+          {showBegin && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={dateBegin}
+              mode={mode}
+              is24Hour={true}
+              display="default"
+              minimumDate={new Date()}
+              onChange={onChangeBegin}
+            />
+          )}
+          {showEnd && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={dateEnd}
+              mode={mode}
+              is24Hour={true}
+              display="default"
+              minimumDate={new Date()}
+              onChange={onChangeEnd}
+            />
+          )}
+          {pickedBeginDate && pickedEndDate && (
+            <Separator />
+          )}
+          {pickedBeginDate && pickedEndDate && (
+            <BnbButton
+              title="Siguiente"
+              onPress={_handleNextButtonPress}
+              buttonStyle={styles.nextButton}
+              style={styles.nextButtonText}
+            />
+          )}
+        </BnbBodyView>
+      </View>
+
     </BnbMainView>
   );
 }
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: colors.redBackground,
+    backgroundColor: colors.redAirBNB,
+    paddingLeft: 5,
+    paddingRight: 5,
+    alignItems: "center",
   },
   bigText: {
     color: colors.graySoft,
@@ -141,16 +174,70 @@ const styles = StyleSheet.create({
     width: "60%",
     marginHorizontal: styling.bodyHPadding,
   },
-  locationText: {
-    alignSelf: "center",
-    fontWeight: "bold",
-  },
   date: {
+    fontSize: fonts.semi,
+    fontFamily: "Raleway_500Medium",
+  },
+  dateTitle: {
     fontSize: fonts.big,
+    textDecorationLine: "underline",
+    fontFamily: "Raleway_500Medium",
+    paddingBottom: 2,
   },
-  button: {
+  dateTextContainer: {
+    paddingBottom: 10,
+    alignItems: "center",
+  },
+  dateButton: {
+    borderRadius: 10,
+    padding: 5,
+    backgroundColor: colors.redAirBNB,
+  },
+  dateButtonText: {
+    color: colors.white,
+  },
+  nextButton: {
+    backgroundColor: colors.redAirBNB,
+    borderRadius: 15,
+    marginTop: 40,
+  },
+  nextButtonText: {
+    color: colors.white,
+  },
+  headerText: {
+    fontFamily: "Raleway_700Bold",
+    fontSize: 25,
+    paddingLeft: 11,
+    paddingVertical: 15,
+    color: colors.white,
+  },
+  bodyView: {
     width: "100%",
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    borderTopStartRadius: 10,
+    borderTopEndRadius: 10,
+    paddingTop: 10,
+    paddingHorizontal: 10,
   },
+  headersContainer: {
+    alignItems: "center",
+    paddingVertical: 10,
+  },
+  innerContainer: {
+    width: "100%",
+    flex: 1,
+    backgroundColor: colors.redAirBNBSoft,
+    borderTopStartRadius: 10,
+    borderTopEndRadius: 10,
+  },
+  dateTextAndButton: {
+    paddingVertical: 5,
+  },
+  locationContainer: {
+    justifyContent: "center",
+    alignSelf: "center",
+  }
 });
 
 export default SearchDateTimePicker;

@@ -14,6 +14,9 @@ const pickAnImage = async (props) => {
     base64: true,
   });
 
+  /**@komod0 fijate como es en el caso de que sea un room y no un profile
+   * name: "profile????"
+   */
   if (!result.cancelled) {
     const extension = getFileNameExtension(result.uri);
     const file = {

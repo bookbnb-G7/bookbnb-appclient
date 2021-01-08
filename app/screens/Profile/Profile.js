@@ -6,12 +6,9 @@ import fonts from "../../config/fonts";
 import Separator from "../../components/Separator";
 import BnbMainView from "../../components/BnbMainView";
 import BnbBodyView from "../../components/BnbBodyView";
-import BnbIconText from "../../components/BnbIconText";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import BnbSecureStore from "../../classes/BnbSecureStore";
 import constants from "../../constant/constants";
 import BnbButton from "../../components/BnbButton";
-import firebase from "../../database/firebase";
 import BnbImage from "../../components/BnbImage";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 import urls from "../../constant/urls";
@@ -23,11 +20,22 @@ function Profile({ route, navigation }) {
   /**user_id es el id del perfil del usuario que queremos ver */
   const user_id = route?.params?.user_id ? route.params.user_id : 0;
   const [user, setUser] = useState();
-  const [_is_loading, setIsLoading] = useState(true);
+  const [_is_loading, setIsLoading] = useState(user_id === 0);
 
   const _handleApiResponse = (user) => {
     setUser(user);
     setIsLoading(false);
+  };
+
+  const _handleProfileEdit = () => {
+    navigation.navigate("ProfileEdit");
+  };
+
+  const _handleReviewUser = () => {
+    navigation.navigate("ReviewUser", {
+      is_guest: false,
+      reviewed_id: user_id,
+    });
   };
 
   useEffect(() => {
@@ -50,34 +58,29 @@ function Profile({ route, navigation }) {
     }
   }, []);
 
-  const _handleProfileEdit = () => {
-    navigation.navigate("ProfileEdit");
-  };
-
   return (
-    <BnbMainView
-      style={{
-        paddingTop: StatusBar.currentHeight,
-        backgroundColor: "white",
-      }}
-    >
-      <BnbBodyView>
-        <View style={styles.twoColumns}>
-          <View style={styles.leftColumn}>
-            <View style={styles.logoContainer}>
-              {user && (
-                <BnbImage
-                  imageStyle={styles.userLogo}
-                  uri={user ? user.photo : ""}
-                ></BnbImage>
-              )}
-            </View>
-          </View>
-          <View style={styles.rightColumn}>
-            {user && <Text style={styles.userName}>{user.email}</Text>}
+    <BnbMainView style={styles.mainContainer}>
+      <View>
+        <View style={styles.center}>
+          <View>
+            {user && (
+              <BnbImage
+                imageStyle={styles.userLogo}
+                uri={user.photo}
+              ></BnbImage>
+            )}
           </View>
         </View>
-        <Separator></Separator>
+        <View style={styles.center}>
+          {user && (
+            <Text style={styles.userName}>
+              {user.firstname} {user.lastname}
+            </Text>
+          )}
+          {user && <Text style={styles.userName}>{user.email}</Text>}
+        </View>
+      </View>
+      <View style={styles.buttonsContainer}>
         {user_id === 0 && (
           <BnbButton
             style={styles.center}
@@ -85,45 +88,36 @@ function Profile({ route, navigation }) {
             onPress={_handleProfileEdit}
           ></BnbButton>
         )}
-      </BnbBodyView>
+        {user_id === 0 && (
+          <BnbButton
+            title="Escribir una reseña"
+            onPress={_handleReviewUser}
+          ></BnbButton>
+        )}
+      </View>
     </BnbMainView>
   );
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    justifyContent: "space-evenly",
+  },
   center: {
     alignSelf: "center",
   },
-  twoColumns: {
-    //flex: 1,
-    flexDirection: "row",
-  },
-  leftColumn: {
-    //flex: 2,
-    backgroundColor: colors.white,
-    //alignItems: "center",
-    //justifyContent: "center",
-  },
-  logoContainer: {
-    //alignItems: "center",
+  userContainer: {
+    alignItems: "center",
   },
   userLogo: {
     width: 100,
     height: 100,
     backgroundColor: colors.graySoft,
-  },
-  rightColumn: {
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-    paddingHorizontal: 20,
+    borderRadius: 50,
   },
   userName: {
+    textAlign: "center",
     fontSize: fonts.big,
-  },
-  bodyContainer: {
-    flex: 1,
-    backgroundColor: colors.white,
   },
 });
 

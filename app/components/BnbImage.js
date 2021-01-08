@@ -6,15 +6,12 @@ import styling from "../config/styling";
 const BnbImage = (props) => {
   return (
     <View>
-      {props.uri != "" && (
-        <TouchableOpacity onPress={props.onPress}>
-          <Image
-            source={{ uri: props.uri }}
-            style={{ ...styles.image, ...props.imageStyle }}
-          ></Image>
-        </TouchableOpacity>
-      )}
-      {props.uri == "" && <Text style={styles.noImageText}>No hay imagen</Text>}
+      <TouchableOpacity onPress={props.onPress}>
+        <Image
+          source={{ uri: props.uri !== "" ? props.uri : "null" }}
+          style={{ ...styles.image, ...props.imageStyle }}
+        ></Image>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -27,6 +24,9 @@ const styles = StyleSheet.create({
   },
   noImageText: {
     textAlign: "center",
+    width: 200,
+    height: 200,
+    borderRadius: styling.smallCornerRadius,
   },
 });
 

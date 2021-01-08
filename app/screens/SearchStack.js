@@ -31,16 +31,12 @@ function SearchStack(props) {
     return (
       <SearchStackNav.Navigator
         screenOptions={{
-          headerRight: (props) => (
-            <BnbHeaderUserInfo userEmail={storedUser.userData.email} />
-          ),
-          headerTitle: "Buscar",
+          headerTitleStyle: {
+            fontFamily: "Raleway_700Bold",
+          },
+          headerTitleAlign: "center"
         }}
       >
-        <SearchStackNav.Screen
-          name="SearchRooms"
-          component={SearchRoomsScreen}
-        />
         <SearchStackNav.Screen
           name="SearchInput"
           component={SearchInputScreen}

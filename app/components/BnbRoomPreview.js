@@ -7,6 +7,9 @@ import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbLoading from "../components/BnbLoading";
 import BnbImageSlider from "./BnbImageSlider";
+import BnbFormBubbleInfo from "../components/BnbFormBubbleInfo";
+import colors from "../config/colors";
+
 import getAverage from "../helpers/getAverage";
 
 const BnbRoomPreview = (props) => {
@@ -83,9 +86,15 @@ const BnbRoomPreview = (props) => {
             ></BnbImageSlider>
           </View>
           <View style={styles.roomDescriptionContainer}>
-            <Text style={styles.roomReviewScore}>
-              {getAverage(_ratings.ratings, "rating")} de 5 estrellas
-            </Text>
+            
+            <BnbFormBubbleInfo
+              iconName="star"
+              iconColor={colors.golden}
+              iconSize={24}
+              text={_ratings.ratings.length > 0 ? getAverage(_ratings.ratings, "rating") : "-"}
+              textStyle={styles.ratingText} 
+              style={styles.ratingContainer}
+            />
             <Text style={styles.roomTitleText}>{props.room.type}</Text>
             <Text style={styles.roomPriceText}>
               Precio por dia: ${props.room.price_per_day}
@@ -102,6 +111,17 @@ const styles = StyleSheet.create({
     //flex: 1,
     justifyContent: "center",
     marginVertical: styling.separator,
+    borderRadius: 20,
+    paddingHorizontal: 10,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 2,
   },
   imageSlider: {
     justifyContent: "center",
@@ -118,7 +138,6 @@ const styles = StyleSheet.create({
     //borderWidth: 1,
     marginVertical: styling.separator,
   },
-  roomReviewScore: {},
   roomTitleText: {
     fontSize: fonts.big,
   },
@@ -126,6 +145,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: fonts.big,
   },
+  ratingText: {
+    color: colors.black,
+    fontSize: 20,
+  },
+  ratingContainer: {
+    marginVertical: 0,
+    paddingHorizontal: 0,
+  }
 });
 
 export default BnbRoomPreview;

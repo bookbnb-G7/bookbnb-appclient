@@ -13,12 +13,16 @@ import BnbAlertMultiButtons from "../components/BnbAlertMultiButtons";
 import pickAnImage from "../helpers/pickAnImage";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbAlert from "../components/BnbAlert";
+import useRequestMediaLibraryPermissionsAsync from "../helpers/useRequestMediaLibraryPermissionsAsync";
+import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 
 function ImagesEditScreen({ route, navigation }) {
   const photos = route.params.photos;
   const [storedUser, setStoredUser] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
+
+  const [_photos_urls, setPhotosUrl] = useState([]);
 
   const _handleApiResponse = () => {
     setIsLoading(false);
@@ -54,22 +58,27 @@ function ImagesEditScreen({ route, navigation }) {
 
   const _pickImage = () => {
     setIsLoading(true);
-    pickAnImage().then((file) => {
-      if (file) {
-        httpPostTokenRequest(
-          "POST",
-          urls.URL_ROOMS + "/" + photos.room_id + "/photos",
-          file,
-          {
-            "Content-Type": "multipart/form-data",
-            "x-access-token": storedUser.auth_token,
-          },
-          _handleApiResponse,
-          _handleApiError,
-          true
-        );
+    pickAnImage().then(
+      (file) => {
+        if (file) {
+          httpPostTokenRequest(
+            "POST",
+            urls.URL_ROOMS + "/" + photos.room_id + "/photos",
+            file,
+            {
+              "Content-Type": "multipart/form-data",
+              "x-access-token": storedUser.auth_token,
+            },
+            _handleApiResponse,
+            _handleApiError,
+            true
+          );
+        }
+      },
+      (reason) => {
+        setIsLoading(false);
       }
-    });
+    );
   };
 
   const _deleteImage = (photo_firebase_id) => {
@@ -91,22 +100,21 @@ function ImagesEditScreen({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    async () => {
-      if (Platform.OS !== "web") {
-        const {
-          status,
-        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== "granted") {
-          BnbAlert(
-            "Permisos",
-            "Se necesitan permisos de la camara para poder continuar",
-            "entendido",
-            false
-          );
-          navigation.goBack();
-        }
+    useRequestMediaLibraryPermissionsAsync().then((is_granted) => {
+      if (!is_granted) {
+        BnbAlert(
+          "Permisos",
+          "Se necesitan permisos de la camara para poder continuar",
+          "entendido",
+          false
+        );
+        navigation.goBack();
       }
-    };
+    });
+  }, []);
+
+  useEffect(() => {
+    setPhotosUrl(getUrlFromPhotos(photos.room_photos));
   }, []);
 
   if (_is_loading) {
@@ -118,7 +126,7 @@ function ImagesEditScreen({ route, navigation }) {
       <BnbMainView>
         <View style={styles.imageSlider}>
           <BnbImageSlider
-            images={photos.room_photos}
+            images={_photos_urls}
             width={200}
             onPress={_handleRemoveImage}
           ></BnbImageSlider>

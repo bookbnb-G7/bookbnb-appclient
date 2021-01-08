@@ -3,13 +3,15 @@ import { StyleSheet, View, Text, Dimensions } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import fonts from "../config/fonts";
 import constants from "../constant/constants";
+import Ionicons from "@expo/vector-icons/MaterialCommunityIcons";
+import colors from "../config/colors";
 
 class Counter extends Component {
   render() {
     return (
-      <View style={styles.counterContainer}>
+      <View style={styles.mainContainer}>
         <Text style={styles.counterText}> {this.props.title} </Text>
-        <View style={styles.buttonsContainer}>
+        <View style={styles.counterContainer}>
           <TouchableOpacity
             onPress={() =>
               this.props.onIncrement(
@@ -18,9 +20,9 @@ class Counter extends Component {
               )
             }
           >
-            <Text style={styles.button}> - </Text>
+            <Ionicons name="minus-circle-outline" size={40} />
           </TouchableOpacity>
-          <Text> {this.props.counter.quantity} </Text>
+          <Text style={styles.counter}> {this.props.counter.quantity} </Text>
           <TouchableOpacity
             onPress={() =>
               this.props.onIncrement(
@@ -29,7 +31,7 @@ class Counter extends Component {
               )
             }
           >
-            <Text style={styles.button}> + </Text>
+            <Ionicons name="plus-circle-outline" size={40} />
           </TouchableOpacity>
         </View>
       </View>
@@ -45,22 +47,27 @@ Counter.defaultProps = {
 const dimensions = Dimensions.get("window");
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    alignSelf: "center",
+  },
   counterContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    //alignItems: "center",
+    //justifyContent: "center",
   },
   counterText: {
-    flex: 1,
-    fontSize: fonts.big,
+    //flex: 1,
+    textAlign: "center",
+    fontSize: 25,
   },
   buttonsContainer: {
-    flex: 2,
-    flexDirection: "row",
-    alignItems: "center",
+    //flex: 2,
+    //flexDirection: "row",
+    //alignItems: "center",
   },
-  button: {
-    fontSize: fonts.bigBig,
-    marginHorizontal: dimensions.width * 0.03,
+  counter: {
+    marginHorizontal: 10,
+    fontSize: 30,
   },
 });
 

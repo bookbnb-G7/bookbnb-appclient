@@ -37,7 +37,6 @@ function ProfileInfoScreen({ route, navigation }) {
     };
 
     /**guardo */
-    //console.log("\nNuevo storedUser:" + JSON.stringify(storeUser));
     BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser).then(() => {
       setIsAwaiting(false);
       setIsEditing(false);
@@ -80,7 +79,6 @@ function ProfileInfoScreen({ route, navigation }) {
   };
 
   const _handleDeleteAccountButtonPress = () => {
-    //BnbAlert("Eliminar cuenta", "Si acepta la cuenta sera eliminada permanentemente",)
     Alert.alert(
       "Eliminar cuenta",
       "Si acepta la cuenta sera eliminada permanentemente",

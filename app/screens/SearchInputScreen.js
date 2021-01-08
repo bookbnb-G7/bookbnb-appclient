@@ -1,35 +1,19 @@
 import React, { useState } from "react";
-import { Image, StyleSheet, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import BnbBodyView from "../components/BnbBodyView";
-import BnbIconText from "../components/BnbIconText";
 import BnbMainView from "../components/BnbMainView";
 import fonts from "../config/fonts";
-import Separator from "../components/Separator";
 import colors from "../config/colors";
 import GooglePlacesInput from "../components/GooglePlacesInput";
-
-const icon = require("../assets/bookbnb_1.png");
-
 
 function SearchInputScreen({ navigation }) {
   const [tempLocation, setTempLocation] = useState("");
   const [_location_input, setLocationInput] = useState("");
 
-
-
-  /**Lo creo aca y lo voy pasando como props a cada screen que lo va completando */
-  const [searchForm, setSearchForm] = useState({
-    date_ends: "",
-    date_begins: "",
-    amount_of_people: 0,
-    user_id: 0,
-  });
-
-  const _handleEndEditing = () => {
-    console.log("Lo que recibio es: " + _location_input);
+  const _handleEndEditing = (_location_input, _coordinates_input) => {
     navigation.navigate("SearchDateTimePicker", {
-      location: _location_input,
-      searchForm: searchForm,
+      "location": _location_input,
+      "coordinates": _coordinates_input,
     });
   };
 
@@ -55,24 +39,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.redAirBNB,
     paddingLeft: 5,
     paddingRight: 5,
-    alignItems: "center"
+    alignItems: "center",
   },
   searchInputText: {
     fontSize: fonts.big,
   },
   bodyView: {
-    paddingHorizontal: 0,
-    paddingVertical: 0,
     paddingTop: 10,
     borderTopStartRadius: 10,
     borderTopEndRadius: 10,
   },
   headerText: {
     fontFamily: "Raleway_700Bold",
-    fontSize: 30,
+    fontSize: 25,
     paddingLeft: 11,
-    paddingBottom: 10,
-    paddingTop: 10,
+    paddingVertical: 15,
     color: colors.white,
   },
 });

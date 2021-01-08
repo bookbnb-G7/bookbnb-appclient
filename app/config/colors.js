@@ -18,9 +18,11 @@ export default {
   redSoft2: "#DB5B5B",
   redBackground: "#DB5B5B",
   redAirBNB: "#FF5A60",
+  redAirBNBSoft: "#ff8589",
   redError: "#FF9494",
   alpha02: "rgba(255, 255, 255, 0.2)",
   alpha03: "rgba(255, 255, 255, 0.3)",
   alpha08: "rgba(255, 255, 255, 0.8)",
   greenSuccess: "#5CB85C",
+  golden: "#FFDF00",
 };

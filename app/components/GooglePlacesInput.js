@@ -7,14 +7,7 @@ import colors from "../config/colors";
 const GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
 
 const GooglePlacesInput = (props) => {
-  const isInitialMount = useRef(true);
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-    } else {
-      props.onEndEditing();
-    }
-  }, [props.stateVar]);
+
   return (
     <GooglePlacesAutocomplete
       placeholder={props.placeholder}
@@ -25,10 +18,13 @@ const GooglePlacesInput = (props) => {
       }}
       fetchDetails={true}
       onPress={(data, details=null) => {
-        props.onPress(data.description);
+        props.onEndEditing(data.description, {
+          "latitude": details.geometry.location.lat,
+          "longitude": details.geometry.location.lng,
+        });
       }}
       enablePoweredByContainer={false}
-      minLength={4}
+      minLength={3}
       textInputProps={{
         InputComp: Input,
         placeholder: props.placeholder,

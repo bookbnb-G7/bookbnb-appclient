@@ -16,6 +16,7 @@ import ProfileRoomsScreen from "./ProfileRoomsScreen";
 import ProfileWalletScreen from "./ProfileWalletScreen";
 import ImagesEditScreen from "../ImagesEditScreen";
 import { Text } from "react-native";
+import ReviewUserScreen from "../ReviewUserScreen";
 
 const ProfileStack = createStackNavigator();
 
@@ -33,12 +34,14 @@ function ProfileStackScreen(props) {
     return (
       <ProfileStack.Navigator
         screenOptions={{
-          headerRight: (props) => (
-            <BnbHeaderUserInfo userEmail={storedUser.userData.email} />
-          ),
+          headerTitleStyle: {
+            fontFamily: "Raleway_700Bold",
+          },
+          headerTitleAlign: "center",
         }}
       >
         <ProfileStack.Screen name="Profile" component={Profile} />
+        <ProfileStack.Screen name="ReviewUser" component={ReviewUserScreen} />
         <ProfileStack.Screen name="ProfileEdit" component={ProfileEditScreen} />
         <ProfileStack.Screen name="ProfileInfo" component={ProfileInfoScreen} />
         <ProfileStack.Screen

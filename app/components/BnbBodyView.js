@@ -15,9 +15,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderTopLeftRadius: styling.mediumCornerRadius,
     borderTopRightRadius: styling.mediumCornerRadius,
-    paddingHorizontal: styling.bodyHPadding,
-    paddingVertical: styling.separator,
-    //borderWidth: 1,
+    paddingTop: 10,
+    borderTopStartRadius: 10,
+    borderTopEndRadius: 10,
+    paddingHorizontal: 10,
   },
 });
 

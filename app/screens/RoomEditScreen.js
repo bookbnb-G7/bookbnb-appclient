@@ -117,7 +117,7 @@ function RoomEditScreen({ route, navigation }) {
   }, []);
 
   if (_error) {
-    return <BnbLoading text={_error.message}></BnbLoading>;
+    return <Text>{_error.message}</Text>;
   }
 
   if (_is_loading) {
