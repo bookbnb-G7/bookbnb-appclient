@@ -9,6 +9,7 @@ import UserLoginScreen from "./UserLoginScreen";
 import WelcomeScreen from "./WelcomeScreen";
 import PasswordRecover from "./PasswordRecover";
 import BnbImageSlider from "../components/BnbImageSlider";
+import SendPassResetEmailScreen from "./SendPassResetEmailScreen";
 
 const HomeStackNav = createStackNavigator();
 
@@ -32,7 +33,7 @@ function HomeStack(props) {
         <HomeStackNav.Screen name="UserLogin" component={UserLoginScreen} />
         <HomeStackNav.Screen
           name="PasswordRecover"
-          component={PasswordRecover}
+          component={SendPassResetEmailScreen}
         />
       </HomeStackNav.Navigator>
     );
