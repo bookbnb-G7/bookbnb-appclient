@@ -22,10 +22,6 @@ function SearchDateTimePicker({ route, navigation }) {
   const [pickedBeginDate, setPicked] = useState(false);
   const [pickedEndDate, setPickedEnd] = useState(false);
 
-  console.log("Las coordendas: " + coordinates.longitude + " " + coordinates.latitude);
-  console.log("La ubicacion: " + location);
-
-
   const _handleNextButtonPress = () => {
     navigation.navigate("SearchCounters", {
       "location": location,

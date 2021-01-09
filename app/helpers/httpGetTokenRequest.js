@@ -7,6 +7,7 @@ async function httpGetTokenRequest(method, url, header, onResponse, onError) {
   };
 
   console.log("Debug httpGetTokenRequest header:" + JSON.stringify(header));
+  console.log("url: " + url);
 
   /**error captura los errores de red pero NO los errores de HTTP */
   return fetch(url, requestOptions)

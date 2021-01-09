@@ -14,6 +14,7 @@ const BnbIconTextInput = (props) => (
       onChangeText={props.onChangeText}
       value={props.value}
       secureTextEntry={Boolean(props.secureTextEntry)}
+      keyboardType={props.keyboardType}
     />
   </View>
 );

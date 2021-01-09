@@ -6,6 +6,7 @@ import BnbHeaderUserInfo from "../components/BnbHeaderUserInfo";
 import BnbLoading from "../components/BnbLoading";
 import constants from "../constant/constants";
 import ImagesEditScreen from "./ImagesEditScreen";
+import OptionalFiltersScreen from "./OptionalFiltersScreen";
 import RoomEditScreen from "./RoomEditScreen";
 import RoomScreen from "./RoomScreen";
 import SearchCountersScreen from "./SearchCountersScreen";
@@ -48,6 +49,10 @@ function SearchStack(props) {
         <SearchStackNav.Screen
           name="SearchCounters"
           component={SearchCountersScreen}
+        />
+        <SearchStackNav.Screen
+          name="OptionalFilters"
+          component={OptionalFiltersScreen}
         />
         <SearchStackNav.Screen
           name="SearchResultRooms"

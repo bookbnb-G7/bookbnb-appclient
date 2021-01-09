@@ -121,8 +121,7 @@ function UserLoginScreen({ navigation }) {
 
               <View>
                 <Text style={styles.errorText}>
-                  {" "}
-                  {_login_error !== "" ? _login_error : ""}
+                  {_login_error}
                 </Text>
               </View>
             </View>

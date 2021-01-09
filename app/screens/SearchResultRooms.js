@@ -15,6 +15,29 @@ function SearchResultRooms({ route, navigation }) {
   const searchForm = route.params;
   const dateBegin = searchForm.dateBegin.substr(0, 10).replace(/-/g, "/");
   const dateEnd = searchForm.dateEnd.substr(0, 10).replace(/-/g, "/");
+  const minPrice = parseInt(searchForm.minPrice);
+  const maxPrice = parseInt(searchForm.maxPrice);
+  const propertyTypes = searchForm.propertyTypes;
+
+  const queryParams = {
+    "latitude": searchForm.coordinates.latitude,
+    "longitude": searchForm.coordinates.longitude,
+    "date_begins": searchForm.dateBegin,
+    "date_ends": searchForm.dateEnd,
+    "people": searchForm.amount_of_people,
+  }
+
+  useEffect(() => {
+    if (!isNaN(minPrice)) {
+      queryParams.min_price = minPrice;
+    }
+    if (!isNaN(maxPrice)) {
+      queryParams.max_price = maxPrice;
+    }
+    if (propertyTypes.length > 0) {
+      queryParams.property_types = propertyTypes;
+    }
+  })
 
   const [_rooms, setRooms] = useState({});
   const [_error, setError] = useState(null);
@@ -34,13 +57,7 @@ function SearchResultRooms({ route, navigation }) {
   useEffect(() => {
     httpGetTokenRequest(
       "GET",
-      URL_ROOMS + "?" + new URLSearchParams({
-        "latitude": searchForm.coordinates.latitude,
-        "longitude": searchForm.coordinates.longitude,
-        "date_begins": searchForm.dateBegin,
-        "date_ends": searchForm.dateEnd,
-        "people": searchForm.amount_of_people,
-      }),
+      URL_ROOMS + "?" + new URLSearchParams(queryParams),
       {},
       _handleApiResponse,
       _handleResponseError
