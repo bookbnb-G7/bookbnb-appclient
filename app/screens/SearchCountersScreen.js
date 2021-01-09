@@ -36,7 +36,7 @@ class SearchCountersScreen extends Component {
       ...this.props.route.params,
       "amount_of_people": amount_of_people
     };
-    this.props.navigation.navigate("SearchResultRooms", searchForm);
+    this.props.navigation.navigate("OptionalFilters", searchForm);
   };
 
   render() {
