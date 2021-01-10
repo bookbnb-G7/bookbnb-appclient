@@ -25,7 +25,8 @@ const BnbTextInputObject = (props) => {
           defaultValue={props.object[props.id].toString()}
           editable={props.editable}
           onChangeText={(text) => props.onChange(props.id, text)}
-          multiline
+          onSubmitEditing={() => {}}
+          multiline={props.multiline}
         ></TextInput>
       </View>
     </View>

@@ -14,6 +14,8 @@ import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 import urls from "../../constant/urls";
 import BnbLoading from "../../components/BnbLoading";
 import { color } from "react-native-reanimated";
+import { Divider } from "react-native-elements";
+import bnbStyleSheet from "../../constant/bnbStyleSheet";
 
 /**Este es de solo lectura, generico y debe sevir para cualquier usuario */
 function Profile({ route, navigation }) {
@@ -59,19 +61,13 @@ function Profile({ route, navigation }) {
   }, []);
 
   return (
-    <BnbMainView style={styles.mainContainer}>
-      <View>
-        <View style={styles.center}>
-          <View>
-            {user && (
-              <BnbImage
-                imageStyle={styles.userLogo}
-                uri={user.photo}
-              ></BnbImage>
-            )}
-          </View>
-        </View>
-        <View style={styles.center}>
+    <BnbMainView>
+      <BnbBodyView>
+        <View style={styles.userInfoContainer}>
+          {user && (
+            <BnbImage imageStyle={styles.userLogo} uri={user.photo}></BnbImage>
+          )}
+
           {user && (
             <Text style={styles.userName}>
               {user.firstname} {user.lastname}
@@ -79,34 +75,29 @@ function Profile({ route, navigation }) {
           )}
           {user && <Text style={styles.userName}>{user.email}</Text>}
         </View>
-      </View>
-      <View style={styles.buttonsContainer}>
-        {user_id === 0 && (
-          <BnbButton
-            style={styles.center}
-            title="Editar perfil"
-            onPress={_handleProfileEdit}
-          ></BnbButton>
-        )}
-        {user_id === 0 && (
-          <BnbButton
-            title="Escribir una reseña"
-            onPress={_handleReviewUser}
-          ></BnbButton>
-        )}
-      </View>
+
+        <Divider style={bnbStyleSheet.divider} />
+        <View style={styles.buttonsContainer}>
+          {user_id === 0 && (
+            <BnbButton
+              title="Editar perfil"
+              onPress={_handleProfileEdit}
+            ></BnbButton>
+          )}
+          {user_id === 0 && (
+            <BnbButton
+              title="Escribir una reseña"
+              onPress={_handleReviewUser}
+            ></BnbButton>
+          )}
+        </View>
+      </BnbBodyView>
     </BnbMainView>
   );
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    justifyContent: "space-evenly",
-  },
-  center: {
-    alignSelf: "center",
-  },
-  userContainer: {
+  userInfoContainer: {
     alignItems: "center",
   },
   userLogo: {
@@ -116,7 +107,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   userName: {
-    textAlign: "center",
     fontSize: fonts.big,
   },
 });

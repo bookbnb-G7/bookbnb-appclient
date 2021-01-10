@@ -13,6 +13,8 @@ import constants from "../../constant/constants";
 import BnbButton from "../../components/BnbButton";
 import firebase from "../../database/firebase";
 import BnbImage from "../../components/BnbImage";
+import bnbStyleSheet from "../../constant/bnbStyleSheet";
+import { Divider } from "react-native-elements";
 
 function ProfileEditScreen({ route, navigation }) {
   const [storedUser, setStoredUser] = useState();
@@ -62,34 +64,25 @@ function ProfileEditScreen({ route, navigation }) {
   ];
 
   return (
-    <BnbMainView
-      style={{
-        paddingTop: StatusBar.currentHeight,
-        backgroundColor: "white",
-      }}
-    >
+    <BnbMainView>
       <BnbBodyView>
-        <View style={styles.twoColumns}>
-          <View style={styles.leftColumn}>
-            <View style={styles.logoContainer}>
-              <BnbImage
-                onPress={_handleProfileImagePress}
-                imageStyle={styles.userLogo}
-                uri={
-                  route.params?.photo
-                    ? route.params.photo
-                    : storedUser
-                    ? storedUser.userData.photo
-                    : ""
-                }
-              ></BnbImage>
-            </View>
-          </View>
-          <View style={styles.rightColumn}>
-            {storedUser && (
-              <Text style={styles.userName}>{storedUser.userData.email}</Text>
-            )}
-          </View>
+        <View style={styles.userInfoContainer}>
+          {storedUser && (
+            <BnbImage
+              imageStyle={styles.userLogo}
+              uri={storedUser.userData.photo}
+              onPress={_handleProfileImagePress}
+            ></BnbImage>
+          )}
+
+          {storedUser && (
+            <Text style={styles.userName}>
+              {storedUser.userData.firstname} {storedUser.userData.lastname}
+            </Text>
+          )}
+          {storedUser && (
+            <Text style={styles.userName}>{storedUser.userData.email}</Text>
+          )}
         </View>
         <View style={styles.bodyContainer}>
           {PROFILE_OPTIONS.map((element) => (
@@ -104,7 +97,6 @@ function ProfileEditScreen({ route, navigation }) {
           ))}
         </View>
         <BnbButton
-          style={styles.center}
           title="Cerrar sesion"
           onPress={_handleLogOutButton}
         ></BnbButton>
@@ -114,32 +106,14 @@ function ProfileEditScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  center: {
-    alignSelf: "center",
-  },
-  twoColumns: {
-    //flex: 1,
-    flexDirection: "row",
-  },
-  leftColumn: {
-    //flex: 2,
-    backgroundColor: colors.white,
-    //alignItems: "center",
-    //justifyContent: "center",
-  },
-  logoContainer: {
-    //alignItems: "center",
+  userInfoContainer: {
+    alignItems: "center",
   },
   userLogo: {
     width: 100,
     height: 100,
+    borderRadius: 50,
     backgroundColor: colors.graySoft,
-  },
-  rightColumn: {
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-    paddingHorizontal: 20,
   },
   userName: {
     fontSize: fonts.big,
