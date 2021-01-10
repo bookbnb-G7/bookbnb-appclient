@@ -19,6 +19,7 @@ import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import BnbFormBubbleInfo from "../../components/BnbFormBubbleInfo";
 import getAverage from "../../helpers/getAverage";
 import { ScrollView } from "react-native-gesture-handler";
+import BnbError from "../../components/BnbError";
 
 /**Este es de solo lectura, generico y debe sevir para cualquier usuario */
 function Profile({ route, navigation }) {
@@ -52,7 +53,7 @@ function Profile({ route, navigation }) {
   };
 
   const _handleProfileReviewsButtonPress = () => {
-    navigation.navigate("ProfileReviews");
+    navigation.navigate("ProfileReviews", { user_id: user.id });
   };
 
   useEffect(() => {
@@ -66,7 +67,8 @@ function Profile({ route, navigation }) {
         "GET",
         urls.URL_USERS + "/" + async_user_id,
         {},
-        _handleApiResponse
+        null,
+        _handleApiError
       ).then((user) => {
         setUser(user);
         setIsLoading(false);
@@ -87,6 +89,14 @@ function Profile({ route, navigation }) {
       });
     });
   }, []);
+
+  if (_error) {
+    return <BnbError>{_error}</BnbError>;
+  }
+
+  if (_is_loading) {
+    return <BnbLoading></BnbLoading>;
+  }
 
   return (
     <BnbMainView>
@@ -144,7 +154,10 @@ function Profile({ route, navigation }) {
                 onPress={_handleReviewUser}
               ></BnbButton>
             )}
-            <BnbButton title="Ver reseñas"></BnbButton>
+            <BnbButton
+              title="Ver reseñas"
+              onPress={_handleProfileReviewsButtonPress}
+            ></BnbButton>
           </View>
         </ScrollView>
       </BnbBodyView>
