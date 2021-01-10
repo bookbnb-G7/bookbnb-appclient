@@ -108,7 +108,7 @@ function ReviewUserScreen({ route, navigation }) {
   };
 
   if (_error) {
-    <Text style={bnbStyleSheet.centerText}>{_error.message}</Text>;
+    <Text style={bnbStyleSheet.centerText}>{_error}</Text>;
   }
 
   if (_is_loading) {

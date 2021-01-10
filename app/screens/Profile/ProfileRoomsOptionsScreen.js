@@ -16,7 +16,6 @@ function ProfileRoomsOptionsScreen({ navigation }) {
   };
 
   const _handleMyRoomsButton = () => {
-    console.log("HOla");
     navigation.navigate("ProfileRooms");
   };
 
