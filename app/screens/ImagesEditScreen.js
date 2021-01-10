@@ -18,6 +18,8 @@ import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 
 function ImagesEditScreen({ route, navigation }) {
   const photos = route.params.photos;
+  const isCreatingRoom = route?.params?.isCreatingRoom;
+
   const [storedUser, setStoredUser] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
@@ -27,6 +29,9 @@ function ImagesEditScreen({ route, navigation }) {
   const _handleApiResponse = () => {
     setIsLoading(false);
     alert("success");
+    if (isCreatingRoom) {
+      navigation.navigate("Home");
+    }
   };
 
   const _handleApiError = (error) => {
@@ -132,6 +137,14 @@ function ImagesEditScreen({ route, navigation }) {
           ></BnbImageSlider>
         </View>
         <BnbButton title={"Agregar imagen"} onPress={_pickImage}></BnbButton>
+        {isCreatingRoom && (
+          <BnbButton
+            title={"No agregar imagen y terminar"}
+            onPress={() => {
+              navigation.navigate("Home");
+            }}
+          ></BnbButton>
+        )}
       </BnbMainView>
     );
   }

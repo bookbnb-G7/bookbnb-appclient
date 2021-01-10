@@ -9,7 +9,7 @@ import colors from "../config/colors";
 import Separator from "../components/Separator";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbFormBubbleInfo from "../components/BnbFormBubbleInfo";
-
+import urls from "../constant/urls";
 
 function SearchResultRooms({ route, navigation }) {
   const searchForm = route.params;
@@ -20,12 +20,12 @@ function SearchResultRooms({ route, navigation }) {
   const propertyTypes = searchForm.propertyTypes;
 
   const queryParams = {
-    "latitude": searchForm.coordinates.latitude,
-    "longitude": searchForm.coordinates.longitude,
-    "date_begins": searchForm.dateBegin,
-    "date_ends": searchForm.dateEnd,
-    "people": searchForm.amount_of_people,
-  }
+    latitude: searchForm.coordinates.latitude,
+    longitude: searchForm.coordinates.longitude,
+    date_begins: searchForm.dateBegin,
+    date_ends: searchForm.dateEnd,
+    people: searchForm.amount_of_people,
+  };
 
   useEffect(() => {
     if (!isNaN(minPrice)) {
@@ -37,12 +37,11 @@ function SearchResultRooms({ route, navigation }) {
     if (propertyTypes.length > 0) {
       queryParams.property_types = propertyTypes;
     }
-  })
+  });
 
   const [_rooms, setRooms] = useState({});
   const [_error, setError] = useState(null);
   const [_is_loaded, setIsLoaded] = useState(false);
-  const URL_ROOMS = "http://bookbnb-appserver.herokuapp.com/rooms";
 
   const _handleApiResponse = (response) => {
     setRooms(response);
@@ -57,13 +56,12 @@ function SearchResultRooms({ route, navigation }) {
   useEffect(() => {
     httpGetTokenRequest(
       "GET",
-      URL_ROOMS + "?" + new URLSearchParams(queryParams),
+      urls.URL_ROOMS + "?" + new URLSearchParams(queryParams),
       {},
       _handleApiResponse,
       _handleResponseError
     );
   }, []);
-
 
   if (!_is_loaded) {
     return (
@@ -97,16 +95,15 @@ function SearchResultRooms({ route, navigation }) {
             <BnbFormBubbleInfo
               iconName="calendar"
               iconColor={colors.white}
-              text={
-                `${dateBegin} - ${dateEnd}`
-                }
+              text={`${dateBegin} - ${dateEnd}`}
               style={styles.bubbleInfo}
             />
           </View>
           <BnbBodyView style={styles.bodyView}>
             <Text style={styles.infoText}>
-              {`Encontramos ${_rooms.rooms.length} lugar${""
-              }${_rooms.rooms.length === 1 ? "" : "es"} para alojarse`}
+              {`Encontramos ${_rooms.rooms.length} lugar${""}${
+                _rooms.rooms.length === 1 ? "" : "es"
+              } para alojarse`}
             </Text>
             <Separator></Separator>
             <ScrollView>
@@ -172,7 +169,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "center",
     paddingVertical: 5,
-  }
+  },
 });
 
 export default SearchResultRooms;

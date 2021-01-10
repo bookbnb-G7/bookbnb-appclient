@@ -22,6 +22,7 @@ import BnbButtonGroup from "../components/BnbButtonGroup";
 import { ScrollView } from "react-native-gesture-handler";
 import BnbIconTextInput from "../components/BnbIconTextInput";
 import BnbIconText from "../components/BnbIconText";
+import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 
 function RoomCreateScreen({ navigation }) {
   const [_room, setRoom] = useState({
@@ -62,16 +63,25 @@ function RoomCreateScreen({ navigation }) {
     setRoom({ ..._room, [key]: value });
   };
 
-  const _handleApiResponse = (data) => {
+  const _handleApiResponse = (room) => {
     BnbAlert(
       "Creación de habitación",
       "Habitacion creada con exito",
       "Entendido",
       false
     );
-    setIsAwaiting(false);
 
-    navigation.navigate("ImagesEditScreen");
+    /**Una vez creado el room obtengo lss photos del endpoint /images que van a ser []
+     * y paso al editor de fotos
+     */
+    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room.id + "/photos").then(
+      (photos) => {
+        navigation.navigate("ImagesEditScreen", {
+          photos: photos,
+          isCreatingRoom: true,
+        });
+      }
+    );
   };
 
   const _handleApiError = (error) => {
@@ -115,12 +125,6 @@ function RoomCreateScreen({ navigation }) {
       setStoredUser(response);
     });
   }, []);
-
-  /**
-   * if(continue){
-   * <PickAnImage>
-   * }
-   */
 
   if (_is_awaiting) {
     return <BnbLoading text="Creando habitacion..."></BnbLoading>;
