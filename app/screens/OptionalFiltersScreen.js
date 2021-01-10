@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import {ButtonGroup, Divider} from "react-native-elements";
+import { ButtonGroup, Divider } from "react-native-elements";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbIconTextInput from "../components/BnbIconTextInput";
 import BnbMainView from "../components/BnbMainView";
@@ -19,121 +19,125 @@ const OptionalFiltersScreen = ({ route, navigation }) => {
     "Hotel",
     "Cabaña",
     "Hostel",
-    "Loft"
+    "Loft",
   ];
 
   const [errorMessage, setErrorMessage] = useState("");
   const searchForm = route.params;
 
   const handleMinPriceChange = (newValue) => {
-    if (maxPrice !== "" && 
-      (isNaN(newValue) || 
-      parseInt(newValue) > parseInt(maxPrice) ||
-      parseInt(newValue) < 0)) {
-        setErrorMessage("Ingrese valores validos para los precios")
+    if (
+      maxPrice !== "" &&
+      (isNaN(newValue) ||
+        parseInt(newValue) > parseInt(maxPrice) ||
+        parseInt(newValue) < 0)
+    ) {
+      setErrorMessage("Ingrese valores validos para los precios");
     } else {
       setErrorMessage("");
     }
     setMinPrice(newValue);
-  }
+  };
 
   const handleMaxPriceChange = (newValue) => {
-    if (minPrice !== "" && 
-      (isNaN(newValue) || 
-      parseInt(minPrice) > parseInt(newValue) ||
-      parseInt(newValue) < 0)) {
-        setErrorMessage("Ingrese valores validos para los precios")
+    if (
+      minPrice !== "" &&
+      (isNaN(newValue) ||
+        parseInt(minPrice) > parseInt(newValue) ||
+        parseInt(newValue) < 0)
+    ) {
+      setErrorMessage("Ingrese valores validos para los precios");
     } else {
       setErrorMessage("");
     }
     setMaxPrice(newValue);
-  }
+  };
 
   const handleButtonPress = (index) => {
     if (propertyTypesIndex.includes(index)) {
-      setPropertyTypesIndex(propertyTypesIndex.filter((value) => value != index));
+      setPropertyTypesIndex(
+        propertyTypesIndex.filter((value) => value != index)
+      );
     } else {
       setPropertyTypesIndex(propertyTypesIndex.concat([index]));
     }
-  }
+  };
 
   const handleNextButtonPress = () => {
     navigation.navigate("SearchResultRooms", {
       ...searchForm,
-      "minPrice": minPrice,
-      "maxPrice": maxPrice,
-      "propertyTypes": propertyTypesIndex.map((index) => propertyTypes[index]),
-    })
-  }
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      propertyTypes: propertyTypesIndex.map((index) => propertyTypes[index]),
+    });
+  };
 
   return (
     <BnbMainView style={styles.background}>
-    <Text style={styles.headerText}>Filtros opcionales</Text>
+      <Text style={styles.headerText}>Filtros opcionales</Text>
 
-    <BnbBodyView style={styles.bodyView}>
-      <ScrollView>
-        <Text style={styles.filterHeader}>Rango de precios:</Text>
-        <View style={styles.priceContainer}>
-          <BnbIconTextInput
-            iconName="currency-usd"
-            placeholder="Precio min."
-            onChangeText={handleMinPriceChange}
-            value={minPrice}
-            style={{...styles.priceInputStyle, marginLeft: 0}}
-            inputStyle={styles.normalText}
-            keyboardType="numeric"
+      <BnbBodyView style={styles.bodyView}>
+        <ScrollView>
+          <Text style={styles.filterHeader}>Rango de precios:</Text>
+          <View style={styles.priceContainer}>
+            <BnbIconTextInput
+              iconName="currency-usd"
+              placeholder="Precio min."
+              onChangeText={handleMinPriceChange}
+              value={minPrice}
+              style={{ ...styles.priceInputStyle, marginLeft: 0 }}
+              inputStyle={styles.normalText}
+              keyboardType="numeric"
+            />
+            <Text>-</Text>
+            <BnbIconTextInput
+              iconName="currency-usd"
+              placeholder="Precio max."
+              onChangeText={handleMaxPriceChange}
+              value={maxPrice}
+              style={{ ...styles.priceInputStyle, marginRight: 0 }}
+              inputStyle={styles.normalText}
+              keyboardType="numeric"
+            />
+          </View>
+
+          <Divider style={{ width: "80%", margin: 20 }} />
+
+          <Text style={styles.filterHeader}>Tipo de propiedad:</Text>
+
+          <ButtonGroup
+            containerStyle={{
+              marginHorizontal: 0,
+              borderWidth: 0,
+            }}
+            buttonStyle={{
+              borderWidth: 1,
+              borderRadius: 5,
+              paddingVertical: 5,
+            }}
+            buttonContainerStyle={{
+              flex: 0,
+              marginVertical: 3,
+            }}
+            buttons={propertyTypes}
+            onPress={handleButtonPress}
+            selectedButtonStyle={{ backgroundColor: colors.redAirBNB }}
+            selectedIndexes={propertyTypesIndex}
+            vertical
           />
-          <Text>-</Text>
-          <BnbIconTextInput
-            iconName="currency-usd"
-            placeholder="Precio max."
-            onChangeText={handleMaxPriceChange}
-            value={maxPrice}
-            style={{...styles.priceInputStyle, marginRight: 0}}
-            inputStyle={styles.normalText}
-            keyboardType="numeric"
+
+          <BnbButton
+            title="Siguiente"
+            onPress={handleNextButtonPress}
+            buttonStyle={styles.nextButton}
+            style={styles.nextButtonText}
           />
-        </View>
-
-        <Divider style={{ width: "80%", margin: 20 }} />
-
-        <Text style={styles.filterHeader}>Tipo de propiedad:</Text>
-
-        <ButtonGroup
-          containerStyle={{
-            marginHorizontal: 0,
-            borderWidth: 0,
-          }}
-          buttonStyle={{
-            borderWidth: 1,
-            borderRadius: 5,
-            paddingVertical: 5,
-          }}
-          buttonContainerStyle={{
-            flex: 0,
-            marginVertical: 3,
-          }}
-          buttons={propertyTypes}
-          onPress={handleButtonPress}
-          selectedButtonStyle={{ backgroundColor: colors.redAirBNB }}
-          selectedIndexes={propertyTypesIndex}
-          vertical
-        />
-
-        <BnbButton
-          title="Siguiente"
-          onPress={handleNextButtonPress}
-          buttonStyle={styles.nextButton}
-          style={styles.nextButtonText}
-        />
-      </ScrollView>
-      <Text style={styles.errorText}>{errorMessage}</Text>
-
-    </BnbBodyView>
-
-</BnbMainView>
-  )
-}
+        </ScrollView>
+        <Text style={styles.errorText}>{errorMessage}</Text>
+      </BnbBodyView>
+    </BnbMainView>
+  );
+};
 
 const styles = StyleSheet.create({
   background: {
@@ -201,6 +205,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 5,
   },
-})
+});
 
 export default OptionalFiltersScreen;

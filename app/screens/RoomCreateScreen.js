@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import BnbAlert from "../components/BnbAlert";
 import BnbBodyView from "../components/BnbBodyView";
@@ -16,23 +16,47 @@ import BnbLoading from "../components/BnbLoading";
 import constants from "../constant/constants";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import urls from "../constant/urls";
+import BnbFloatingTextInput from "../components/BnbFloatingTextInput";
+import { ButtonGroup, Divider } from "react-native-elements";
+import BnbButtonGroup from "../components/BnbButtonGroup";
+import { ScrollView } from "react-native-gesture-handler";
+import BnbIconTextInput from "../components/BnbIconTextInput";
+import BnbIconText from "../components/BnbIconText";
 
 function RoomCreateScreen({ navigation }) {
   const [_room, setRoom] = useState({
+    title: "",
+    description: "",
     type: "",
     price_per_day: "",
     latitude: 0,
     longitude: 0,
-    capacity: 1,
+    location: "",
+    capacity: 0,
   });
   const [_is_awaiting, setIsAwaiting] = useState(false);
+  const [_showButtonGroup, setShowButtonGroup] = useState(false);
   const [storedUser, setStoredUser] = useState();
+  const [_selectedIndexes, setSelectedIndexes] = useState([]);
 
-  useEffect(() => {
-    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
-      setStoredUser(response);
-    });
-  }, []);
+  const ref_title = useRef();
+  const ref_description = useRef();
+  const ref_type = useRef();
+  const ref_price_per_day = useRef();
+  const ref_latitude = useRef();
+  const ref_longitude = useRef();
+  const ref_location = useRef();
+  const ref_capacity = useRef();
+
+  /**Repetido de OptionalFiltersSCreen */
+  const propertyTypes = [
+    "Casa",
+    "Apartamento",
+    "Hotel",
+    "Cabaña",
+    "Hostel",
+    "Loft",
+  ];
 
   const _handleTextChange = (key, value) => {
     setRoom({ ..._room, [key]: value });
@@ -46,8 +70,8 @@ function RoomCreateScreen({ navigation }) {
       false
     );
     setIsAwaiting(false);
-    navigation.navigate("Profile");
-    //TODO: navigation.navigate("ImageEditScreen")
+
+    navigation.navigate("ImagesEditScreen");
   };
 
   const _handleApiError = (error) => {
@@ -58,7 +82,6 @@ function RoomCreateScreen({ navigation }) {
       false
     );
     setIsAwaiting(false);
-    navigation.navigate("Profile");
   };
 
   const _handleNextButtonPress = () => {
@@ -80,9 +103,18 @@ function RoomCreateScreen({ navigation }) {
     }
   };
 
-  const _handleGoBackButtonPress = () => {
-    navigation.goBack();
+  const _handleButtonGroupPress = (index) => {
+    if (!_selectedIndexes.includes(index)) {
+      setSelectedIndexes([index]);
+      setRoom({ ..._room, ["type"]: propertyTypes[index] });
+    }
   };
+
+  useEffect(() => {
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
+      setStoredUser(response);
+    });
+  }, []);
 
   /**
    * if(continue){
@@ -95,39 +127,96 @@ function RoomCreateScreen({ navigation }) {
   } else {
     return (
       <BnbMainView>
-        <BnbBodyView>
-          <BnbTitleText style={styles.titleText}>
-            Crear una habitación
-          </BnbTitleText>
-          <Separator />
-          <View style={styles.roomForm}>
-            <BnbTextInputObject
-              name="Breve descripcion de la habitacion"
-              id="type"
-              object={_room}
-              editable={true}
-              onChange={_handleTextChange}
-              customStyle={bnbStyleSheet.bubbleContainer}
-            ></BnbTextInputObject>
-            <BnbTextInputObject
-              name="Precio por dia"
-              id="price_per_day"
-              object={_room}
-              editable={true}
-              onChange={_handleTextChange}
-              customStyle={bnbStyleSheet.bubbleContainer}
-            ></BnbTextInputObject>
-
-            <Text style={styles.titleText}>Vista previa</Text>
-            <Text>Descripcion: {_room.type}</Text>
-            <Text>Precio por dia: {_room.price_per_day}</Text>
-          </View>
-          <BnbContainer>
-            <BnbButton title="Cancelar" onPress={_handleGoBackButtonPress} />
+        <BnbBodyView styles={bnbStyleSheet.bodyView}>
+          <ScrollView>
+            <Text style={bnbStyleSheet.headerTextBlack}>
+              Crear una habitación
+            </Text>
+            <Divider style={bnbStyleSheet.divider} />
+            <View style={styles.roomForm}>
+              <BnbFloatingTextInput
+                name="Titulo"
+                id={"title"}
+                object={_room}
+                onChange={_handleTextChange}
+                inputRef={ref_title}
+                onSubmit={() => ref_description.current?.focus()}
+                returnKeyType="next"
+              />
+              <BnbFloatingTextInput
+                name="Descripcion"
+                id={"description"}
+                object={_room}
+                onChange={_handleTextChange}
+                inputRef={ref_description}
+                onSubmit={() => ref_type.current?.focus()}
+                returnKeyType="next"
+              />
+              <Text>Tipo: {propertyTypes[_selectedIndexes[0]]}</Text>
+              {_showButtonGroup && (
+                <BnbButtonGroup
+                  buttons={propertyTypes}
+                  selectedIndexes={_selectedIndexes}
+                  onPress={_handleButtonGroupPress}
+                ></BnbButtonGroup>
+              )}
+              <BnbButton
+                title="Seleccionar tipo"
+                onPress={() => setShowButtonGroup(!_showButtonGroup)}
+              ></BnbButton>
+              <BnbFloatingTextInput
+                name="Precio por dia"
+                id={"price_per_day"}
+                object={_room}
+                onChange={_handleTextChange}
+                inputRef={ref_price_per_day}
+                onSubmit={() => ref_latitude.current?.focus()}
+                keyboardType="numeric"
+                returnKeyType="next"
+              />
+              <BnbFloatingTextInput
+                name="Latitud"
+                id={"latitude"}
+                object={_room}
+                onChange={_handleTextChange}
+                inputRef={ref_latitude}
+                onSubmit={() => ref_longitude.current?.focus()}
+                keyboardType="numeric"
+                returnKeyType="next"
+              />
+              <BnbFloatingTextInput
+                name="Longitud"
+                id={"longitude"}
+                object={_room}
+                onChange={_handleTextChange}
+                inputRef={ref_longitude}
+                onSubmit={() => ref_location.current?.focus()}
+                keyboardType="numeric"
+                returnKeyType="next"
+              />
+              <BnbFloatingTextInput
+                name="Locacion"
+                id={"location"}
+                object={_room}
+                onChange={_handleTextChange}
+                inputRef={ref_location}
+                onSubmit={() => ref_capacity.current?.focus()}
+                returnKeyType="next"
+              />
+              <BnbFloatingTextInput
+                name="Capacidad"
+                id={"capacity"}
+                object={_room}
+                onChange={_handleTextChange}
+                inputRef={ref_capacity}
+                keyboardType="numeric"
+                onSubmit={_handleNextButtonPress}
+              />
+            </View>
             {storedUser && (
               <BnbButton title="Continuar" onPress={_handleNextButtonPress} />
             )}
-          </BnbContainer>
+          </ScrollView>
         </BnbBodyView>
       </BnbMainView>
     );
