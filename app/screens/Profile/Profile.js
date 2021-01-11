@@ -91,7 +91,7 @@ function Profile({ route, navigation }) {
   }, []);
 
   if (_error) {
-    return <BnbError>{_error}</BnbError>;
+    return <BnbError>{_error.message}</BnbError>;
   }
 
   if (_is_loading) {
@@ -109,7 +109,6 @@ function Profile({ route, navigation }) {
                 uri={user.photo}
               ></BnbImage>
             )}
-
             {user && (
               <Text style={styles.userName}>
                 {user.firstname} {user.lastname}
@@ -120,22 +119,22 @@ function Profile({ route, navigation }) {
               iconName="star"
               iconColor={colors.golden}
               iconSize={24}
-              text={
+              text={`Host rating: ${
                 _guestRatings?.ratings.length > 0
                   ? getAverage(_ratings.ratings, "rating")
                   : "-"
-              }
+              }`}
               textStyle={{ color: "black" }}
             />
             <BnbFormBubbleInfo
               iconName="star"
               iconColor={colors.golden}
               iconSize={24}
-              text={
+              text={`Guest rating: ${
                 _hostRatings?.ratings.length > 0
                   ? getAverage(_ratings.ratings, "rating")
                   : "-"
-              }
+              }`}
               textStyle={{ color: "black" }}
             />
           </View>

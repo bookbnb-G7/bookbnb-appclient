@@ -131,13 +131,13 @@ function RoomCreateScreen({ navigation }) {
   } else {
     return (
       <BnbMainView>
-        <BnbBodyView styles={bnbStyleSheet.bodyView}>
+        <BnbBodyView>
           <ScrollView>
             <Text style={bnbStyleSheet.headerTextBlack}>
               Crear una habitación
             </Text>
             <Divider style={bnbStyleSheet.divider} />
-            <View style={styles.roomForm}>
+            <View>
               <BnbFloatingTextInput
                 name="Titulo"
                 id={"title"}

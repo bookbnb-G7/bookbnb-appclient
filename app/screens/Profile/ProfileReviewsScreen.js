@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import BnbBodyView from "../../components/BnbBodyView";
 import BnbError from "../../components/BnbError";
 import BnbLoading from "../../components/BnbLoading";
 import BnbMainView from "../../components/BnbMainView";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
+import bnbStyleSheet from "../../constant/bnbStyleSheet";
 
 function ProfileReviewsScreen({ route, navigation }) {
   const user_id = route.params.user_id;
@@ -53,15 +54,27 @@ function ProfileReviewsScreen({ route, navigation }) {
 
   return (
     <BnbMainView>
-      <BnbBodyView>
-        <Text>Reviews como Dueño</Text>
+      <BnbBodyView style={styles.bodyContainer}>
+        <Text style={bnbStyleSheet.headerTextBlack}>Reviews como Dueño</Text>
+        {_hostRatings.ratings.length === 0 && (
+          <Text style={bnbStyleSheet.normalText}>
+            {" "}
+            Todavia no ha recibido ninguna reseña como dueño{" "}
+          </Text>
+        )}
         {_hostRatings.ratings.map((item, index) => {
           <View key={index}>
             <Text>{item.reviewer}</Text>
             <Text>{item.rating}</Text>
           </View>;
         })}
-        <Text>Reviews como Huesped</Text>
+        <Text style={bnbStyleSheet.headerTextBlack}>Reviews como Huesped</Text>
+        {_guestRatings.ratings.length === 0 && (
+          <Text style={bnbStyleSheet.normalText}>
+            {" "}
+            Todavia no ha recibido ninguna reseña como huesped{" "}
+          </Text>
+        )}
         {_guestRatings.ratings.map((item, index) => {
           <View key={index}>
             <Text>{item.reviewer}</Text>
@@ -72,5 +85,11 @@ function ProfileReviewsScreen({ route, navigation }) {
     </BnbMainView>
   );
 }
+
+const styles = StyleSheet.create({
+  bodyContainer: {
+    alignItems: "center",
+  },
+});
 
 export default ProfileReviewsScreen;

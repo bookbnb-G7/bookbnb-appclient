@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     marginVertical: styling.separator,
     borderBottomColor: colors.separator,
     borderBottomWidth: StyleSheet.hairlineWidth,
+    width: "80%",
   },
 });
 

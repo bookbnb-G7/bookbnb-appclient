@@ -72,4 +72,7 @@ export default StyleSheet.create({
   bodyView: {
     alignItems: "center",
   },
+  normalText: {
+    fontFamily: "Raleway_400Regular",
+  },
 });
