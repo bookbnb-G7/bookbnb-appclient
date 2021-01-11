@@ -58,4 +58,21 @@ export default StyleSheet.create({
     textAlign: "center",
     textAlignVertical: "center",
   },
+  divider: {
+    width: "80%",
+    margin: 20,
+  },
+  headerText: {
+    fontFamily: "Raleway_700Bold",
+    fontSize: 25,
+    paddingLeft: 11,
+    paddingVertical: 15,
+    color: colors.white,
+  },
+  bodyView: {
+    alignItems: "center",
+  },
+  normalText: {
+    fontFamily: "Raleway_400Regular",
+  },
 });

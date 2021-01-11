@@ -15,12 +15,19 @@ import httpPostTokenRequest from "../../helpers/httpPostTokenRequest";
 import urls from "../../constant/urls";
 import BnbTextInputObject from "../../components/BnbTextInputObject";
 import BnbLoading from "../../components/BnbLoading";
+import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
+import { Divider } from "react-native-elements";
+import bnbStyleSheet from "../../constant/bnbStyleSheet";
+import BnbError from "../../components/BnbError";
+import firebase from "../../database/firebase";
 
 function ProfileInfoScreen({ route, navigation }) {
   const [_is_editing, setIsEditing] = useState(false);
   const [_is_awaiting, setIsAwaiting] = useState(false);
+
   const [storedUser, setStoredUser] = useState();
   const [userNames, setUserNames] = useState({ firstname: "", lastname: "" });
+  const [_error, setError] = useState();
 
   const _handleApiResponse = (data) => {
     /**copio */
@@ -43,9 +50,10 @@ function ProfileInfoScreen({ route, navigation }) {
     });
   };
 
-  const _handleApiError = () => {
+  const _handleApiError = (error) => {
     setIsAwaiting(false);
     setIsEditing(false);
+    setError(error);
   };
 
   const _handleToggleEditButtonPress = () => {
@@ -70,12 +78,17 @@ function ProfileInfoScreen({ route, navigation }) {
 
   const _handleConfirmDelete = () => {
     setIsEditing(false);
-    /**httpGetRequest(
+    httpGetTokenRequest(
       "DELETE",
-      "http://bookbnb-appserver.herokuapp.com/users/" + id,
-      _handleApiResponse
-    );
-    navigation.navigate("Home");*/
+      urls.URL_USERS + "/" + storedUser.userData.id,
+      { "x-access-token": storedUser.auth_token },
+      null,
+      _handleApiError
+    ).then((response) => {
+      if (response) {
+        firebase.auth.signOut();
+      }
+    });
   };
 
   const _handleDeleteAccountButtonPress = () => {
@@ -140,7 +153,9 @@ function ProfileInfoScreen({ route, navigation }) {
               ></BnbTextInputObject>
             </View>
           </View>
-          <View style={styles.buttonContainer}>
+          <BnbError>{_error ? _error : ""}</BnbError>
+          <Divider style={bnbStyleSheet.divider}></Divider>
+          <View>
             <BnbButton
               title={_is_editing ? "Aceptar cambios" : "Editar tus datos"}
               onPress={
@@ -156,14 +171,12 @@ function ProfileInfoScreen({ route, navigation }) {
               />
             )}
           </View>
-          <Separator></Separator>
           {_is_editing && (
             <View style={styles.deleteAccountContainer}>
               <BnbTitleText style={styles.subTitle}>
                 Eliminar tu cuenta
               </BnbTitleText>
               <BnbButton
-                style={styles.buttonContainer}
                 title="Borrar cuenta"
                 onPress={_handleDeleteAccountButtonPress}
               />

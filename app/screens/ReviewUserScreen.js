@@ -14,6 +14,7 @@ import colors from "../config/colors";
 import BnbButton from "../components/BnbButton";
 import Counter from "../components/Counter";
 import BnbBodyView from "../components/BnbBodyView";
+import { Divider } from "react-native-elements";
 
 /**Esta pantalla sirve para tanto Guest como Host e incluye reviews cualitativos y cuantitativos */
 function ReviewUserScreen({ route, navigation }) {
@@ -108,7 +109,7 @@ function ReviewUserScreen({ route, navigation }) {
   };
 
   if (_error) {
-    <Text style={bnbStyleSheet.centerText}>{_error.message}</Text>;
+    <Text style={bnbStyleSheet.centerText}>{_error}</Text>;
   }
 
   if (_is_loading) {
@@ -117,41 +118,57 @@ function ReviewUserScreen({ route, navigation }) {
 
   return (
     <BnbMainView>
-      <View style={bnbStyleSheet.centerView}>
-        <Text style={bnbStyleSheet.headerTextBlack}>
-          Escriba una reseña al {is_guest ? "inquilino" : "dueño"}
-        </Text>
-      </View>
-      <TextInput
-        multiline
-        style={styles.reviewText}
-        value={_review_text}
-        onChangeText={setReviewText}
-      ></TextInput>
-      <BnbButton title="Publicar Reseña" onPress={_handlePostReview} />
-      <Text style={bnbStyleSheet.headerTextBlack}>
-        Puntuar {is_guest ? "inquilino" : "dueño"}
-      </Text>
-      <View>
-        <Counter
-          title="Rating"
-          onIncrement={_handleRatingChange}
-          counter={_rating}
-          maxCount={constants.maxRating}
-        ></Counter>
-        <BnbButton title="Puntuar" onPress={_handleRateUserButtonPress} />
-      </View>
+      <BnbBodyView style={styles.bodyContainer}>
+        <View style={styles.reviewContainer}>
+          <Text style={bnbStyleSheet.headerTextBlack}>
+            Escriba una reseña al {is_guest ? "inquilino" : "dueño"}
+          </Text>
+          <TextInput
+            style={styles.reviewText}
+            value={_review_text}
+            onChangeText={setReviewText}
+            multiline
+          ></TextInput>
+          <BnbButton title="Publicar Reseña" onPress={_handlePostReview} />
+        </View>
+        <Separator style={styles.separator}></Separator>
+        <View style={styles.ratingContainer}>
+          <Text style={bnbStyleSheet.headerTextBlack}>
+            Puntuar {is_guest ? "inquilino" : "dueño"}
+          </Text>
+          <Counter
+            title="Rating"
+            onIncrement={_handleRatingChange}
+            counter={_rating}
+            maxCount={constants.maxRating}
+          />
+          <BnbButton title="Puntuar" onPress={_handleRateUserButtonPress} />
+        </View>
+      </BnbBodyView>
     </BnbMainView>
   );
 }
 
 const styles = StyleSheet.create({
+  bodyContainer: {
+    //alignItems: "center",
+  },
+  reviewContainer: {
+    //borderWidth: 1,
+  },
   reviewText: {
     borderRadius: styling.smallCornerRadius,
     backgroundColor: colors.graySoft,
     borderWidth: 1,
     marginVertical: styling.separator,
-    padding: 1,
+    padding: 4,
+  },
+  separator: {
+    marginVertical: 20,
+    alignSelf: "center",
+  },
+  ratingContainer: {
+    //borderWidth: 1,
   },
 });
 

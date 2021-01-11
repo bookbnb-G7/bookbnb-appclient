@@ -24,17 +24,17 @@ function SearchDateTimePicker({ route, navigation }) {
 
   const _handleNextButtonPress = () => {
     navigation.navigate("SearchCounters", {
-      "location": location,
-      "dateBegin": dateBegin.toISOString(),
-      "dateEnd": dateEnd.toISOString(),
-      "coordinates": coordinates,
+      location: location,
+      dateBegin: dateBegin.toISOString(),
+      dateEnd: dateEnd.toISOString(),
+      coordinates: coordinates,
     });
   };
 
   const onChangeBegin = (event, selectedDate) => {
     const currentDate = selectedDate || dateBegin;
+    setShowBegin(Platform.OS === "ios");
     if (currentDate < dateEnd || !pickedBeginDate) {
-      setShowBegin(Platform.OS === "ios");
       setDateBegin(currentDate);
       setPicked(true);
     } else {
@@ -46,8 +46,8 @@ function SearchDateTimePicker({ route, navigation }) {
 
   const onChangeEnd = (event, selectedDate) => {
     const currentDate = selectedDate || dateEnd;
+    setShowEnd(Platform.OS === "ios");
     if (currentDate > dateBegin) {
-      setShowEnd(Platform.OS === "ios");
       setDateEnd(currentDate);
       setPickedEnd(true);
     } else {
@@ -71,7 +71,7 @@ function SearchDateTimePicker({ route, navigation }) {
 
   return (
     <BnbMainView style={styles.background}>
-        <Text style={styles.headerText}>¿Cuando vas a estar ahí?</Text>
+      <Text style={styles.headerText}>¿Cuando vas a estar ahí?</Text>
 
       <View style={styles.innerContainer}>
         <BnbFormBubbleInfo
@@ -96,7 +96,7 @@ function SearchDateTimePicker({ route, navigation }) {
                 buttonStyle={styles.dateButton}
                 style={styles.dateButtonText}
               />
-          </View>
+            </View>
           </View>
           <Separator />
           {pickedBeginDate && (
@@ -104,7 +104,8 @@ function SearchDateTimePicker({ route, navigation }) {
               <View style={styles.dateTextContainer}>
                 <Text style={styles.dateTitle}>Fecha de fin:</Text>
                 <Text style={styles.date}>
-                  {dateEnd.getDate()}-{getMonth(dateEnd)}-{dateEnd.getFullYear()}
+                  {dateEnd.getDate()}-{getMonth(dateEnd)}-
+                  {dateEnd.getFullYear()}
                 </Text>
               </View>
               <View>
@@ -139,9 +140,7 @@ function SearchDateTimePicker({ route, navigation }) {
               onChange={onChangeEnd}
             />
           )}
-          {pickedBeginDate && pickedEndDate && (
-            <Separator />
-          )}
+          {pickedBeginDate && pickedEndDate && <Separator />}
           {pickedBeginDate && pickedEndDate && (
             <BnbButton
               title="Siguiente"
@@ -152,7 +151,6 @@ function SearchDateTimePicker({ route, navigation }) {
           )}
         </BnbBodyView>
       </View>
-
     </BnbMainView>
   );
 }
@@ -233,7 +231,7 @@ const styles = StyleSheet.create({
   locationContainer: {
     justifyContent: "center",
     alignSelf: "center",
-  }
+  },
 });
 
 export default SearchDateTimePicker;

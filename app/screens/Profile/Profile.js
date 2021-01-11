@@ -14,16 +14,30 @@ import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 import urls from "../../constant/urls";
 import BnbLoading from "../../components/BnbLoading";
 import { color } from "react-native-reanimated";
+import { Divider } from "react-native-elements";
+import bnbStyleSheet from "../../constant/bnbStyleSheet";
+import BnbFormBubbleInfo from "../../components/BnbFormBubbleInfo";
+import getAverage from "../../helpers/getAverage";
+import { ScrollView } from "react-native-gesture-handler";
+import BnbError from "../../components/BnbError";
 
 /**Este es de solo lectura, generico y debe sevir para cualquier usuario */
 function Profile({ route, navigation }) {
   /**user_id es el id del perfil del usuario que queremos ver */
-  const user_id = route?.params?.user_id ? route.params.user_id : 0;
+  let user_id = route?.params?.user_id;
   const [user, setUser] = useState();
   const [_is_loading, setIsLoading] = useState(user_id === 0);
+  const [_guestRatings, setGuestRatings] = useState();
+  const [_hostRatings, setHostRatings] = useState();
+  const [_error, setError] = useState();
 
   const _handleApiResponse = (user) => {
     setUser(user);
+    setIsLoading(false);
+  };
+
+  const _handleApiError = (error) => {
+    setError(error);
     setIsLoading(false);
   };
 
@@ -34,79 +48,124 @@ function Profile({ route, navigation }) {
   const _handleReviewUser = () => {
     navigation.navigate("ReviewUser", {
       is_guest: false,
-      reviewed_id: user_id,
+      reviewed_id: user.id,
     });
   };
 
+  const _handleProfileReviewsButtonPress = () => {
+    navigation.navigate("ProfileReviews", { user_id: user.id });
+  };
+
   useEffect(() => {
-    if (user_id !== 0) {
+    /**Si no me pasaron el user id es porque soy el dueño, asi que obtengo el user_id del dueño */
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
+      let async_user_id = user_id;
+      if (user) {
+        async_user_id = user.userData.id;
+      }
       httpGetTokenRequest(
         "GET",
-        urls.URL_USERS + "/" + user_id,
+        urls.URL_USERS + "/" + async_user_id,
         {},
-        _handleApiResponse
-      );
-    }
+        null,
+        _handleApiError
+      ).then((user) => {
+        setUser(user);
+        setIsLoading(false);
+        httpGetTokenRequest(
+          "GET",
+          urls.URL_USERS + "/" + async_user_id + "/host_ratings",
+          {}
+        ).then((hostRatings) => {
+          setHostRatings(hostRatings);
+          httpGetTokenRequest(
+            "GET",
+            urls.URL_USERS + "/" + async_user_id + "/guest_ratings",
+            {}
+          ).then((guestRatings) => {
+            setGuestRatings(guestRatings);
+          });
+        });
+      });
+    });
   }, []);
 
-  useEffect(() => {
-    if (user_id === 0) {
-      BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
-        setUser(user.userData);
-        setIsLoading(false);
-      });
-    }
-  }, []);
+  if (_error) {
+    return <BnbError>{_error.message}</BnbError>;
+  }
+
+  if (_is_loading) {
+    return <BnbLoading></BnbLoading>;
+  }
 
   return (
-    <BnbMainView style={styles.mainContainer}>
-      <View>
-        <View style={styles.center}>
-          <View>
+    <BnbMainView>
+      <BnbBodyView>
+        <ScrollView>
+          <View style={styles.userInfoContainer}>
             {user && (
               <BnbImage
                 imageStyle={styles.userLogo}
                 uri={user.photo}
               ></BnbImage>
             )}
+            {user && (
+              <Text style={styles.userName}>
+                {user.firstname} {user.lastname}
+              </Text>
+            )}
+            {user && <Text style={styles.userName}>{user.email}</Text>}
+            <BnbFormBubbleInfo
+              iconName="star"
+              iconColor={colors.golden}
+              iconSize={24}
+              text={`Host rating: ${
+                _guestRatings?.ratings.length > 0
+                  ? getAverage(_ratings.ratings, "rating")
+                  : "-"
+              }`}
+              textStyle={{ color: "black" }}
+            />
+            <BnbFormBubbleInfo
+              iconName="star"
+              iconColor={colors.golden}
+              iconSize={24}
+              text={`Guest rating: ${
+                _hostRatings?.ratings.length > 0
+                  ? getAverage(_ratings.ratings, "rating")
+                  : "-"
+              }`}
+              textStyle={{ color: "black" }}
+            />
           </View>
-        </View>
-        <View style={styles.center}>
-          {user && (
-            <Text style={styles.userName}>
-              {user.firstname} {user.lastname}
-            </Text>
-          )}
-          {user && <Text style={styles.userName}>{user.email}</Text>}
-        </View>
-      </View>
-      <View style={styles.buttonsContainer}>
-        {user_id === 0 && (
-          <BnbButton
-            style={styles.center}
-            title="Editar perfil"
-            onPress={_handleProfileEdit}
-          ></BnbButton>
-        )}
-        {user_id === 0 && (
-          <BnbButton
-            title="Escribir una reseña"
-            onPress={_handleReviewUser}
-          ></BnbButton>
-        )}
-      </View>
+
+          <Divider style={bnbStyleSheet.divider} />
+          <View style={styles.buttonsContainer}>
+            {!user_id && (
+              <BnbButton
+                title="Editar perfil"
+                onPress={_handleProfileEdit}
+              ></BnbButton>
+            )}
+            {!user_id && (
+              <BnbButton
+                title="Escribir una reseña"
+                onPress={_handleReviewUser}
+              ></BnbButton>
+            )}
+            <BnbButton
+              title="Ver reseñas"
+              onPress={_handleProfileReviewsButtonPress}
+            ></BnbButton>
+          </View>
+        </ScrollView>
+      </BnbBodyView>
     </BnbMainView>
   );
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    justifyContent: "space-evenly",
-  },
-  center: {
-    alignSelf: "center",
-  },
-  userContainer: {
+  userInfoContainer: {
     alignItems: "center",
   },
   userLogo: {
@@ -116,7 +175,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   userName: {
-    textAlign: "center",
     fontSize: fonts.big,
   },
 });
