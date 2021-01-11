@@ -16,15 +16,21 @@ import constants from "../constant/constants";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbLoading from "../components/BnbLoading";
 import BnbImageSlider from "../components/BnbImageSlider";
+import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 
 function RoomEditScreen({ route, navigation }) {
   const room_id = route.params.room_id;
   const [_room, setRoom] = useState();
   const [_photos, setPhotos] = useState();
+  const [_photos_urls, setPhotosUrl] = useState([]);
   const [storedUser, setStoredUser] = useState();
   const [_is_editing, setIsEditing] = useState(false);
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
+
+  const _handleTextChange = (key, value) => {
+    setRoom({ ..._room, [key]: value });
+  };
 
   const _handleImagePress = () => {
     navigation.navigate("ImagesEdit", { photos: _photos });
@@ -108,6 +114,7 @@ function RoomEditScreen({ route, navigation }) {
       })
       .then((photos) => {
         setPhotos(photos);
+        setPhotosUrl(getUrlFromPhotos(photos.room_photos));
         return BnbSecureStore.read(constants.CACHE_USER_KEY);
       })
       .then((user) => {
@@ -131,7 +138,7 @@ function RoomEditScreen({ route, navigation }) {
           <BnbTitleText style={styles.subTitle}>{_room.type}</BnbTitleText>
           <View style={styles.imageSlider}>
             <BnbImageSlider
-              images={_photos.room_photos}
+              images={_photos_urls}
               width={200}
               onPress={_handleImagePress}
             ></BnbImageSlider>
@@ -141,9 +148,11 @@ function RoomEditScreen({ route, navigation }) {
             <Text style={styles.keyText}>Precio por dia: </Text>
             <TextInput
               style={styles.valueText}
-              defaultValue={_room.price_per_day.toString()}
+              value={_room.price_per_day.toString()}
               editable={_is_editing}
-              onChangeText={(text) => (_room["price_per_day"] = text)}
+              onChangeText={(text) => {
+                _handleTextChange("price_per_day", text);
+              }}
               multiline
             ></TextInput>
           </View>

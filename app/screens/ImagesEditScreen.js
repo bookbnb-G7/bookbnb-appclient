@@ -16,14 +16,17 @@ import BnbAlert from "../components/BnbAlert";
 import useRequestMediaLibraryPermissionsAsync from "../helpers/useRequestMediaLibraryPermissionsAsync";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 
+/**Deberia pasar un ide y hacer el fetch aca, pero dejaria de ser generico
+ * dado que no es lo mismo el user que el room, creo
+ */
 function ImagesEditScreen({ route, navigation }) {
-  const photos = route.params.photos;
+  const room_id = route.params.room_id;
   const isCreatingRoom = route?.params?.isCreatingRoom;
 
+  const [_photos, setPhotos] = useState();
   const [storedUser, setStoredUser] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
-
   const [_photos_urls, setPhotosUrl] = useState([]);
 
   const _handleApiResponse = () => {
@@ -40,14 +43,14 @@ function ImagesEditScreen({ route, navigation }) {
   };
 
   const _handleRemoveImage = (index) => {
-    if (photos.room_photos.length !== 0) {
+    if (_photos.room_photos.length !== 0) {
       BnbAlertMultiButtons(
         "Eliminar imagen",
         "Si acepta la imagen sera eliminada permanentemente",
         [
           {
             text: "Aceptar",
-            onPress: _deleteImage(photos.room_photos[index].firebase.id),
+            onPress: _deleteImage(_photos.room_photos[index].firebase.id),
           },
           {
             text: "Cancelar",
@@ -68,7 +71,7 @@ function ImagesEditScreen({ route, navigation }) {
         if (file) {
           httpPostTokenRequest(
             "POST",
-            urls.URL_ROOMS + "/" + photos.room_id + "/photos",
+            urls.URL_ROOMS + "/" + room_id + "/photos",
             file,
             {
               "Content-Type": "multipart/form-data",
@@ -90,7 +93,7 @@ function ImagesEditScreen({ route, navigation }) {
     setIsLoading(true);
     httpGetTokenRequest(
       "DELETE",
-      urls.URL_ROOMS + "/" + photos.room_id + "/photos/" + photo_firebase_id,
+      urls.URL_ROOMS + "/" + room_id + "/photos/" + photo_firebase_id,
       { "x-access-token": storedUser.auth_token },
       _handleApiResponse,
       _handleApiError
@@ -98,10 +101,22 @@ function ImagesEditScreen({ route, navigation }) {
   };
 
   useEffect(() => {
-    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
-      setStoredUser(user);
-      setIsLoading(false);
-    });
+    BnbSecureStore.read(constants.CACHE_USER_KEY)
+      .then((user) => {
+        setStoredUser(user);
+        return httpGetTokenRequest(
+          "GET",
+          urls.URL_ROOMS + "/" + room_id + "/photos",
+          {},
+          null,
+          _handleApiError
+        );
+      })
+      .then((photos) => {
+        setPhotos(photos);
+        setPhotosUrl(getUrlFromPhotos(photos.room_photos));
+        setIsLoading(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -116,10 +131,6 @@ function ImagesEditScreen({ route, navigation }) {
         navigation.goBack();
       }
     });
-  }, []);
-
-  useEffect(() => {
-    setPhotosUrl(getUrlFromPhotos(photos.room_photos));
   }, []);
 
   if (_is_loading) {

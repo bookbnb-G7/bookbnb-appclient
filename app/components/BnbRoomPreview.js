@@ -11,6 +11,7 @@ import BnbFormBubbleInfo from "../components/BnbFormBubbleInfo";
 import colors from "../config/colors";
 
 import getAverage from "../helpers/getAverage";
+import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 
 const BnbRoomPreview = (props) => {
   const [_ratings, setRatings] = useState({});
@@ -22,6 +23,7 @@ const BnbRoomPreview = (props) => {
     room_id: 0,
     room_photos: [],
   });
+  const [_photos_urls, setPhotosUrl] = useState([]);
 
   const _handleApiError = (error) => {
     setError(error);
@@ -63,6 +65,7 @@ const BnbRoomPreview = (props) => {
       })
       .then((photos) => {
         setPhotos(photos);
+        setPhotosUrl(getUrlFromPhotos(photos.room_photos));
         setIsLoaded(true);
       });
   }, []);
@@ -80,19 +83,19 @@ const BnbRoomPreview = (props) => {
       <View style={styles.mainContainer}>
         <TouchableOpacity onPress={_handleImagePress}>
           <View style={styles.imageSlider}>
-            <BnbImageSlider
-              images={_photos.room_photos}
-              width={250}
-            ></BnbImageSlider>
+            <BnbImageSlider images={_photos_urls} width={250}></BnbImageSlider>
           </View>
           <View style={styles.roomDescriptionContainer}>
-            
             <BnbFormBubbleInfo
               iconName="star"
               iconColor={colors.golden}
               iconSize={24}
-              text={_ratings.ratings.length > 0 ? getAverage(_ratings.ratings, "rating") : "-"}
-              textStyle={styles.ratingText} 
+              text={
+                _ratings.ratings.length > 0
+                  ? getAverage(_ratings.ratings, "rating")
+                  : "-"
+              }
+              textStyle={styles.ratingText}
               style={styles.ratingContainer}
             />
             <Text style={styles.roomTitleText}>{props.room.type}</Text>
@@ -152,7 +155,7 @@ const styles = StyleSheet.create({
   ratingContainer: {
     marginVertical: 0,
     paddingHorizontal: 0,
-  }
+  },
 });
 
 export default BnbRoomPreview;
