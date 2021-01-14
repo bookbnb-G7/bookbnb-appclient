@@ -18,6 +18,7 @@ import BnbSecureStore from "../classes/BnbSecureStore";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbImageSlider from "../components/BnbImageSlider";
 import BnbLoading from "../components/BnbLoading";
+import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 
 const image = require("../assets/bookbnb_1.png");
 
@@ -26,6 +27,7 @@ function RoomScreen({ route, navigation }) {
   const searchForm = route.params?.searchForm;
   const [_room, setRoom] = useState();
   const [_is_loading, setIsLoading] = useState(true);
+  const [storedUser, setStoredUser] = useState();
 
   const [_reviews, setReviews] = useState();
   const [_average_rating, setAverageRating] = useState(0);
@@ -35,6 +37,7 @@ function RoomScreen({ route, navigation }) {
   });
   const [_error, setError] = useState();
   const [_photos, setPhotos] = useState();
+  const [_photos_url, setPhotosUrl] = useState([]);
 
   const _handleRatingChange = (counter, offset) => {
     const new_quantity = _rating.quantity + offset;
@@ -145,6 +148,7 @@ function RoomScreen({ route, navigation }) {
         })
         .then((photos) => {
           setPhotos(photos);
+          setPhotosUrl(getUrlFromPhotos(photos.room_photos));
           return httpGetTokenRequest(
             "GET",
             urls.URL_ROOMS + "/" + room_id + "/reviews",
@@ -168,7 +172,6 @@ function RoomScreen({ route, navigation }) {
     }
   }, [_is_loading]);
 
-  const [storedUser, setStoredUser] = useState();
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
       setStoredUser(storedUser);
@@ -184,10 +187,7 @@ function RoomScreen({ route, navigation }) {
       <BnbMainView>
         <ScrollView>
           <View style={styles.imageSlider}>
-            <BnbImageSlider
-              images={_photos.room_photos}
-              width={200}
-            ></BnbImageSlider>
+            <BnbImageSlider images={_photos_url} width={200}></BnbImageSlider>
           </View>
           <BnbBodyView>
             <View style={styles.roomInfoContainer}>

@@ -88,7 +88,10 @@ function Profile({ route, navigation }) {
         });
       });
     });
-  }, []);
+    return function () {
+      setError(undefined);
+    };
+  }, [_error]);
 
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
