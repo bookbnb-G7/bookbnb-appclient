@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
 } from "react-native-gesture-handler";
 import PropTypes from "prop-types";
+import { Component } from "react";
 
 class BnbComment extends Component {
   constructor(props) {
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
   },
 });
 
-Comment.propTypes = {
+BnbComment.propTypes = {
   comment: PropTypes.string,
   styles: PropTypes.object,
   canEdit: PropTypes.bool,

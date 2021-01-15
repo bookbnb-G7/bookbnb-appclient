@@ -8,7 +8,10 @@ const BnbImage = (props) => {
     <View>
       <TouchableOpacity onPress={props.onPress}>
         <Image
-          source={{ uri: props.uri !== "" ? props.uri : "null" }}
+          source={{
+            uri:
+              props.uri !== "" ? props.uri : require("../assets/no-image.png"),
+          }}
           style={{ ...styles.image, ...props.imageStyle }}
         ></Image>
       </TouchableOpacity>

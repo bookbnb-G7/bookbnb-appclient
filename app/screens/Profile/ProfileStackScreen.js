@@ -18,6 +18,7 @@ import ImagesEditScreen from "../ImagesEditScreen";
 import { Text } from "react-native";
 import ReviewUserScreen from "../ReviewUserScreen";
 import ProfileReviewsScreen from "./ProfileReviewsScreen";
+import RoomScreen from "../RoomScreen";
 
 const ProfileStack = createStackNavigator();
 
@@ -57,6 +58,7 @@ function ProfileStackScreen(props) {
           name="ProfileRooms"
           component={ProfileRoomsScreen}
         />
+        <ProfileStack.Screen name="Room" component={RoomScreen} />
         <ProfileStack.Screen name="ImagesEdit" component={ImagesEditScreen} />
         <ProfileStack.Screen name="RoomCreate" component={RoomCreateScreen} />
         <ProfileStack.Screen
