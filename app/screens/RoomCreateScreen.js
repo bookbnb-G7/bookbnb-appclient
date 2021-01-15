@@ -64,24 +64,17 @@ function RoomCreateScreen({ navigation }) {
   };
 
   const _handleApiResponse = (room) => {
-    BnbAlert(
-      "Creación de habitación",
-      "Habitacion creada con exito",
-      "Entendido",
-      false
-    );
-
-    /**Una vez creado el room obtengo lss photos del endpoint /images que van a ser []
-     * y paso al editor de fotos
-     */
-    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room.id + "/photos").then(
-      (photos) => {
-        navigation.navigate("ImagesEditScreen", {
-          photos: photos,
-          isCreatingRoom: true,
-        });
-      }
-    );
+    Alert.alert("Creacion de habitacion", "Habitacion creada con exito", [
+      {
+        text: "Entendido",
+        onPress: () => {
+          navigation.navigate("ImagesEdit", {
+            room_id: room.id,
+            isCreatingRoom: true,
+          });
+        },
+      },
+    ]);
   };
 
   const _handleApiError = (error) => {
@@ -127,7 +120,7 @@ function RoomCreateScreen({ navigation }) {
   }, []);
 
   if (_is_awaiting) {
-    return <BnbLoading text="Creando habitacion..."></BnbLoading>;
+    return null;
   } else {
     return (
       <BnbMainView>

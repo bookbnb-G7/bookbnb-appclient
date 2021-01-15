@@ -31,7 +31,7 @@ function ImagesEditScreen({ route, navigation }) {
 
   const _handleApiResponse = () => {
     setIsLoading(false);
-    alert("success");
+    /**TODO: navegar al room screen que acabo de crear como si lo hiciera por Mis Habitaciones */
     if (isCreatingRoom) {
       navigation.navigate("Home");
     }
@@ -113,9 +113,11 @@ function ImagesEditScreen({ route, navigation }) {
         );
       })
       .then((photos) => {
-        setPhotos(photos);
-        setPhotosUrl(getUrlFromPhotos(photos.room_photos));
-        setIsLoading(false);
+        if (photos) {
+          setPhotos(photos);
+          setPhotosUrl(getUrlFromPhotos(photos.room_photos));
+          setIsLoading(false);
+        }
       });
   }, []);
 

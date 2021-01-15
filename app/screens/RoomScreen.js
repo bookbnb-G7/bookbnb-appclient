@@ -203,7 +203,7 @@ function RoomScreen({ route, navigation }) {
             <Separator></Separator>
             <View style={styles.reviewsContainer}>
               <BnbTitleText style={styles.titleText}>Reseñas</BnbTitleText>
-              {_reviews !== undefined && (
+              {_reviews && (
                 <View>
                   {_reviews.reviews.map((item, index) => (
                     <View key={item.id}>
