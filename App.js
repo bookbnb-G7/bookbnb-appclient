@@ -19,6 +19,11 @@ import colors from "./app/config/colors";
 import firebase from "./app/database/firebase";
 import BnbSecureStore from "./app/classes/BnbSecureStore";
 import constants from "./app/constant/constants";
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 
 const Tab = createBottomTabNavigator();
 

@@ -142,12 +142,6 @@ function UserLoginScreen({ navigation }) {
               onPress={_handleLoginUserButtonPress}
             />
 
-            <View style={styles.inlineTextButton}>
-              <Text style={styles.normalText}>¿No tienes una cuenta?, </Text>
-              <TouchableOpacity onPress={_handleSignup}>
-                <Text style={styles.clickableText}>Registrate</Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </BnbBodyView>
       </BnbMainView>
@@ -163,7 +157,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   loginText: {
-    width: "100%",
+    //width: "100%",
     color: colors.white,
     fontFamily: "Raleway_400Regular",
   },
