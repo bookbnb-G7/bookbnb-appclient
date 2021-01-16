@@ -156,10 +156,12 @@ function Profile({ route, navigation }) {
                 onPress={_handleReviewUser}
               ></BnbButton>
             )}
-            <BnbButton
-              title="Ver reseñas"
-              onPress={_handleProfileReviewsButtonPress}
-            ></BnbButton>
+            {!user_id && (
+              <BnbButton
+                title="Ver reseñas"
+                onPress={_handleProfileReviewsButtonPress}
+              ></BnbButton>
+            )}
           </View>
         </ScrollView>
       </BnbBodyView>

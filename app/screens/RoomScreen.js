@@ -165,6 +165,17 @@ function RoomScreen({ route, navigation }) {
     );
   };
 
+  const _handleDeleteComment = (comment_id) => {
+    setIsLoading(true);
+    httpGetTokenRequest(
+      "DELETE",
+      urls.URL_ROOMS + "/" + _room.id + "/comments/" + comment_id,
+      { "x-access-token": storedUser.auth_token },
+      _handleApiResponse,
+      _handleApiError
+    );
+  };
+
   /**Fetcheo los datos del room */
   useEffect(() => {
     if (_is_loading === true) {
@@ -253,18 +264,22 @@ function RoomScreen({ route, navigation }) {
           </View>
           <BnbBodyView>
             <View style={styles.roomInfoContainer}>
-              <Text>{_average_rating} de 5 estrellas</Text>
+              <Text>
+                {isNaN(_average_rating)
+                  ? "Sin puntaje"
+                  : _average_rating + "de 5 estrellas"}{" "}
+              </Text>
               <Text style={styles.roomTitleText}>{_room.type}</Text>
               <Text style={styles.priceText}>
                 Precio por dia: {_room.price_per_day}
               </Text>
-            </View>
-            <View style={styles.roomDescriptionContainer}>
-              <Text>{_room.description}</Text>
+              <View style={styles.roomDescriptionContainer}>
+                <Text>{_room.description}</Text>
+              </View>
             </View>
             <Separator></Separator>
             <View style={styles.reviewsContainer}>
-              <BnbTitleText style={styles.titleText}>Reseñas</BnbTitleText>
+              <Text style={bnbStyleSheet.headerTextBlack}>Reseñas</Text>
               {_reviews && (
                 <View>
                   {_reviews.reviews.map((item, index) => (
@@ -279,7 +294,6 @@ function RoomScreen({ route, navigation }) {
                 </View>
               )}
             </View>
-            <Separator />
             <View style={styles.writeAReviewContainer}>
               <TextInput
                 multiline
@@ -321,16 +335,34 @@ function RoomScreen({ route, navigation }) {
               />
             )}
             <Text style={bnbStyleSheet.headerTextBlack}>Comentarios</Text>
-            {_comments?.comments.map((item, index) => (
-              <View>
-                <BnbComment
-                  username={item.commentaor}
-                  comment={item.comment}
-                  timeStamp={item.created_at}
-                  canEdit={item.commentator_id === storedUser.userData.id}
-                ></BnbComment>
-              </View>
-            ))}
+            {_comments &&
+              _comments.comments.map((item, index) => (
+                <View>
+                  <View key={item.id}>
+                    <BnbComment
+                      id={item.id}
+                      username={item.commentaor}
+                      comment={item.comment}
+                      timeStamp={item.created_at}
+                      canEdit={item.commentator_id === storedUser.userData.id}
+                      onDeleteTap={_handleDeleteComment}
+                    ></BnbComment>
+                  </View>
+                  {item.answers.map((item, index) => {
+                    <View key={item.id}>
+                      <BnbComment
+                        id={item.id}
+                        username={item.commentaor}
+                        comment={item.comment}
+                        timeStamp={item.created_at}
+                        canEdit={item.commentator_id === storedUser.userData.id}
+                        onDeleteTap={_handleDeleteComment}
+                        onReply={_handleAddReply}
+                      ></BnbComment>
+                    </View>;
+                  })}
+                </View>
+              ))}
             <View style={styles.addCommentContainer}>
               <TextInput
                 style={styles.textInput}

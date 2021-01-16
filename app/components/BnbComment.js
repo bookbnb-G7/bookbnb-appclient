@@ -6,12 +6,17 @@ import {
 } from "react-native-gesture-handler";
 import PropTypes from "prop-types";
 import { Component } from "react";
+import constants from "../constant/constants";
+import styling from "../config/styling";
+import colors from "../config/colors";
 
 class BnbComment extends Component {
   constructor(props) {
     super(props);
     this.state = {
       menu_visible: false,
+      reply_visible: false,
+      comment: "",
     };
 
     this.handleUsernameTap = this.handleUsernameTap.bind(this);
@@ -31,7 +36,7 @@ class BnbComment extends Component {
       [
         {
           text: "Si",
-          onPress: () => this.props.onDeleteTap(this.props.data),
+          onPress: () => this.props.onDeleteTap(this.props.id),
         },
         {
           text: "No",
@@ -41,6 +46,18 @@ class BnbComment extends Component {
       true
     );
     this.setState({ menu_visible: false });
+  }
+
+  handleMakeReply() {
+    if (this.props.onReply) {
+      this.setState({ reply_visible: true });
+    }
+  }
+
+  handleSendReply() {
+    if (this.props.onReply) {
+      this.props.onReply(this.state.comment);
+    }
   }
 
   render() {
@@ -74,6 +91,32 @@ class BnbComment extends Component {
               <Text> DELETE </Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={this.handleMakeReply}
+          >
+            <Text> Responder </Text>
+          </TouchableOpacity>
+          {this.state.reply_visible && (
+            <View>
+              <View style={styles.addCommentContainer}>
+                <TextInput
+                  style={styles.textInput}
+                  multiline
+                  numberOfLines={4}
+                  maxLength={constants.maxTextLength}
+                  onChangeText={(value) => this.setState({ comment: value })}
+                  value={this.state.comment}
+                ></TextInput>
+              </View>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={this.handleSendReply}
+              >
+                <Text> Publicar </Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     );
@@ -91,6 +134,12 @@ const styles = StyleSheet.create({
   },
   actionBar: {
     flexDirection: "row",
+  },
+  textInput: {
+    borderRadius: styling.smallCornerRadius,
+    backgroundColor: colors.graySoft,
+    borderWidth: 1,
+    marginVertical: styling.separator,
   },
 });
 
