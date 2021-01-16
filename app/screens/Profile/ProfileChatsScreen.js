@@ -16,8 +16,8 @@ function ProfileChatsScreen({ navigation }) {
   const [_error, setError] = useState({});
   const [_chats_photos, setChatsPhotos] = useState([]);
 
-  const _handleUserChatTap = () => {
-    navigation.navigate("UserChat");
+  const _handleUserChatTap = (other_uuid) => {
+    navigation.navigate("UserChat", { other_uuid: other_uuid });
   };
 
   useEffect(() => {
@@ -50,9 +50,9 @@ function ProfileChatsScreen({ navigation }) {
     });
   }, []);
 
-  const renderItem = ({ item }) => {
-    <TouchableOpacity onPress={_handleUserChatTap}>
-      <BnbIconText logo="">{item.other_user}</BnbIconText>;
+  const renderItem = ({ chat }) => {
+    <TouchableOpacity onPress={_handleUserChatTap(chat.other_uuid)}>
+      <BnbIconText logo="">{chat.other_user}</BnbIconText>;
     </TouchableOpacity>;
   };
 
