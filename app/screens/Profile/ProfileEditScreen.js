@@ -50,6 +50,10 @@ function ProfileEditScreen({ route, navigation }) {
     });
   };
 
+  const _handleChatsButtonPress = () => {
+    navigation.navigate("ProfileChats");
+  };
+
   const PROFILE_OPTIONS = [
     { id: 0, title: "Informacion de la cuenta" },
     { id: 1, title: "Habitaciones" },
@@ -74,22 +78,34 @@ function ProfileEditScreen({ route, navigation }) {
               onPress={_handleProfileImagePress}
             ></BnbImage>
           )}
-
-          {storedUser && (
-            <Text style={styles.userName}>
-              {storedUser.userData.firstname} {storedUser.userData.lastname}
-            </Text>
-          )}
-          {storedUser && (
-            <Text style={styles.userName}>{storedUser.userData.email}</Text>
-          )}
+          <View style={styles.userInfoAndButtons}>
+            <View>
+              {storedUser && (
+                <Text style={styles.userName}>
+                  {storedUser.userData.firstname} {storedUser.userData.lastname}
+                </Text>
+              )}
+              {storedUser && (
+                <Text style={styles.userName}>{storedUser.userData.email}</Text>
+              )}
+            </View>
+            <View>
+              <BnbButton
+                title="Chats"
+                onPress={_handleChatsButtonPress}
+              ></BnbButton>
+            </View>
+          </View>
         </View>
         <View style={styles.bodyContainer}>
           {PROFILE_OPTIONS.map((element) => (
             <View key={element.id}>
               <Separator />
               <TouchableOpacity onPress={HANDLERS[element.id]}>
-                <BnbIconText iconName={ICONS_NAMES[element.id]}>
+                <BnbIconText
+                  style={styles.iconText}
+                  iconName={ICONS_NAMES[element.id]}
+                >
                   {element.title}
                 </BnbIconText>
               </TouchableOpacity>
@@ -109,6 +125,7 @@ const styles = StyleSheet.create({
   userInfoContainer: {
     alignItems: "center",
   },
+  userInfoAndButtons: {},
   userLogo: {
     width: 100,
     height: 100,
@@ -121,6 +138,9 @@ const styles = StyleSheet.create({
   bodyContainer: {
     flex: 1,
     backgroundColor: colors.white,
+  },
+  iconText: {
+    height: 30,
   },
 });
 

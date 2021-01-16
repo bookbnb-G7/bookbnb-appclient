@@ -25,7 +25,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   const [user, initializing] = useGetCurrentSignedInUser();
   const [_is_refreshing, setIsRefreshing] = useState(false);
-  useFonts({
+  const [loaded, error] = useFonts({
     Raleway_700Bold,
     Raleway_400Regular,
     Raleway_500Medium,
@@ -54,6 +54,10 @@ export default function App() {
       }
     });
   }, []);
+
+  if (!loaded) {
+    return <BnbLoading text="Cargando fuentes..." />;
+  }
 
   console.log("##############");
   if (_is_refreshing) {

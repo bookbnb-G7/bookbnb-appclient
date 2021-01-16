@@ -5,16 +5,11 @@ import styling from "../config/styling";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const BnbIconText = (props) => (
-  <View style={styles.mainContainer}>
+  <View style={{ ...styles.mainContainer, ...props.style }}>
     {props?.logo && <Image source={props.logo} style={styles.icon}></Image>}
     {props?.iconName && (
-      <Ionicons
-        name={props.iconName}
-        style={styles.ionIcon}
-        size={50}
-      />
+      <Ionicons name={props.iconName} style={styles.ionIcon} size={50} />
     )}
-
     <Text style={{ ...styles.text, ...props.style }}>{props.children}</Text>
   </View>
 );
@@ -24,6 +19,7 @@ const styles = StyleSheet.create({
     marginVertical: styling.separator,
     flexDirection: "row",
     alignItems: "center",
+    height: 50,
   },
   icon: {
     width: 50,

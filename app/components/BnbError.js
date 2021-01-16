@@ -13,9 +13,13 @@ const BnbError = (props) => {
 };
 
 const styles = StyleSheet.create({
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
   errorText: {
     color: colors.error,
-    textAlign: "left",
+    textAlign: "center",
     fontFamily: "Raleway_400Regular",
   },
 });
