@@ -19,14 +19,20 @@ async function httpGetTokenRequest(method, url, header, onResponse, onError) {
       } else {
         const error = (data && JSON.stringify(data)) || response.statusText;
         alert("Respuesta de red OK pero HTTP no:" + error);
-        if (onError) onError(error);
-        return Promise.reject(error);
+        if (onError) {
+          onError(error);
+        } else {
+          return Promise.reject(error);
+        }
       }
     })
     .catch((error) => {
       console.log("Error en la peticion fetch" + error);
-      if (onError) onError(error);
-      return Promise.reject(error);
+      if (onError) {
+        onError(error);
+      } else {
+        return Promise.reject(error);
+      }
     });
 }
 

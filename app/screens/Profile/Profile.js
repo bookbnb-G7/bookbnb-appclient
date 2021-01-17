@@ -49,11 +49,13 @@ function Profile({ route, navigation }) {
   };
 
   const _handleChatButtonPress = () => {
-    if (user_id === user.id) {
+    if (!_is_owner) {
       /**El other_uuid es el del perfil que estoy viendo en este momento */
       navigation.navigate("UserChat", { other_uuid: user.id });
     } else {
-      console.error("No puedes chatear contigo mismo");
+      console.error(
+        "No puedes chatear contigo mismo, el boton no deberia poder verse en tu propio perfil"
+      );
     }
   };
 
