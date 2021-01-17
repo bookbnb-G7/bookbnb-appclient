@@ -21,8 +21,7 @@ import BnbLoading from "../components/BnbLoading";
 import BnbComment from "../components/BnbComment";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
-
-const image = require("../assets/bookbnb_1.png");
+import BnbIconText from "../components/BnbIconText";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -47,6 +46,8 @@ function RoomScreen({ route, navigation }) {
     commentator: "",
     commentator_id: 0,
   });
+
+  const [_owner, setOwner] = useState();
 
   const _handleRatingChange = (counter, offset) => {
     const new_quantity = _rating.quantity + offset;
@@ -234,6 +235,25 @@ function RoomScreen({ route, navigation }) {
     }
   }, [_room, storedUser]);
 
+  /**Fetcheo el owner aca para no tocar la cadena de promesa del room fetch */
+  useEffect(() => {
+    if (_room) {
+      httpGetTokenRequest(
+        "GET",
+        urls.URL_USERS + "/" + _room.owner_uuid,
+        {}
+      ).then(
+        (owner) => {
+          setOwner(owner);
+        },
+        (error) => {
+          setError(error);
+        }
+      );
+    }
+  }, [_room]);
+
+  /**Fetch comentarios de la publicacion*/
   useEffect(() => {
     if (_room) {
       httpGetTokenRequest(
@@ -259,23 +279,28 @@ function RoomScreen({ route, navigation }) {
     return (
       <BnbMainView>
         <ScrollView>
-          <View style={styles.imageSlider}>
-            <BnbImageSlider images={_photos_url} width={200}></BnbImageSlider>
-          </View>
           <BnbBodyView>
+            <Text style={bnbStyleSheet.headerTextBlack}>
+              {_room.description}
+            </Text>
+            <View style={styles.imageSlider}>
+              <BnbImageSlider images={_photos_url} width={200}></BnbImageSlider>
+            </View>
             <View style={styles.roomInfoContainer}>
+              <Text style={bnbStyleSheet.subHeaderText}>Puntuacion</Text>
               <Text>
                 {isNaN(_average_rating)
                   ? "Sin puntaje"
                   : _average_rating + "de 5 estrellas"}{" "}
               </Text>
-              <Text style={styles.roomTitleText}>{_room.type}</Text>
-              <Text style={styles.priceText}>
-                Precio por dia: {_room.price_per_day}
-              </Text>
-              <View style={styles.roomDescriptionContainer}>
-                <Text>{_room.description}</Text>
-              </View>
+              <Text style={bnbStyleSheet.subHeaderText}>Precio por dia</Text>
+              <Text>{_room.price_per_day}</Text>
+              <Text style={bnbStyleSheet.subHeaderText}>Categoria</Text>
+              <Text>{_room.type}</Text>
+              <Text style={bnbStyleSheet.subHeaderText}>Dueño</Text>
+              <BnbIconText logo={_owner.photo}>
+                {_owner.firstname} {_owner.lastname}
+              </BnbIconText>
             </View>
             <Separator></Separator>
             <View style={styles.reviewsContainer}>

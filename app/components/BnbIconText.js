@@ -6,7 +6,9 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 const BnbIconText = (props) => (
   <View style={{ ...styles.mainContainer, ...props.style }}>
-    {props?.logo && <Image source={props.logo} style={styles.icon}></Image>}
+    {props?.logo && (
+      <Image source={{ uri: props.logo }} style={styles.icon}></Image>
+    )}
     {props?.iconName && (
       <Ionicons name={props.iconName} style={styles.ionIcon} size={50} />
     )}

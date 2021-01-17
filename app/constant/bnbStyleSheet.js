@@ -45,6 +45,11 @@ export default StyleSheet.create({
     paddingVertical: 15,
     color: "black",
   },
+  subHeaderText: {
+    fontSize: 20,
+    fontFamily: "Raleway_600SemiBold",
+    color: "black",
+  },
   subTitle: {
     fontSize: fonts.semi,
     fontWeight: fonts.bold,
