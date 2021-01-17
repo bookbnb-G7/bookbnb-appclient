@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import {
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbTitleText from "../components/BnbTitleText";
@@ -177,6 +181,10 @@ function RoomScreen({ route, navigation }) {
     );
   };
 
+  const _handleRoomOwnerPress = () => {
+    navigation.navigate("Profile", { user_id: _owner.id });
+  };
+
   /**Fetcheo los datos del room */
   useEffect(() => {
     if (_is_loading === true) {
@@ -212,7 +220,9 @@ function RoomScreen({ route, navigation }) {
           return httpGetTokenRequest(
             "GET",
             urls.URL_ROOMS + "/" + room_id + "/ratings",
-            {}
+            {},
+            null,
+            _handleApiError
           );
         })
         .then((ratings) => {
@@ -298,9 +308,11 @@ function RoomScreen({ route, navigation }) {
               <Text style={bnbStyleSheet.subHeaderText}>Categoria</Text>
               <Text>{_room.type}</Text>
               <Text style={bnbStyleSheet.subHeaderText}>Dueño</Text>
-              <BnbIconText logo={_owner.photo}>
-                {_owner.firstname} {_owner.lastname}
-              </BnbIconText>
+              <TouchableOpacity onPress={_handleRoomOwnerPress}>
+                <BnbIconText logo={_owner.photo}>
+                  {_owner.firstname} {_owner.lastname}
+                </BnbIconText>
+              </TouchableOpacity>
             </View>
             <Separator></Separator>
             <View style={styles.reviewsContainer}>

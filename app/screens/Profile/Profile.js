@@ -31,6 +31,8 @@ function Profile({ route, navigation }) {
   const [_hostRatings, setHostRatings] = useState();
   const [_error, setError] = useState();
 
+  const [_is_owner, setIsOwner] = useState(false);
+
   const _handleProfileEdit = () => {
     navigation.navigate("ProfileEdit");
   };
@@ -60,8 +62,10 @@ function Profile({ route, navigation }) {
     BnbSecureStore.read(constants.CACHE_USER_KEY)
       .then((user) => {
         let async_user_id = user_id;
-        if (!user_id) {
+        console.log("prop:" + user_id + "vs" + user.userData.id);
+        if (!user_id || user_id === user.userData.id) {
           async_user_id = user.userData.id;
+          setIsOwner(true);
         }
         httpGetTokenRequest(
           "GET",
@@ -142,25 +146,25 @@ function Profile({ route, navigation }) {
                 textStyle={{ color: "black" }}
               />
             </View>
-            {user_id && (
+            {!_is_owner && (
               <BnbButton title="Mensaje" onPress={_handleChatButtonPress} />
             )}
           </View>
           <Divider style={bnbStyleSheet.divider} />
           <View style={styles.buttonsContainer}>
-            {!user_id && (
+            {_is_owner && (
               <BnbButton
                 title="Editar perfil"
                 onPress={_handleProfileEdit}
               ></BnbButton>
             )}
-            {!user_id && (
+            {_is_owner && (
               <BnbButton
                 title="Escribir una reseña"
                 onPress={_handleReviewUser}
               ></BnbButton>
             )}
-            {!user_id && (
+            {_is_owner && (
               <BnbButton
                 title="Ver reseñas"
                 onPress={_handleProfileReviewsButtonPress}
