@@ -81,8 +81,8 @@ function ImagePickScreen({ route, navigation }) {
     pickAnImage().then((file) => {
       if (file) {
         httpPostTokenRequest(
-          "PATCH",
-          urls.URL_USERS + "/" + storedUser.userData.id + "/photo",
+          "POST",
+          urls.URL_ME + "/profile_picture",
           file,
           {
             "Content-Type": "multipart/form-data",
@@ -102,13 +102,13 @@ function ImagePickScreen({ route, navigation }) {
 
   return (
     <BnbMainView>
-      <Separator></Separator>
       <BnbBodyView>
-        <BnbImage
-          imageStyle={styles.image}
-          uri={storedUser ? storedUser.userData.photo : ""}
-        ></BnbImage>
-
+        {storedUser && (
+          <BnbImage
+            imageStyle={styles.image}
+            uri={storedUser ? storedUser.userData.photo : ""}
+          />
+        )}
         <Text style={styles.textContainer}>
           Seleccione una imagen del rollo de la camara para cambiar su foto de
           perfil

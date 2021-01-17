@@ -13,7 +13,7 @@ import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 
 function ProfileChatsScreen({ navigation }) {
   const [_chats, setChats] = useState({});
-  const [_error, setError] = useState({});
+  const [_error, setError] = useState();
   const [_chats_photos, setChatsPhotos] = useState([]);
 
   const _handleUserChatTap = (other_uuid) => {
