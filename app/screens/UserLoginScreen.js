@@ -58,12 +58,6 @@ function UserLoginScreen({ navigation }) {
                 constants.CACHE_USER_KEY,
                 storeUser
               );
-            } else {
-              /**Si ocurre un error en el request, cierro sesion
-               * Esto es un fix temporal hasta que encuentre una manera de
-               * evitar el logeo en firebase si el request falla
-               */
-              firebase.auth.signOut();
             }
           });
         })
@@ -120,9 +114,7 @@ function UserLoginScreen({ navigation }) {
               />
 
               <View>
-                <Text style={styles.errorText}>
-                  {_login_error}
-                </Text>
+                <Text style={styles.errorText}>{_login_error}</Text>
               </View>
             </View>
 
@@ -141,7 +133,6 @@ function UserLoginScreen({ navigation }) {
               buttonStyle={styles.loginButton}
               onPress={_handleLoginUserButtonPress}
             />
-
           </View>
         </BnbBodyView>
       </BnbMainView>

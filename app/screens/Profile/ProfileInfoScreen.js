@@ -23,35 +23,27 @@ import firebase from "../../database/firebase";
 
 function ProfileInfoScreen({ route, navigation }) {
   const [_is_editing, setIsEditing] = useState(false);
-  const [_is_awaiting, setIsAwaiting] = useState(false);
-
-  const [storedUser, setStoredUser] = useState();
-  const [userNames, setUserNames] = useState({ firstname: "", lastname: "" });
+  const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
+  const [_x_access_token, setXAccessToken] = useState();
+  const [_me, setMe] = useState();
 
   const _handleApiResponse = (data) => {
-    /**copio */
-    let userData = storedUser.userData;
-
-    /**modifico */
-    userData["firstname"] = data.firstname;
-    userData["lastname"] = data.lastname;
-
     /**armo de nuevo */
     const storeUser = {
-      auth_token: storedUser.auth_token,
-      userData: userData,
+      auth_token: _x_access_token,
+      userData: _me,
     };
 
     /**guardo */
     BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser).then(() => {
-      setIsAwaiting(false);
+      setIsLoading(false);
       setIsEditing(false);
     });
   };
 
   const _handleApiError = (error) => {
-    setIsAwaiting(false);
+    setIsLoading(false);
     setIsEditing(false);
     setError(error);
   };
@@ -62,14 +54,15 @@ function ProfileInfoScreen({ route, navigation }) {
 
   const _handleFinishEditingButtonPress = () => {
     setIsEditing(false);
-    setIsAwaiting(true);
+    setIsLoading(true);
+    const body = { firstname: _me.firstname, lastname: _me.lastname };
     httpPostTokenRequest(
       "PATCH",
-      urls.URL_USERS + "/" + storedUser.userData.id,
-      userNames,
+      urls.URL_USERS + "/" + _me.id,
+      body,
       {
         "Content-Type": "application/json",
-        "x-access-token": storedUser.auth_token,
+        "x-access-token": _x_access_token,
       },
       _handleApiResponse,
       _handleApiError
@@ -80,8 +73,8 @@ function ProfileInfoScreen({ route, navigation }) {
     setIsEditing(false);
     httpGetTokenRequest(
       "DELETE",
-      urls.URL_USERS + "/" + storedUser.userData.id,
-      { "x-access-token": storedUser.auth_token },
+      urls.URL_USERS + "/" + _me.id,
+      { "x-access-token": _x_access_token },
       null,
       _handleApiError
     ).then((response) => {
@@ -107,25 +100,29 @@ function ProfileInfoScreen({ route, navigation }) {
   };
 
   const _handleTextChange = (key, value) => {
-    setUserNames({ ...userNames, [key]: value });
+    setMe({ ..._me, [key]: value });
   };
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
-      setStoredUser(user);
-      setUserNames({
-        firstname: user.userData.firstname,
-        lastname: user.userData.lastname,
-      });
+      setXAccessToken(user.auth_token);
+      httpGetTokenRequest("GET", urls.URL_ME, {
+        "x-access-token": user.auth_token,
+      }).then(
+        (me) => {
+          setMe(me);
+          setIsLoading(false);
+        },
+        (error) => {
+          setError(error);
+          setIsLoading(false);
+        }
+      );
     });
   }, []);
 
-  if (!storedUser) {
-    return <BnbLoading></BnbLoading>;
-  }
-
-  if (_is_awaiting) {
-    return <BnbLoading text="Guardando cambios..."></BnbLoading>;
+  if (_is_loading) {
+    return <BnbLoading text="Cargando..." />;
   }
 
   return (
@@ -140,14 +137,14 @@ function ProfileInfoScreen({ route, navigation }) {
               <BnbTextInputObject
                 name="Nombre"
                 id="firstname"
-                object={userNames}
+                object={_me}
                 onChange={_handleTextChange}
                 editable={_is_editing}
               ></BnbTextInputObject>
               <BnbTextInputObject
                 name="Apellido"
                 id="lastname"
-                object={userNames}
+                object={_me}
                 onChange={_handleTextChange}
                 editable={_is_editing}
               ></BnbTextInputObject>

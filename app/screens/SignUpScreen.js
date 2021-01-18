@@ -72,9 +72,6 @@ function SignUpScreen({ route, navigation }) {
                   userData: data,
                 };
                 BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
-              } else {
-                /**Ver UserLoginScreen.js */
-                firebase.auth.signOut();
               }
             });
           });

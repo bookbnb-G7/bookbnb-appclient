@@ -19,10 +19,10 @@ import colors from "./app/config/colors";
 import firebase from "./app/database/firebase";
 import BnbSecureStore from "./app/classes/BnbSecureStore";
 import constants from "./app/constant/constants";
-import { LogBox } from 'react-native';
+import { LogBox } from "react-native";
 
 LogBox.ignoreLogs([
-  'Non-serializable values were found in the navigation state',
+  "Non-serializable values were found in the navigation state",
 ]);
 
 const Tab = createBottomTabNavigator();
@@ -42,13 +42,13 @@ export default function App() {
       if (user) {
         /**ojo con el loop de refresheo de tokens, idToken refreshea por lo que activa onIdToken Changed */
         /**No se activa al expirar el token, ver si el token tiene un tiempo de expiracion */
-        console.log("Signin or token refresh");
+        //console.log("Signin or token refresh");
         user.getIdToken().then((id_token) => {
-          console.log("onIdTokenChanged: " + id_token + "\n");
+          //console.log("onIdTokenChanged: " + id_token + "\n");
 
           BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
             if (storedUser && id_token != storedUser.auth_token) {
-              console.log("Refresheando token");
+              //console.log("Refresheando token");
               /**Si tengo un user en el Storage y su token es distinto,
                * lo reemplazo por el mas nuevo*/
               //storedUser.auth_token = id_token;

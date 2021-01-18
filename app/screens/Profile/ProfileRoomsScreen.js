@@ -49,7 +49,8 @@ function ProfileRoomsScreen(props) {
       {_error == "" && (
         <View style={styles.centerContainer}>
           <Text style={styles.titleText}>
-            Tienes {_rooms.amount} habitaciones
+            Tienes {_rooms.amount}{" "}
+            {_rooms.amount === 1 ? "habitacion" : "habitaciones"}
           </Text>
           <ScrollView>
             {_rooms.rooms.map((item, index) => (

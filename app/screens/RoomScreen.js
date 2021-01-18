@@ -216,7 +216,7 @@ function RoomScreen({ route, navigation }) {
 
   /**Fetcheo los datos del room */
   useEffect(() => {
-    if (_is_loading === true) {
+    if (_is_loading) {
       httpGetTokenRequest(
         "GET",
         urls.URL_ROOMS + "/" + room_id,
