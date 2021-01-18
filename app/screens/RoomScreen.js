@@ -308,11 +308,13 @@ function RoomScreen({ route, navigation }) {
               <Text style={bnbStyleSheet.subHeaderText}>Categoria</Text>
               <Text>{_room.type}</Text>
               <Text style={bnbStyleSheet.subHeaderText}>Dueño</Text>
-              <TouchableOpacity onPress={_handleRoomOwnerPress}>
-                <BnbIconText logo={_owner.photo}>
-                  {_owner.firstname} {_owner.lastname}
-                </BnbIconText>
-              </TouchableOpacity>
+              {_owner && (
+                <TouchableOpacity onPress={_handleRoomOwnerPress}>
+                  <BnbIconText logo={_owner.photo}>
+                    {_owner.firstname} {_owner.lastname}
+                  </BnbIconText>
+                </TouchableOpacity>
+              )}
             </View>
             <Separator></Separator>
             <View style={styles.reviewsContainer}>
@@ -412,7 +414,7 @@ function RoomScreen({ route, navigation }) {
               <BnbButton title="Comentar" onPress={_handleAddParentComment} />
             </View>
             <Separator />
-            {_is_owner && (
+            {_is_owner && _room && (
               <BnbButton
                 style={styles.center}
                 title="Detalles"

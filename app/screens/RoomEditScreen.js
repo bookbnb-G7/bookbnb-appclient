@@ -33,7 +33,7 @@ function RoomEditScreen({ route, navigation }) {
   };
 
   const _handleImagePress = () => {
-    navigation.navigate("ImagesEdit", { photos: _photos });
+    navigation.navigate("ImagesEdit", { room_id: room_id });
   };
 
   const _handleToggleEditRoomButtonPress = () => {

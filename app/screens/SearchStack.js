@@ -35,7 +35,7 @@ function SearchStack(props) {
           headerTitleStyle: {
             fontFamily: "Raleway_700Bold",
           },
-          headerTitleAlign: "center"
+          headerTitleAlign: "center",
         }}
       >
         <SearchStackNav.Screen
@@ -59,7 +59,6 @@ function SearchStack(props) {
           component={SearchResultRooms}
         />
         <SearchStackNav.Screen name="Room" component={RoomScreen} />
-        <SearchStackNav.Screen name="RoomDetails" component={RoomEditScreen} />
         <SearchStackNav.Screen name="ImagesEdit" component={ImagesEditScreen} />
       </SearchStackNav.Navigator>
     );

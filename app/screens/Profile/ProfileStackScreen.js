@@ -21,6 +21,7 @@ import ProfileReviewsScreen from "./ProfileReviewsScreen";
 import RoomScreen from "../RoomScreen";
 import ProfileChatsScreen from "./ProfileChatsScreen";
 import UserChatScreen from "./UserChatScreen";
+import RoomEditScreen from "../RoomEditScreen";
 
 const ProfileStack = createStackNavigator();
 
@@ -61,6 +62,7 @@ function ProfileStackScreen(props) {
           component={ProfileRoomsScreen}
         />
         <ProfileStack.Screen name="Room" component={RoomScreen} />
+        <ProfileStack.Screen name="RoomDetails" component={RoomEditScreen} />
         <ProfileStack.Screen name="ImagesEdit" component={ImagesEditScreen} />
         <ProfileStack.Screen name="RoomCreate" component={RoomCreateScreen} />
         <ProfileStack.Screen

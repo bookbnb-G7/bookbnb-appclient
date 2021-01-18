@@ -153,26 +153,28 @@ function Profile({ route, navigation }) {
             )}
           </View>
           <Divider style={bnbStyleSheet.divider} />
-          <View style={styles.buttonsContainer}>
-            {_is_owner && (
-              <BnbButton
-                title="Editar perfil"
-                onPress={_handleProfileEdit}
-              ></BnbButton>
-            )}
-            {_is_owner && (
-              <BnbButton
-                title="Escribir una reseña"
-                onPress={_handleReviewUser}
-              ></BnbButton>
-            )}
-            {_is_owner && (
-              <BnbButton
-                title="Ver reseñas"
-                onPress={_handleProfileReviewsButtonPress}
-              ></BnbButton>
-            )}
-          </View>
+          {user && (
+            <View style={styles.buttonsContainer}>
+              {_is_owner && (
+                <BnbButton
+                  title="Editar perfil"
+                  onPress={_handleProfileEdit}
+                ></BnbButton>
+              )}
+              {_is_owner && (
+                <BnbButton
+                  title="Escribir una reseña"
+                  onPress={_handleReviewUser}
+                ></BnbButton>
+              )}
+              {_is_owner && (
+                <BnbButton
+                  title="Ver reseñas"
+                  onPress={_handleProfileReviewsButtonPress}
+                ></BnbButton>
+              )}
+            </View>
+          )}
         </ScrollView>
       </BnbBodyView>
     </BnbMainView>
