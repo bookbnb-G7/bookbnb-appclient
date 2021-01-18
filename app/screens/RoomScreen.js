@@ -257,6 +257,10 @@ function RoomScreen({ route, navigation }) {
         .then((ratings) => {
           getAverageRating(ratings);
           setIsLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setIsLoading(false);
         });
     }
   }, []);

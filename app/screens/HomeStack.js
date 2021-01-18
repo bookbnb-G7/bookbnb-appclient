@@ -58,6 +58,7 @@ function HomeStack(props) {
         <HomeStackNav.Screen
           name={name}
           component={component}
+          key={name}
         ></HomeStackNav.Screen>
       ))}
     </HomeStackNav.Navigator>
