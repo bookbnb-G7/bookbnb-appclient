@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  ImageBackground,
-} from "react-native";
+import { View, StyleSheet, ImageBackground } from "react-native";
 import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
 import styling from "../config/styling";
@@ -13,11 +9,8 @@ import firebase from "../database/firebase";
 import BnbImageSlider from "../components/BnbImageSlider";
 import colors from "../config/colors";
 
-function HomeScreen({ route, navigation }) {
-  const user_email = route.params.user_email;
+function HomeScreen({ navigation }) {
   const [storedUser, setStoredUser] = useState();
-
-  const background = require("../assets/background_2.png");
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
@@ -32,37 +25,34 @@ function HomeScreen({ route, navigation }) {
   const _handleLogOutButton = () => {
     firebase.auth
       .signOut()
-      .then(() => console.log(user_email + " Cerro sesion"))
+      .then(() => console.log(storedUser.userData.email + " Cerro sesion"))
       .then(() => navigation.navigate("HomeStack"))
-      .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY))
-    ;
+      .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY));
   };
 
   return (
     <BnbMainView style={styles.mainContainer}>
-        <View style={styles.imageSlider}>
-          <BnbImageSlider
-            images={[require("../assets/Bookbnb_logo.png")]}
-            width={200}
-            onPress={() => {
-              console.log("HOla");
-            }}
+      <View style={styles.imageSlider}>
+        <BnbImageSlider
+          images={[require("../assets/Bookbnb_logo.png")]}
+          width={200}
+          onPress={() => {
+            console.log("HOla");
+          }}
+        />
+      </View>
+      <View style={styles.optionsContainer}>
+        <View>
+          <BnbButton
+            onPress={_handleSearchRoomsButton}
+            title={"Buscar Habitaciones"}
+          />
+          <BnbButton
+            title="DEBUG Cerrar sesion"
+            onPress={_handleLogOutButton}
           />
         </View>
-        <View style={styles.optionsContainer}>
-          {user_email && (
-            <View>
-              <BnbButton
-                onPress={_handleSearchRoomsButton}
-                title={"Buscar Habitaciones"}
-              />
-              <BnbButton
-                title="DEBUG Cerrar sesion"
-                onPress={_handleLogOutButton}
-              />
-            </View>
-          )}
-        </View>
+      </View>
     </BnbMainView>
   );
 }

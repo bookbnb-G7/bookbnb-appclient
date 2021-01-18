@@ -21,49 +21,45 @@ function HomeStack(props) {
    */
   const [user, initializing] = useGetCurrentSignedInUser();
 
+  const userScreens = {
+    Home: HomeScreen,
+  };
+
+  const authScreens = {
+    Welcome: WelcomeScreen,
+    RegisterSelect: RegisterSelectScreen,
+    SignUp: SignUpScreen,
+    OAuthSingup: OAuthSignupScreen,
+    LoginSelect: LoginSelectScreen,
+    UserLogin: UserLoginScreen,
+    PasswordRecover: SendPassResetEmailScreen,
+  };
+
+  /**Podria poner un observer aca que espere al login pero del appserver
+   * para recien ahi cambiar los screens
+   * bool isLoggedIn = SignUpObserver(SignUpScreen)
+   */
 
   if (initializing) {
     return <BnbLoading />;
   }
-
-  if (!user) {
-    return (
-      <HomeStackNav.Navigator screenOptions={{ headerShown: false }}>
-        <HomeStackNav.Screen name="Welcome" component={WelcomeScreen} />
-        <HomeStackNav.Screen
-          name="RegisterSelect"
-          component={RegisterSelectScreen}
-        />
-        <HomeStackNav.Screen name="SignUp" component={SignUpScreen} />
-        <HomeStackNav.Screen
-          name="OAuthSignup"
-          component={OAuthSignupScreen}
-        />
-        <HomeStackNav.Screen name="LoginSelect" component={LoginSelectScreen} />
-        <HomeStackNav.Screen name="UserLogin" component={UserLoginScreen} />
-        <HomeStackNav.Screen
-          name="PasswordRecover"
-          component={SendPassResetEmailScreen}
-        />
-      </HomeStackNav.Navigator>
-    );
-  }
-
   return (
     <HomeStackNav.Navigator
       screenOptions={{
         headerTitleStyle: {
           fontFamily: "Raleway_700Bold",
         },
-        headerTitleAlign: "center"
+        headerTitleAlign: "center",
       }}
     >
-      <HomeStackNav.Screen
-        name="Home"
-        component={HomeScreen}
-        initialParams={{ user_email: user.email }}
-      />
-
+      {Object.entries({
+        ...(user ? userScreens : authScreens),
+      }).map(([name, component]) => (
+        <HomeStackNav.Screen
+          name={name}
+          component={component}
+        ></HomeStackNav.Screen>
+      ))}
     </HomeStackNav.Navigator>
   );
 }
