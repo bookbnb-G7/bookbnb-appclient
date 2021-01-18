@@ -56,7 +56,7 @@ class BnbComment extends Component {
 
   handleSendReply() {
     if (this.props.onReply) {
-      this.props.onReply(this.state.comment);
+      this.props.onReply(this.state.comment, this.props.id);
     }
   }
 

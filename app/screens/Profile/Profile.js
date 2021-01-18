@@ -61,37 +61,47 @@ function Profile({ route, navigation }) {
 
   useEffect(() => {
     /**Si no me pasaron el user id es porque soy el dueño, asi que obtengo el user_id del dueño */
+    /**La ventaja de no anidar los then es que puedo catchear los errores con un solo catch
+     * la desventaja es que si un then depende de uno superior no tengo forma de pasarle la respuesta
+     * de la promesa
+     */
     BnbSecureStore.read(constants.CACHE_USER_KEY)
       .then((user) => {
         let async_user_id = user_id;
-        console.log("prop:" + user_id + "vs" + user.userData.id);
         if (!user_id || user_id === user.userData.id) {
           async_user_id = user.userData.id;
           setIsOwner(true);
+          return async_user_id;
         }
-        httpGetTokenRequest(
+      })
+      .then((async_user_id) => {
+        return httpGetTokenRequest(
           "GET",
           urls.URL_USERS + "/" + async_user_id,
           {},
           null
-        ).then((user) => {
-          setUser(user);
-          setIsLoading(false);
-          httpGetTokenRequest(
-            "GET",
-            urls.URL_USERS + "/" + async_user_id + "/host_ratings",
-            {}
-          ).then((hostRatings) => {
-            setHostRatings(hostRatings);
-            httpGetTokenRequest(
-              "GET",
-              urls.URL_USERS + "/" + async_user_id + "/guest_ratings",
-              {}
-            ).then((guestRatings) => {
-              setGuestRatings(guestRatings);
-            });
-          });
-        });
+        );
+      })
+      .then((user) => {
+        setUser(user);
+        setIsLoading(false);
+        return httpGetTokenRequest(
+          "GET",
+          urls.URL_USERS + "/" + user.id + "/host_ratings",
+          {}
+        );
+      })
+      .then((hostRatings) => {
+        setHostRatings(hostRatings);
+        return httpGetTokenRequest(
+          "GET",
+          urls.URL_USERS + "/" + hostRatings.userId + "/guest_ratings",
+          {}
+        );
+      })
+      .then((guestRatings) => {
+        setGuestRatings(guestRatings);
+        setError(undefined);
       })
       .catch((error) => {
         setError(error);

@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import colors from "../config/colors";
 
 const BnbIconText = (props) => (
   <View style={{ ...styles.mainContainer, ...props.style }}>
@@ -27,6 +28,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: styling.smallCornerRadius,
+    backgroundColor: colors.graySoft,
   },
   ionIcon: {
     paddingLeft: 10,

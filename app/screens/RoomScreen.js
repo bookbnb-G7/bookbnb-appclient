@@ -26,6 +26,7 @@ import BnbComment from "../components/BnbComment";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import BnbIconText from "../components/BnbIconText";
+import BnbAlert from "../components/BnbAlert";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -47,8 +48,6 @@ function RoomScreen({ route, navigation }) {
   const [_comments, setComments] = useState([]);
   const [_comment, setComment] = useState({
     comment: "",
-    commentator: "",
-    commentator_id: 0,
   });
 
   const [_owner, setOwner] = useState();
@@ -146,14 +145,6 @@ function RoomScreen({ route, navigation }) {
 
   const _handleAddParentComment = () => {
     setIsLoading(true);
-    setComment({
-      ..._comment,
-      ["commentator"]: storedUser.userData.firstname,
-    });
-    setComment({
-      ..._comment,
-      ["commentator_id"]: storedUser.userData.id,
-    });
     httpPostTokenRequest(
       "POST",
       urls.URL_ROOMS + "/" + room_id + "/comments",
@@ -163,9 +154,47 @@ function RoomScreen({ route, navigation }) {
     ).then(
       (value) => {
         setComment("");
+        setIsLoading(false);
       },
-      (reason) => {
-        console.log("reason: " + reason);
+      (error) => {
+        BnbAlert(
+          "Error al publicar comentario",
+          error.message,
+          "Entendido",
+          false
+        );
+        setIsLoading(false);
+      }
+    );
+  };
+
+  const _handleReplyComment = (comment, parent_id) => {
+    /**Creo un comentario con el body requerido por el endpoint */
+    setIsLoading(true);
+    const endPointComment = {
+      comment: comment,
+      main_comment_id: parent_id,
+    };
+    /**Como modifico el flag _is_loading ejecuto el hook que carga los comentarios
+     * deberian re-renderizar con el nuevo comentario
+     */
+    httpPostTokenRequest(
+      "POST",
+      urls.URL_ROOMS + "/" + _room.id + "/comments",
+      endPointComment,
+      { "x-access-token": storedUser.auth_token }
+    ).then(
+      (comment) => {
+        setIsLoading(false);
+      },
+      (error) => {
+        BnbAlert(
+          "Hubo un error al querer publicar la respuesta",
+          `Error: ${error}`,
+          "Entendido",
+          false
+        );
+        setIsLoading(false);
       }
     );
   };
@@ -230,7 +259,7 @@ function RoomScreen({ route, navigation }) {
           setIsLoading(false);
         });
     }
-  }, [_is_loading]);
+  }, []);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
@@ -380,11 +409,12 @@ function RoomScreen({ route, navigation }) {
                   <View key={item.id}>
                     <BnbComment
                       id={item.id}
-                      username={item.commentaor}
+                      username={item.commentator}
                       comment={item.comment}
                       timeStamp={item.created_at}
                       canEdit={item.commentator_id === storedUser.userData.id}
                       onDeleteTap={_handleDeleteComment}
+                      onReply={_handleReplyComment}
                     ></BnbComment>
                   </View>
                   {item.answers.map((item, index) => {
@@ -396,7 +426,7 @@ function RoomScreen({ route, navigation }) {
                         timeStamp={item.created_at}
                         canEdit={item.commentator_id === storedUser.userData.id}
                         onDeleteTap={_handleDeleteComment}
-                        onReply={_handleAddReply}
+                        onReply={_handleReplyComment}
                       ></BnbComment>
                     </View>;
                   })}
