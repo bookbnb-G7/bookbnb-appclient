@@ -158,7 +158,7 @@ function Profile({ route, navigation }) {
                 textStyle={{ color: "black" }}
               />
             </View>
-            {!_is_owner && (
+            {!_is_owner && user && (
               <BnbButton title="Mensaje" onPress={_handleChatButtonPress} />
             )}
           </View>

@@ -362,21 +362,21 @@ function RoomScreen({ route, navigation }) {
                 </View>
               )}
             </View>
-            <View style={styles.writeAReviewContainer}>
-              <TextInput
-                multiline
-                placeholder="Escribe aqui tu reseña"
-                maxLength={constants.maxTextLength}
-                onChangeText={setReview}
-                style={styles.textInput}
-              ></TextInput>
-              {!_is_owner && (
+            {!_is_owner && (
+              <View style={styles.writeAReviewContainer}>
+                <TextInput
+                  multiline
+                  placeholder="Escribe aqui tu reseña"
+                  maxLength={constants.maxTextLength}
+                  onChangeText={setReview}
+                  style={styles.textInput}
+                ></TextInput>
                 <View>
                   <BnbButton title="Publicar" onPress={_handlePostAReview} />
                   <Separator />
                 </View>
-              )}
-            </View>
+              </View>
+            )}
             {!_is_owner && (
               <View style={styles.rateRoomContainer}>
                 <BnbTitleText style={styles.titleText}>
@@ -403,7 +403,7 @@ function RoomScreen({ route, navigation }) {
               />
             )}
             <Text style={bnbStyleSheet.headerTextBlack}>Comentarios</Text>
-            {_comments &&
+            {_comments.length > 0 &&
               _comments.comments.map((item, index) => (
                 <View>
                   <View key={item.id}>
