@@ -83,7 +83,7 @@ function HomeScreen({ navigation }) {
       .auth()
       .signOut()
       .then(() => console.log(storedUser.userData.email + " Cerro sesion"))
-      .then(() => navigation.navigate("HomeStack"))
+      .then(() => navigation.navigate("HomeStack", { isLoggedIn: false }))
       .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY));
   };
 

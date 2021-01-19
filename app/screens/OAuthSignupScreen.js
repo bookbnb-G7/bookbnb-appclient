@@ -14,7 +14,7 @@ import firebase from "firebase";
 import urls from "../constant/urls";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 
-function OAuthSignupScreen({ route }) {
+function OAuthSignupScreen({ route, navigation }) {
   const { firstName, lastName, email, credential } = route.params;
   const [user, setUser] = useState({
     email: email,
@@ -36,11 +36,7 @@ function OAuthSignupScreen({ route }) {
   };
 
   const _handleCreateUserButtonPress = async () => {
-    if (
-      user.email === "" ||
-      user.firstname === "" ||
-      user.lastname === ""
-    ) {
+    if (user.email === "" || user.firstname === "" || user.lastname === "") {
       setSignInError(constants.ERR_EMPTY_FIELD);
     } else {
       setSignInError("");
@@ -55,19 +51,27 @@ function OAuthSignupScreen({ route }) {
         photo: "null",
       };
       try {
-        const userCredential = await firebase.auth().signInWithCredential(credential);
+        const userCredential = await firebase
+          .auth()
+          .signInWithCredential(credential);
         const accessToken = await userCredential.user.getIdToken();
 
-        const data = await httpPostTokenRequest("POST", urls.URL_USERS, appServerUser, {
-          "Content-Type": "application/json",
-          "x-access-token": accessToken,
-        })
+        const data = await httpPostTokenRequest(
+          "POST",
+          urls.URL_USERS,
+          appServerUser,
+          {
+            "Content-Type": "application/json",
+            "x-access-token": accessToken,
+          }
+        );
         if (data) {
           const storeUser = {
             auth_token: accessToken,
             userData: data,
           };
           await BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
+          navigation.navigate("HomeStack", { isLoggedIn: true });
         } else {
           /**Ver UserLoginScreen.js */
           console.log("Se deslogeo en el oauthscreen, no habia data");
@@ -167,7 +171,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 28,
     fontFamily: "Raleway_400Regular",
-    color: '#333',
+    color: "#333",
     textAlign: "center",
     marginVertical: 30,
   },

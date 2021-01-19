@@ -107,6 +107,7 @@ export default function App() {
             title: "Inicio",
             tabBarVisible: Boolean(user),
           }}
+          initialParams={{ isLoggedIn: false }}
         />
         {user && (
           <Tab.Screen

@@ -36,7 +36,7 @@ function ProfileOwnerScreen({ route, navigation }) {
       firebase.auth
         .signOut()
         .then(() => console.log(storedUser.userData.email + " Cerro sesion"))
-        .then(() => navigation.navigate("HomeStack"));
+        .then(() => navigation.navigate("HomeStack", { isLoggedIn: false }));
     });
   };
 

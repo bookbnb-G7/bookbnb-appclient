@@ -12,13 +12,13 @@ import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
+import Clipboard from "@react-native-community/clipboard";
 
 function ProfileWalletScreen(props) {
   const [_wallet, setWallet] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
   const [_show_mnemonic, setShowMnemonic] = useState(false);
-
   const [mock_balance, setBalance] = useState(0);
 
   const _handleApiResponse = (wallet) => {
@@ -36,6 +36,10 @@ function ProfileWalletScreen(props) {
     setShowMnemonic(!_show_mnemonic);
   };
 
+  const _copyToClipboard = () => {
+    Clipboard.setString(_wallet.address);
+  };
+
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
       httpGetTokenRequest(
@@ -51,7 +55,6 @@ function ProfileWalletScreen(props) {
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
   }
-
   if (_is_loading) {
     return <BnbLoading text="Cargando..."></BnbLoading>;
   }
@@ -65,7 +68,8 @@ function ProfileWalletScreen(props) {
         <View style={styles.walletInfoContainer}>
           <Text style={bnbStyleSheet.headerTextBlack}>Detalles</Text>
           <Text style={bnbStyleSheet.subHeaderText}>Address</Text>
-          <TextInput editable={false}>{_wallet.address}</TextInput>
+          <Text>{_wallet.address}</Text>
+          <BnbButton title="Copiar" onPress={_copyToClipboard}></BnbButton>
           <Text style={bnbStyleSheet.subHeaderText}>Mnemonic</Text>
           {_show_mnemonic && <Text>{_wallet.mnemonic}</Text>}
           <BnbButton

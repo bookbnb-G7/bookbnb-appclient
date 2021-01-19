@@ -58,6 +58,11 @@ function UserLoginScreen({ navigation }) {
                 constants.CACHE_USER_KEY,
                 storeUser
               );
+              navigation.navigate("HomeStack", { isLoggedIn: true });
+            } else {
+              console.log("Se deslogeo en user login screen, no habia data");
+              firebase.auth().signOut();
+              setIsAwaiting(false);
             }
           });
         })
