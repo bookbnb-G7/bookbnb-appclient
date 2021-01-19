@@ -58,12 +58,6 @@ function UserLoginScreen({ navigation }) {
                 constants.CACHE_USER_KEY,
                 storeUser
               );
-            } else {
-              /**Si ocurre un error en el request, cierro sesion
-               * Esto es un fix temporal hasta que encuentre una manera de
-               * evitar el logeo en firebase si el request falla
-               */
-              firebase.auth.signOut();
             }
           });
         })
@@ -120,9 +114,7 @@ function UserLoginScreen({ navigation }) {
               />
 
               <View>
-                <Text style={styles.errorText}>
-                  {_login_error}
-                </Text>
+                <Text style={styles.errorText}>{_login_error}</Text>
               </View>
             </View>
 
@@ -141,13 +133,6 @@ function UserLoginScreen({ navigation }) {
               buttonStyle={styles.loginButton}
               onPress={_handleLoginUserButtonPress}
             />
-
-            <View style={styles.inlineTextButton}>
-              <Text style={styles.normalText}>¿No tienes una cuenta?, </Text>
-              <TouchableOpacity onPress={_handleSignup}>
-                <Text style={styles.clickableText}>Registrate</Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </BnbBodyView>
       </BnbMainView>
@@ -163,7 +148,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   loginText: {
-    width: "100%",
+    //width: "100%",
     color: colors.white,
     fontFamily: "Raleway_400Regular",
   },

@@ -64,9 +64,11 @@ const BnbRoomPreview = (props) => {
         );
       })
       .then((photos) => {
-        setPhotos(photos);
-        setPhotosUrl(getUrlFromPhotos(photos.room_photos));
-        setIsLoaded(true);
+        if (photos) {
+          setPhotos(photos);
+          setPhotosUrl(getUrlFromPhotos(photos.room_photos));
+          setIsLoaded(true);
+        }
       });
   }, []);
 

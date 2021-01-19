@@ -26,6 +26,8 @@ const pickAnImage = async (props) => {
     };
     return file;
   }
+
+  return Promise.reject(result.cancelled);
 };
 
 export default pickAnImage;

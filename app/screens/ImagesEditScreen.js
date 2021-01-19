@@ -15,6 +15,8 @@ import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbAlert from "../components/BnbAlert";
 import useRequestMediaLibraryPermissionsAsync from "../helpers/useRequestMediaLibraryPermissionsAsync";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
+import bnbStyleSheet from "../constant/bnbStyleSheet";
+import BnbBodyView from "../components/BnbBodyView";
 
 /**Deberia pasar un ide y hacer el fetch aca, pero dejaria de ser generico
  * dado que no es lo mismo el user que el room, creo
@@ -31,7 +33,7 @@ function ImagesEditScreen({ route, navigation }) {
 
   const _handleApiResponse = () => {
     setIsLoading(false);
-    alert("success");
+    /**TODO: navegar al room screen que acabo de crear como si lo hiciera por Mis Habitaciones */
     if (isCreatingRoom) {
       navigation.navigate("Home");
     }
@@ -83,8 +85,8 @@ function ImagesEditScreen({ route, navigation }) {
           );
         }
       },
-      (reason) => {
-        setIsLoading(false);
+      (cancelled) => {
+        setIsLoading(!cancelled);
       }
     );
   };
@@ -113,9 +115,11 @@ function ImagesEditScreen({ route, navigation }) {
         );
       })
       .then((photos) => {
-        setPhotos(photos);
-        setPhotosUrl(getUrlFromPhotos(photos.room_photos));
-        setIsLoading(false);
+        if (photos) {
+          setPhotos(photos);
+          setPhotosUrl(getUrlFromPhotos(photos.room_photos));
+          setIsLoading(false);
+        }
       });
   }, []);
 
@@ -133,6 +137,12 @@ function ImagesEditScreen({ route, navigation }) {
     });
   }, []);
 
+  useEffect(() => {
+    if (_error) {
+      setError(undefined);
+    }
+  }, [_error]);
+
   if (_is_loading) {
     return <BnbLoading></BnbLoading>;
   } else if (_error) {
@@ -140,22 +150,29 @@ function ImagesEditScreen({ route, navigation }) {
   } else {
     return (
       <BnbMainView>
-        <View style={styles.imageSlider}>
-          <BnbImageSlider
-            images={_photos_urls}
-            width={200}
-            onPress={_handleRemoveImage}
-          ></BnbImageSlider>
-        </View>
-        <BnbButton title={"Agregar imagen"} onPress={_pickImage}></BnbButton>
-        {isCreatingRoom && (
-          <BnbButton
-            title={"No agregar imagen y terminar"}
-            onPress={() => {
-              navigation.navigate("Home");
-            }}
-          ></BnbButton>
-        )}
+        <BnbBodyView>
+          {isCreatingRoom && (
+            <Text style={bnbStyleSheet.headerTextBlack}>
+              Seleccione una imagen para su publicacion
+            </Text>
+          )}
+          <View style={styles.imageSlider}>
+            <BnbImageSlider
+              images={_photos_urls}
+              width={200}
+              onPress={_handleRemoveImage}
+            ></BnbImageSlider>
+          </View>
+          <BnbButton title={"Agregar imagen"} onPress={_pickImage}></BnbButton>
+          {isCreatingRoom && (
+            <BnbButton
+              title={"No agregar imagen y terminar"}
+              onPress={() => {
+                navigation.navigate("Home");
+              }}
+            ></BnbButton>
+          )}
+        </BnbBodyView>
       </BnbMainView>
     );
   }

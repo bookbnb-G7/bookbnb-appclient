@@ -14,3 +14,4 @@ web-build/
 .DS_Store
 yarn.lock
 .env
+google-services.json

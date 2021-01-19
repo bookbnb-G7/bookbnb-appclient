@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import CountryPicker from "react-native-country-picker-modal";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
@@ -11,23 +10,21 @@ import BnbFloatingTextInput from "../components/BnbFloatingTextInput";
 import Separator from "../components/Separator";
 import colors from "../config/colors";
 import constants from "../constant/constants";
-import firebase from "../database/firebase";
+import firebase from "firebase";
 import urls from "../constant/urls";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 
-function SignUpScreen({ route, navigation }) {
+function OAuthSignupScreen({ route }) {
+  const { firstName, lastName, email, credential } = route.params;
   const [user, setUser] = useState({
-    email: "",
-    password: "",
-    firstname: "",
-    lastname: "",
+    email: email,
+    firstname: firstName || "",
+    lastname: lastName || "",
     phonenumber: "",
     country: "",
     birthdate: "",
     photo: "",
   });
-  /**TODO: crear un formulario para completar estos campos, photo??? */
-
   const [_sign_in_error, setSignInError] = useState("");
   const [_is_awaiting, setIsAwaiting] = useState(false);
 
@@ -38,10 +35,9 @@ function SignUpScreen({ route, navigation }) {
     }));
   };
 
-  const _handleCreateUserButtonPress = () => {
+  const _handleCreateUserButtonPress = async () => {
     if (
       user.email === "" ||
-      user.password === "" ||
       user.firstname === "" ||
       user.lastname === ""
     ) {
@@ -49,48 +45,40 @@ function SignUpScreen({ route, navigation }) {
     } else {
       setSignInError("");
       setIsAwaiting(true);
-      firebase.auth
-        .createUserWithEmailAndPassword(user.email, user.password)
-        .then(async (userCredential) => {
-          return userCredential.user.getIdToken().then((id_token) => {
-            const appServerUser = {
-              firstname: user.firstname,
-              lastname: user.lastname,
-              email: user.email,
-              phonenumber: user.phonenumber,
-              country: user.country,
-              birthdate: user.birthdate,
-              photo: "null",
-            };
-            httpPostTokenRequest("POST", urls.URL_USERS, appServerUser, {
-              "Content-Type": "application/json",
-              "x-access-token": id_token,
-            }).then((data) => {
-              if (data) {
-                const storeUser = {
-                  auth_token: id_token,
-                  userData: data,
-                };
-                BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
-              }
-            });
-          });
+      const appServerUser = {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        phonenumber: user.phonenumber,
+        country: user.country,
+        birthdate: user.birthdate,
+        photo: "null",
+      };
+      try {
+        const userCredential = await firebase.auth().signInWithCredential(credential);
+        const accessToken = await userCredential.user.getIdToken();
+
+        const data = await httpPostTokenRequest("POST", urls.URL_USERS, appServerUser, {
+          "Content-Type": "application/json",
+          "x-access-token": accessToken,
         })
-        .catch((error) => {
-          if (error.code === "auth/email-already-in-use") {
-            setSignInError(constants.ERR_EMAIL_IN_USE);
-          } else if (error.code === "auth/invalid-email") {
-            setSignInError(constants.ERR_EMAIL_INVALID);
-          } else {
-            setSignInError(error.message);
-          }
-          setIsAwaiting(false);
-        });
+        if (data) {
+          const storeUser = {
+            auth_token: accessToken,
+            userData: data,
+          };
+          await BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
+        } else {
+          /**Ver UserLoginScreen.js */
+          console.log("Se deslogeo en el oauthscreen, no habia data");
+          firebase.auth().signOut();
+        }
+      } catch (error) {
+        setSignInError(error.message);
+        setIsAwaiting(false);
+      }
     }
   };
-  const [password, setPassword] = useState("");
-  const ref_mail = useRef();
-  const ref_password = useRef();
   const ref_name = useRef();
   const ref_surname = useRef();
   const ref_phone = useRef();
@@ -103,33 +91,11 @@ function SignUpScreen({ route, navigation }) {
     return (
       <BnbMainView>
         <BnbBodyView style={styles.bodyView}>
-          <Image
-            source={require("../assets/Bookbnb_logo.png")}
-            style={styles.image}
-          />
+          <Text style={styles.headerText}>Solo necesitamos unos datos mas</Text>
           <ScrollView
             keyboardShouldPersistTaps="always"
             style={{ paddingRight: 10 }}
           >
-            <BnbFloatingTextInput
-              name="E-Mail"
-              id={"email"}
-              object={user}
-              onChange={_handleTextChange}
-              onSubmit={() => ref_password.current?.focus()}
-              returnKeyType="next"
-              autoFocus={true}
-            />
-            <BnbFloatingTextInput
-              name="Contraseña"
-              id={"password"}
-              object={user}
-              onChange={_handleTextChange}
-              isPassword={true}
-              inputRef={ref_password}
-              onSubmit={() => ref_name.current?.focus()}
-              returnKeyType="next"
-            />
             <BnbFloatingTextInput
               name="Nombre"
               id={"firstname"}
@@ -198,6 +164,13 @@ function SignUpScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  headerText: {
+    fontSize: 28,
+    fontFamily: "Raleway_400Regular",
+    color: '#333',
+    textAlign: "center",
+    marginVertical: 30,
+  },
   errorText: {
     color: colors.error,
   },
@@ -220,7 +193,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.redAirBNB,
   },
   bodyView: {
-    paddingVertical: 0,
+    marginVertical: 30,
   },
   normalText: {
     fontFamily: "Raleway_400Regular",
@@ -234,4 +207,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpScreen;
+export default OAuthSignupScreen;

@@ -28,6 +28,7 @@ async function httpPostTokenRequest(
 
   console.log("Debug httpPostTokenRequest header:" + JSON.stringify(header));
   console.log("Debug httpPostTokenRequest body:" + JSON.stringify(body));
+  console.log("url: " + url);
 
   return fetch(url, requestOptions)
     .then(async (response) => {
@@ -40,12 +41,20 @@ async function httpPostTokenRequest(
       } else {
         const error = (data && JSON.stringify(data)) || response.statusText;
         console.log("Respuesta de red OK pero HTTP no:" + error);
-        if (onError) onError(error);
+        if (onError) {
+          onError(error);
+        } else {
+          return Promise.reject(error);
+        }
       }
     })
     .catch((error) => {
       console.log("Error en la peticion fetch: " + error);
-      if (onError) onError(error);
+      if (onError) {
+        onError(error);
+      } else {
+        return Promise.reject(error);
+      }
     });
 }
 

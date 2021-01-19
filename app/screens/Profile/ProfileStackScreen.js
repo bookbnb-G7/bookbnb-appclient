@@ -18,6 +18,10 @@ import ImagesEditScreen from "../ImagesEditScreen";
 import { Text } from "react-native";
 import ReviewUserScreen from "../ReviewUserScreen";
 import ProfileReviewsScreen from "./ProfileReviewsScreen";
+import RoomScreen from "../RoomScreen";
+import ProfileChatsScreen from "./ProfileChatsScreen";
+import UserChatScreen from "./UserChatScreen";
+import RoomEditScreen from "../RoomEditScreen";
 
 const ProfileStack = createStackNavigator();
 
@@ -57,6 +61,8 @@ function ProfileStackScreen(props) {
           name="ProfileRooms"
           component={ProfileRoomsScreen}
         />
+        <ProfileStack.Screen name="Room" component={RoomScreen} />
+        <ProfileStack.Screen name="RoomDetails" component={RoomEditScreen} />
         <ProfileStack.Screen name="ImagesEdit" component={ImagesEditScreen} />
         <ProfileStack.Screen name="RoomCreate" component={RoomCreateScreen} />
         <ProfileStack.Screen
@@ -68,6 +74,11 @@ function ProfileStackScreen(props) {
           name="ProfileWallet"
           component={ProfileWalletScreen}
         />
+        <ProfileStack.Screen
+          name="ProfileChats"
+          component={ProfileChatsScreen}
+        />
+        <ProfileStack.Screen name="UserChat" component={UserChatScreen} />
         <ProfileStack.Screen name="ImagePick" component={ImagePickScreen} />
       </ProfileStack.Navigator>
     );

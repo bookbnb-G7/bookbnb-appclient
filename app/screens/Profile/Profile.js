@@ -31,15 +31,7 @@ function Profile({ route, navigation }) {
   const [_hostRatings, setHostRatings] = useState();
   const [_error, setError] = useState();
 
-  const _handleApiResponse = (user) => {
-    setUser(user);
-    setIsLoading(false);
-  };
-
-  const _handleApiError = (error) => {
-    setError(error);
-    setIsLoading(false);
-  };
+  const [_is_owner, setIsOwner] = useState(false);
 
   const _handleProfileEdit = () => {
     navigation.navigate("ProfileEdit");
@@ -56,42 +48,66 @@ function Profile({ route, navigation }) {
     navigation.navigate("ProfileReviews", { user_id: user.id });
   };
 
+  const _handleChatButtonPress = () => {
+    if (!_is_owner) {
+      /**El other_uuid es el del perfil que estoy viendo en este momento */
+      navigation.navigate("UserChat", { other_uuid: user.id });
+    } else {
+      console.error(
+        "No puedes chatear contigo mismo, el boton no deberia poder verse en tu propio perfil"
+      );
+    }
+  };
+
   useEffect(() => {
     /**Si no me pasaron el user id es porque soy el dueño, asi que obtengo el user_id del dueño */
-    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
-      let async_user_id = user_id;
-      if (user) {
-        async_user_id = user.userData.id;
-      }
-      httpGetTokenRequest(
-        "GET",
-        urls.URL_USERS + "/" + async_user_id,
-        {},
-        null,
-        _handleApiError
-      ).then((user) => {
+    /**La ventaja de no anidar los then es que puedo catchear los errores con un solo catch
+     * la desventaja es que si un then depende de uno superior no tengo forma de pasarle la respuesta
+     * de la promesa
+     */
+    BnbSecureStore.read(constants.CACHE_USER_KEY)
+      .then((user) => {
+        let async_user_id = user_id;
+        if (!user_id || user_id === user.userData.id) {
+          async_user_id = user.userData.id;
+          setIsOwner(true);
+          return async_user_id;
+        }
+      })
+      .then((async_user_id) => {
+        return httpGetTokenRequest(
+          "GET",
+          urls.URL_USERS + "/" + async_user_id,
+          {},
+          null
+        );
+      })
+      .then((user) => {
         setUser(user);
         setIsLoading(false);
-        httpGetTokenRequest(
+        return httpGetTokenRequest(
           "GET",
-          urls.URL_USERS + "/" + async_user_id + "/host_ratings",
+          urls.URL_USERS + "/" + user.id + "/host_ratings",
           {}
-        ).then((hostRatings) => {
-          setHostRatings(hostRatings);
-          httpGetTokenRequest(
-            "GET",
-            urls.URL_USERS + "/" + async_user_id + "/guest_ratings",
-            {}
-          ).then((guestRatings) => {
-            setGuestRatings(guestRatings);
-          });
-        });
+        );
+      })
+      .then((hostRatings) => {
+        setHostRatings(hostRatings);
+        return httpGetTokenRequest(
+          "GET",
+          urls.URL_USERS + "/" + hostRatings.userId + "/guest_ratings",
+          {}
+        );
+      })
+      .then((guestRatings) => {
+        setGuestRatings(guestRatings);
+        setError(undefined);
+      })
+      .catch((error) => {
+        setError(error);
+        setIsLoading(false);
       });
-    });
-    return function () {
-      setError(undefined);
-    };
-  }, [_error]);
+  }, []);
 
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
@@ -118,49 +134,57 @@ function Profile({ route, navigation }) {
               </Text>
             )}
             {user && <Text style={styles.userName}>{user.email}</Text>}
-            <BnbFormBubbleInfo
-              iconName="star"
-              iconColor={colors.golden}
-              iconSize={24}
-              text={`Host rating: ${
-                _guestRatings?.ratings.length > 0
-                  ? getAverage(_ratings.ratings, "rating")
-                  : "-"
-              }`}
-              textStyle={{ color: "black" }}
-            />
-            <BnbFormBubbleInfo
-              iconName="star"
-              iconColor={colors.golden}
-              iconSize={24}
-              text={`Guest rating: ${
-                _hostRatings?.ratings.length > 0
-                  ? getAverage(_ratings.ratings, "rating")
-                  : "-"
-              }`}
-              textStyle={{ color: "black" }}
-            />
+            <View style={styles.ratingsRow}>
+              <BnbFormBubbleInfo
+                iconName="star"
+                iconColor={colors.golden}
+                iconSize={24}
+                text={`Host rating: ${
+                  _guestRatings?.ratings.length > 0
+                    ? getAverage(_ratings.ratings, "rating")
+                    : "-"
+                }`}
+                textStyle={{ color: "black" }}
+              />
+              <BnbFormBubbleInfo
+                iconName="star"
+                iconColor={colors.golden}
+                iconSize={24}
+                text={`Guest rating: ${
+                  _hostRatings?.ratings.length > 0
+                    ? getAverage(_ratings.ratings, "rating")
+                    : "-"
+                }`}
+                textStyle={{ color: "black" }}
+              />
+            </View>
+            {!_is_owner && user && (
+              <BnbButton title="Mensaje" onPress={_handleChatButtonPress} />
+            )}
           </View>
-
           <Divider style={bnbStyleSheet.divider} />
-          <View style={styles.buttonsContainer}>
-            {!user_id && (
-              <BnbButton
-                title="Editar perfil"
-                onPress={_handleProfileEdit}
-              ></BnbButton>
-            )}
-            {!user_id && (
-              <BnbButton
-                title="Escribir una reseña"
-                onPress={_handleReviewUser}
-              ></BnbButton>
-            )}
-            <BnbButton
-              title="Ver reseñas"
-              onPress={_handleProfileReviewsButtonPress}
-            ></BnbButton>
-          </View>
+          {user && (
+            <View style={styles.buttonsContainer}>
+              {_is_owner && (
+                <BnbButton
+                  title="Editar perfil"
+                  onPress={_handleProfileEdit}
+                ></BnbButton>
+              )}
+              {_is_owner && (
+                <BnbButton
+                  title="Escribir una reseña"
+                  onPress={_handleReviewUser}
+                ></BnbButton>
+              )}
+              {_is_owner && (
+                <BnbButton
+                  title="Ver reseñas"
+                  onPress={_handleProfileReviewsButtonPress}
+                ></BnbButton>
+              )}
+            </View>
+          )}
         </ScrollView>
       </BnbBodyView>
     </BnbMainView>
@@ -179,6 +203,9 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: fonts.big,
+  },
+  ratingsRow: {
+    flexDirection: "row",
   },
 });
 

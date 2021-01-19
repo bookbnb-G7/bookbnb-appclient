@@ -24,7 +24,7 @@ class BnbImageSlider extends Component {
           images={
             this.props.images.length !== 0
               ? this.props.images
-              : [require("../assets/Bookbnb_logo.png")]
+              : [require("../assets/no-image.png")]
           }
           onCurrentImagePressed={(index) => {
             this.props.onPress ? this.props.onPress(index) : {};

@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import {
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbTitleText from "../components/BnbTitleText";
@@ -18,14 +22,17 @@ import BnbSecureStore from "../classes/BnbSecureStore";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbImageSlider from "../components/BnbImageSlider";
 import BnbLoading from "../components/BnbLoading";
+import BnbComment from "../components/BnbComment";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
-
-const image = require("../assets/bookbnb_1.png");
+import bnbStyleSheet from "../constant/bnbStyleSheet";
+import BnbIconText from "../components/BnbIconText";
+import BnbAlert from "../components/BnbAlert";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
   const searchForm = route.params?.searchForm;
   const [_room, setRoom] = useState();
+  const [_is_owner, setIsOwner] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [storedUser, setStoredUser] = useState();
 
@@ -36,8 +43,14 @@ function RoomScreen({ route, navigation }) {
     quantity: 0,
   });
   const [_error, setError] = useState();
-  const [_photos, setPhotos] = useState();
   const [_photos_url, setPhotosUrl] = useState([]);
+
+  const [_comments, setComments] = useState([]);
+  const [_comment, setComment] = useState({
+    comment: "",
+  });
+
+  const [_owner, setOwner] = useState();
 
   const _handleRatingChange = (counter, offset) => {
     const new_quantity = _rating.quantity + offset;
@@ -45,6 +58,10 @@ function RoomScreen({ route, navigation }) {
       ...prevState,
       quantity: new_quantity,
     }));
+  };
+
+  const _handleTextChange = (key, text) => {
+    setComment({ ..._comment, [key]: text });
   };
 
   const _handleApiResponse = (data) => {
@@ -126,9 +143,80 @@ function RoomScreen({ route, navigation }) {
     setAverageRating(average_rating);
   };
 
+  const _handleAddParentComment = () => {
+    setIsLoading(true);
+    httpPostTokenRequest(
+      "POST",
+      urls.URL_ROOMS + "/" + room_id + "/comments",
+      _comment,
+      { "x-access-token": storedUser.auth_token },
+      _handleApiResponse
+    ).then(
+      (value) => {
+        setComment("");
+        setIsLoading(false);
+      },
+      (error) => {
+        BnbAlert(
+          "Error al publicar comentario",
+          error.message,
+          "Entendido",
+          false
+        );
+        setIsLoading(false);
+      }
+    );
+  };
+
+  const _handleReplyComment = (comment, parent_id) => {
+    /**Creo un comentario con el body requerido por el endpoint */
+    setIsLoading(true);
+    const endPointComment = {
+      comment: comment,
+      main_comment_id: parent_id,
+    };
+    /**Como modifico el flag _is_loading ejecuto el hook que carga los comentarios
+     * deberian re-renderizar con el nuevo comentario
+     */
+    httpPostTokenRequest(
+      "POST",
+      urls.URL_ROOMS + "/" + _room.id + "/comments",
+      endPointComment,
+      { "x-access-token": storedUser.auth_token }
+    ).then(
+      (comment) => {
+        setIsLoading(false);
+      },
+      (error) => {
+        BnbAlert(
+          "Hubo un error al querer publicar la respuesta",
+          `Error: ${error}`,
+          "Entendido",
+          false
+        );
+        setIsLoading(false);
+      }
+    );
+  };
+
+  const _handleDeleteComment = (comment_id) => {
+    setIsLoading(true);
+    httpGetTokenRequest(
+      "DELETE",
+      urls.URL_ROOMS + "/" + _room.id + "/comments/" + comment_id,
+      { "x-access-token": storedUser.auth_token },
+      _handleApiResponse,
+      _handleApiError
+    );
+  };
+
+  const _handleRoomOwnerPress = () => {
+    navigation.navigate("Profile", { user_id: _owner.id });
+  };
+
   /**Fetcheo los datos del room */
   useEffect(() => {
-    if (_is_loading === true) {
+    if (_is_loading) {
       httpGetTokenRequest(
         "GET",
         urls.URL_ROOMS + "/" + room_id,
@@ -147,7 +235,6 @@ function RoomScreen({ route, navigation }) {
           );
         })
         .then((photos) => {
-          setPhotos(photos);
           setPhotosUrl(getUrlFromPhotos(photos.room_photos));
           return httpGetTokenRequest(
             "GET",
@@ -162,21 +249,70 @@ function RoomScreen({ route, navigation }) {
           return httpGetTokenRequest(
             "GET",
             urls.URL_ROOMS + "/" + room_id + "/ratings",
-            {}
+            {},
+            null,
+            _handleApiError
           );
         })
         .then((ratings) => {
           getAverageRating(ratings);
           setIsLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setIsLoading(false);
         });
     }
-  }, [_is_loading]);
+  }, []);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
       setStoredUser(storedUser);
     });
   }, []);
+
+  useEffect(() => {
+    /**Debe coincider el id del Secure Store con el id del dueño del cuarto*/
+    if (_room && storedUser) {
+      setIsOwner(storedUser.userData.id === _room.owner_uuid);
+    }
+  }, [_room, storedUser]);
+
+  /**Fetcheo el owner aca para no tocar la cadena de promesa del room fetch */
+  useEffect(() => {
+    if (_room) {
+      httpGetTokenRequest(
+        "GET",
+        urls.URL_USERS + "/" + _room.owner_uuid,
+        {}
+      ).then(
+        (owner) => {
+          setOwner(owner);
+        },
+        (error) => {
+          setError(error);
+        }
+      );
+    }
+  }, [_room]);
+
+  /**Fetch comentarios de la publicacion*/
+  useEffect(() => {
+    if (_room) {
+      httpGetTokenRequest(
+        "GET",
+        urls.URL_ROOMS + "/" + _room.id + "/comments",
+        {}
+      ).then(
+        (comments) => {
+          setComments(comments);
+        },
+        (reason) => {
+          setError(reason);
+        }
+      );
+    }
+  }, [_room]);
 
   if (_is_loading || !storedUser) {
     return <BnbLoading text={"Cargando habitacion..."}></BnbLoading>;
@@ -186,24 +322,37 @@ function RoomScreen({ route, navigation }) {
     return (
       <BnbMainView>
         <ScrollView>
-          <View style={styles.imageSlider}>
-            <BnbImageSlider images={_photos_url} width={200}></BnbImageSlider>
-          </View>
           <BnbBodyView>
-            <View style={styles.roomInfoContainer}>
-              <Text>{_average_rating} de 5 estrellas</Text>
-              <Text style={styles.roomTitleText}>{_room.type}</Text>
-              <Text style={styles.priceText}>
-                Precio por dia: {_room.price_per_day}
-              </Text>
+            <Text style={bnbStyleSheet.headerTextBlack}>
+              {_room.description}
+            </Text>
+            <View style={styles.imageSlider}>
+              <BnbImageSlider images={_photos_url} width={200}></BnbImageSlider>
             </View>
-            <View style={styles.roomDescriptionContainer}>
-              <Text>Aca deberia haber una descripcion detallada del room</Text>
+            <View style={styles.roomInfoContainer}>
+              <Text style={bnbStyleSheet.subHeaderText}>Puntuacion</Text>
+              <Text>
+                {isNaN(_average_rating)
+                  ? "Sin puntaje"
+                  : _average_rating + "de 5 estrellas"}{" "}
+              </Text>
+              <Text style={bnbStyleSheet.subHeaderText}>Precio por dia</Text>
+              <Text>{_room.price_per_day}</Text>
+              <Text style={bnbStyleSheet.subHeaderText}>Categoria</Text>
+              <Text>{_room.type}</Text>
+              <Text style={bnbStyleSheet.subHeaderText}>Dueño</Text>
+              {_owner && (
+                <TouchableOpacity onPress={_handleRoomOwnerPress}>
+                  <BnbIconText logo={_owner.photo}>
+                    {_owner.firstname} {_owner.lastname}
+                  </BnbIconText>
+                </TouchableOpacity>
+              )}
             </View>
             <Separator></Separator>
             <View style={styles.reviewsContainer}>
-              <BnbTitleText style={styles.titleText}>Reseñas</BnbTitleText>
-              {_reviews !== undefined && (
+              <Text style={bnbStyleSheet.headerTextBlack}>Reseñas</Text>
+              {_reviews && (
                 <View>
                   {_reviews.reviews.map((item, index) => (
                     <View key={item.id}>
@@ -217,45 +366,95 @@ function RoomScreen({ route, navigation }) {
                 </View>
               )}
             </View>
+            {!_is_owner && (
+              <View style={styles.writeAReviewContainer}>
+                <TextInput
+                  multiline
+                  placeholder="Escribe aqui tu reseña"
+                  maxLength={constants.maxTextLength}
+                  onChangeText={setReview}
+                  style={styles.textInput}
+                ></TextInput>
+                <View>
+                  <BnbButton title="Publicar" onPress={_handlePostAReview} />
+                  <Separator />
+                </View>
+              </View>
+            )}
+            {!_is_owner && (
+              <View style={styles.rateRoomContainer}>
+                <BnbTitleText style={styles.titleText}>
+                  Puntua esta habitación
+                </BnbTitleText>
+                <Counter
+                  title="Rating"
+                  onIncrement={_handleRatingChange}
+                  counter={_rating}
+                  maxCount={constants.maxRating}
+                ></Counter>
+                <BnbButton
+                  title="Puntuar"
+                  onPress={_handleRateRoomButtonPress}
+                />
+              </View>
+            )}
             <Separator />
-            <View style={styles.writeAReviewContainer}>
-              <BnbTitleText style={styles.titleText}>
-                Deja tu reseña
-              </BnbTitleText>
+            {!_is_owner && (
+              <BnbButton
+                style={styles.center}
+                title="Reservar"
+                onPress={_handleRoomBooking}
+              />
+            )}
+            <Text style={bnbStyleSheet.headerTextBlack}>Comentarios</Text>
+            {_comments.length > 0 &&
+              _comments.comments.map((item, index) => (
+                <View>
+                  <View key={item.id}>
+                    <BnbComment
+                      id={item.id}
+                      username={item.commentator}
+                      comment={item.comment}
+                      timeStamp={item.created_at}
+                      canEdit={item.commentator_id === storedUser.userData.id}
+                      onDeleteTap={_handleDeleteComment}
+                      onReply={_handleReplyComment}
+                    ></BnbComment>
+                  </View>
+                  {item.answers.map((item, index) => {
+                    <View key={item.id}>
+                      <BnbComment
+                        id={item.id}
+                        username={item.commentaor}
+                        comment={item.comment}
+                        timeStamp={item.created_at}
+                        canEdit={item.commentator_id === storedUser.userData.id}
+                        onDeleteTap={_handleDeleteComment}
+                        onReply={_handleReplyComment}
+                      ></BnbComment>
+                    </View>;
+                  })}
+                </View>
+              ))}
+            <View style={styles.addCommentContainer}>
               <TextInput
-                multiline
-                placeholder="Escribe aqui tu reseña"
-                maxLength={constants.maxTextLength}
-                onChangeText={setReview}
                 style={styles.textInput}
+                multiline
+                numberOfLines={4}
+                maxLength={constants.maxTextLength}
+                onChangeText={(value) => _handleTextChange("comment", value)}
+                value={_comment.comment}
               ></TextInput>
-              <BnbButton title="Publicar" onPress={_handlePostAReview} />
+              <BnbButton title="Comentar" onPress={_handleAddParentComment} />
             </View>
             <Separator />
-            <View style={styles.rateRoomContainer}>
-              <BnbTitleText style={styles.titleText}>
-                Puntua esta habitación
-              </BnbTitleText>
-              <Counter
-                title="Rating"
-                onIncrement={_handleRatingChange}
-                counter={_rating}
-                maxCount={constants.maxRating}
-              ></Counter>
-              <BnbButton title="Puntuar" onPress={_handleRateRoomButtonPress} />
-            </View>
-            <Separator />
-            <BnbButton
-              style={styles.center}
-              title="Detalles"
-              onPress={_handleRoomDetailsButtonPress}
-            />
-            <Separator />
-            <BnbButton
-              style={styles.center}
-              title="Reservar"
-              onPress={_handleRoomBooking}
-            />
+            {_is_owner && _room && (
+              <BnbButton
+                style={styles.center}
+                title="Detalles"
+                onPress={_handleRoomDetailsButtonPress}
+              />
+            )}
           </BnbBodyView>
         </ScrollView>
       </BnbMainView>

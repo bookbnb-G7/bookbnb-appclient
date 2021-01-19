@@ -1,15 +1,15 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
-import BnbHeaderUserInfo from "../components/BnbHeaderUserInfo";
+import React, { useState } from "react";
 import BnbLoading from "../components/BnbLoading";
 import useGetCurrentSignedInUser from "../database/useGetCurrentSignedInUser";
 import HomeScreen from "./HomeScreen";
 import SignUpScreen from "./SignUpScreen";
 import UserLoginScreen from "./UserLoginScreen";
 import WelcomeScreen from "./WelcomeScreen";
-import PasswordRecover from "./PasswordRecover";
-import BnbImageSlider from "../components/BnbImageSlider";
 import SendPassResetEmailScreen from "./SendPassResetEmailScreen";
+import LoginSelectScreen from "./LoginSelectScreen";
+import RegisterSelectScreen from "./RegisterSelectScreen";
+import OAuthSignupScreen from "./OAuthSignupScreen";
 
 const HomeStackNav = createStackNavigator();
 
@@ -21,38 +21,46 @@ function HomeStack(props) {
    */
   const [user, initializing] = useGetCurrentSignedInUser();
 
+  const userScreens = {
+    Home: HomeScreen,
+  };
+
+  const authScreens = {
+    Welcome: WelcomeScreen,
+    RegisterSelect: RegisterSelectScreen,
+    SignUp: SignUpScreen,
+    OAuthSingup: OAuthSignupScreen,
+    LoginSelect: LoginSelectScreen,
+    UserLogin: UserLoginScreen,
+    PasswordRecover: SendPassResetEmailScreen,
+  };
+
+  /**Podria poner un observer aca que espere al login pero del appserver
+   * para recien ahi cambiar los screens
+   * bool isLoggedIn = SignUpObserver(SignUpScreen)
+   */
+
   if (initializing) {
     return <BnbLoading />;
   }
-
-  if (!user) {
-    return (
-      <HomeStackNav.Navigator screenOptions={{ headerShown: false }}>
-        <HomeStackNav.Screen name="Welcome" component={WelcomeScreen} />
-        <HomeStackNav.Screen name="SignUp" component={SignUpScreen} />
-        <HomeStackNav.Screen name="UserLogin" component={UserLoginScreen} />
-        <HomeStackNav.Screen
-          name="PasswordRecover"
-          component={SendPassResetEmailScreen}
-        />
-      </HomeStackNav.Navigator>
-    );
-  }
-
   return (
     <HomeStackNav.Navigator
       screenOptions={{
         headerTitleStyle: {
           fontFamily: "Raleway_700Bold",
         },
-        headerTitleAlign: "center"
+        headerTitleAlign: "center",
       }}
     >
-      <HomeStackNav.Screen
-        name="Home"
-        component={HomeScreen}
-        initialParams={{ user_email: user.email }}
-      />
+      {Object.entries({
+        ...(user ? userScreens : authScreens),
+      }).map(([name, component]) => (
+        <HomeStackNav.Screen
+          name={name}
+          component={component}
+          key={name}
+        ></HomeStackNav.Screen>
+      ))}
     </HomeStackNav.Navigator>
   );
 }

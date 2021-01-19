@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.separator,
     borderBottomWidth: StyleSheet.hairlineWidth,
     width: "80%",
+    alignSelf: "center",
   },
 });
 

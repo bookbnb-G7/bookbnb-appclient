@@ -6,11 +6,11 @@ import colors from "../config/colors";
 
 function WelcomeScreen({ navigation }) {
   const _handleLogIn = () => {
-    navigation.navigate("UserLogin");
+    navigation.navigate("LoginSelect");
   };
 
-  const _handleSignIn = () => {
-    navigation.navigate("SignUp");
+  const _handleSignUp = () => {
+    navigation.navigate("RegisterSelect");
   };
   return (
     <BnbMainView>
@@ -18,7 +18,7 @@ function WelcomeScreen({ navigation }) {
         <Image source={require('../assets/BookBNBtextLogo.png')} style={styles.image}/>
         <View style={{margin: 15, paddingBottom: 10}}>
           <BnbButton title="Ingresar" onPress={_handleLogIn} buttonStyle={styles.buttonStyle} style={styles.buttonTextStyle}/>
-          <BnbButton title="Registrarse" onPress={_handleSignIn} buttonStyle={styles.buttonStyle} style={styles.buttonTextStyle}/>
+          <BnbButton title="Registrarse" onPress={_handleSignUp} buttonStyle={styles.buttonStyle} style={styles.buttonTextStyle}/>
         </View>
       </ImageBackground>
     </BnbMainView>

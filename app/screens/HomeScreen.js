@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  ImageBackground,
-} from "react-native";
+import { View, StyleSheet, ImageBackground } from "react-native";
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
 import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
 import styling from "../config/styling";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
-import firebase from "../database/firebase";
+import firebase from "firebase";
+import "firebase/messaging";
 import BnbImageSlider from "../components/BnbImageSlider";
+import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
+import urls from "../constant/urls";
 import colors from "../config/colors";
 
-function HomeScreen({ route, navigation }) {
-  const user_email = route.params.user_email;
+function HomeScreen({ navigation }) {
   const [storedUser, setStoredUser] = useState();
-
-  const background = require("../assets/background_2.png");
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
@@ -25,44 +23,83 @@ function HomeScreen({ route, navigation }) {
     });
   }, []);
 
+  useEffect(() => {
+    const registerForPushNotificationsAsync = async () => {
+      if (Constants.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+          const { status } = await Notifications.requestPermissionsAsync();
+          finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+          alert('Failed to get push token for push notification!');
+          return;
+        }
+        const token = (await Notifications.getDevicePushTokenAsync()).data;
+
+        console.log(token);
+  
+        const user = await BnbSecureStore.read(constants.CACHE_USER_KEY);
+  
+        await httpPostTokenRequest("POST", urls.URL_NOTIFICATION_TOKEN, {
+          push_token: token,
+        }, {
+          "Content-Type": "application/json",
+          "x-access-token": user.auth_token,
+        });
+  
+      } else {
+        alert('Must use physical device for Push Notifications');
+      }
+  
+      if (Platform.OS === 'android') {
+        Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FF231F7C',
+        });
+      }
+    };
+    registerForPushNotificationsAsync();
+  }, [])
+
   function _handleSearchRoomsButton() {
     navigation.navigate("SearchRooms");
   }
 
   const _handleLogOutButton = () => {
-    firebase.auth
+    firebase.auth()
       .signOut()
-      .then(() => console.log(user_email + " Cerro sesion"))
+      .then(() => console.log(storedUser.userData.email + " Cerro sesion"))
       .then(() => navigation.navigate("HomeStack"))
-      .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY))
-    ;
+      .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY));
   };
 
   return (
     <BnbMainView style={styles.mainContainer}>
-        <View style={styles.imageSlider}>
-          <BnbImageSlider
-            images={[require("../assets/Bookbnb_logo.png")]}
-            width={200}
-            onPress={() => {
-              console.log("HOla");
-            }}
+      <View style={styles.imageSlider}>
+        <BnbImageSlider
+          images={[require("../assets/Bookbnb_logo.png")]}
+          width={200}
+          onPress={() => {
+            console.log("HOla");
+          }}
+        />
+      </View>
+      <View style={styles.optionsContainer}>
+        <View>
+          <BnbButton
+            onPress={_handleSearchRoomsButton}
+            title={"Buscar Habitaciones"}
+          />
+          <BnbButton
+            title="DEBUG Cerrar sesion"
+            onPress={_handleLogOutButton}
           />
         </View>
-        <View style={styles.optionsContainer}>
-          {user_email && (
-            <View>
-              <BnbButton
-                onPress={_handleSearchRoomsButton}
-                title={"Buscar Habitaciones"}
-              />
-              <BnbButton
-                title="DEBUG Cerrar sesion"
-                onPress={_handleLogOutButton}
-              />
-            </View>
-          )}
-        </View>
+      </View>
     </BnbMainView>
   );
 }
