@@ -19,7 +19,6 @@ function ProfileWalletScreen(props) {
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
   const [_show_mnemonic, setShowMnemonic] = useState(false);
-  const [mock_balance, setBalance] = useState(0);
 
   const _handleApiResponse = (wallet) => {
     setWallet(wallet);
@@ -63,7 +62,9 @@ function ProfileWalletScreen(props) {
       <BnbBodyView>
         <View style={styles.walletBalanceContainer}>
           <Text style={bnbStyleSheet.headerTextBlack}>Balance</Text>
-          <Text style={bnbStyleSheet.normalText}>Ethereum: {mock_balance}</Text>
+          <Text style={bnbStyleSheet.normalText}>
+            Ethereum: {_wallet.balance}
+          </Text>
         </View>
         <View style={styles.walletInfoContainer}>
           <Text style={bnbStyleSheet.headerTextBlack}>Detalles</Text>

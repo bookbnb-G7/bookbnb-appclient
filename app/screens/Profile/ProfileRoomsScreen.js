@@ -11,7 +11,7 @@ import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 
-function ProfileRoomsScreen(props) {
+function ProfileRoomsScreen({ navigation }) {
   const [storedUser, setStoredUser] = useState();
   const [_rooms, setRooms] = useState({ amount: 0, rooms: [] });
   const [_is_loading, setIsLoading] = useState(true);
@@ -56,7 +56,7 @@ function ProfileRoomsScreen(props) {
             {_rooms.rooms.map((item, index) => (
               <View key={item.id}>
                 <BnbRoomPreview
-                  navigation={props.navigation}
+                  navigation={navigation}
                   room={item}
                 ></BnbRoomPreview>
               </View>

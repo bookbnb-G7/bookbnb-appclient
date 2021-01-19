@@ -64,17 +64,11 @@ function RoomCreateScreen({ navigation }) {
   };
 
   const _handleApiResponse = (room) => {
-    Alert.alert("Creacion de habitacion", "Habitacion creada con exito", [
-      {
-        text: "Entendido",
-        onPress: () => {
-          navigation.navigate("ImagesEdit", {
-            room_id: room.id,
-            isCreatingRoom: true,
-          });
-        },
-      },
-    ]);
+    setIsAwaiting(false);
+    navigation.navigate("ImagesEdit", {
+      room_id: room.id,
+      isCreatingRoom: true,
+    });
   };
 
   const _handleApiError = (error) => {
@@ -120,7 +114,7 @@ function RoomCreateScreen({ navigation }) {
   }, []);
 
   if (_is_awaiting) {
-    return <BnbLoading></BnbLoading>;
+    return <BnbLoading text="Creando habitacion..."></BnbLoading>;
   } else {
     return (
       <BnbMainView>

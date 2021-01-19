@@ -73,7 +73,7 @@ const BnbRoomPreview = (props) => {
   }, []);
 
   if (!_is_loaded) {
-    return <BnbLoading text="Cargando habitacion..."></BnbLoading>;
+    return <Text text="Cargando habitacion..." />;
   } else if (_error) {
     return (
       <View>

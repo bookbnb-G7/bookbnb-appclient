@@ -35,12 +35,13 @@ function ImagesEditScreen({ route, navigation }) {
     setIsLoading(false);
     /**TODO: navegar al room screen que acabo de crear como si lo hiciera por Mis Habitaciones */
     if (isCreatingRoom) {
-      navigation.navigate("Home");
+      navigation.popToTop();
     }
   };
 
   const _handleApiError = (error) => {
     setError(error);
+    BnbAlert("Error al subir foto", error.message, "Entendido");
     setIsLoading(false);
   };
 
@@ -144,7 +145,7 @@ function ImagesEditScreen({ route, navigation }) {
   }, [_error]);
 
   if (_is_loading) {
-    return <BnbLoading></BnbLoading>;
+    return <BnbLoading text="Cargando Imagenes..."></BnbLoading>;
   } else if (_error) {
     return <Text style={styles.centerText}>Error: {_error.message}</Text>;
   } else {
