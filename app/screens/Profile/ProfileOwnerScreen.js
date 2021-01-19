@@ -16,7 +16,7 @@ import BnbImage from "../../components/BnbImage";
 import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import { Divider } from "react-native-elements";
 
-function ProfileEditScreen({ route, navigation }) {
+function ProfileOwnerScreen({ route, navigation }) {
   const [storedUser, setStoredUser] = useState();
 
   useEffect(() => {
@@ -25,16 +25,8 @@ function ProfileEditScreen({ route, navigation }) {
     });
   }, []);
 
-  const _handleProfileInfoPress = () => {
-    navigation.navigate("ProfileInfo");
-  };
-
   const _handleRoomsInfoPress = () => {
     navigation.navigate("ProfileRoomsOptions");
-  };
-
-  const _handleProfileImagePress = () => {
-    navigation.navigate("ImagePick");
   };
 
   const _handleWalletPress = () => {
@@ -55,29 +47,17 @@ function ProfileEditScreen({ route, navigation }) {
   };
 
   const PROFILE_OPTIONS = [
-    { id: 0, title: "Informacion de la cuenta" },
-    { id: 1, title: "Habitaciones" },
-    { id: 2, title: "Billetera" },
+    { id: 0, title: "Habitaciones" },
+    { id: 1, title: "Billetera" },
   ];
 
-  const ICONS_NAMES = ["ios-person", "ios-home", "ios-wallet"];
-  const HANDLERS = [
-    _handleProfileInfoPress,
-    _handleRoomsInfoPress,
-    _handleWalletPress,
-  ];
+  const ICONS_NAMES = ["ios-home", "ios-wallet"];
+  const HANDLERS = [_handleRoomsInfoPress, _handleWalletPress];
 
   return (
     <BnbMainView>
       <BnbBodyView>
         <View style={styles.userInfoContainer}>
-          {storedUser && (
-            <BnbImage
-              imageStyle={styles.userLogo}
-              uri={storedUser.userData.photo}
-              onPress={_handleProfileImagePress}
-            ></BnbImage>
-          )}
           <View style={styles.userInfoAndButtons}>
             <View>
               {storedUser && (
@@ -144,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileEditScreen;
+export default ProfileOwnerScreen;

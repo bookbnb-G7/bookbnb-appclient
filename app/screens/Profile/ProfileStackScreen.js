@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Profile from "./Profile";
-import ProfileInfoScreen from "./ProfileInfoScreen";
 import RoomCreateScreen from "../RoomCreateScreen";
 import ImagePickScreen from "../ImagePickScreen";
 import constants from "../../constant/constants";
-import BnbLoading from "../../components/BnbLoading";
 import BnbSecureStore from "../../classes/BnbSecureStore";
-import BnbHeaderUserInfo from "../../components/BnbHeaderUserInfo";
 import ProfileBookingsScreen from "./ProfileBookingsScreen";
 import RoomBookingScreen from "../RoomBookingScreen";
-import ProfileEditScreen from "./ProfileEditScreen";
 import ProfileRoomsOptionsScreen from "./ProfileRoomsOptionsScreen";
 import ProfileRoomsScreen from "./ProfileRoomsScreen";
 import ProfileWalletScreen from "./ProfileWalletScreen";
@@ -22,6 +18,7 @@ import RoomScreen from "../RoomScreen";
 import ProfileChatsScreen from "./ProfileChatsScreen";
 import UserChatScreen from "./UserChatScreen";
 import RoomEditScreen from "../RoomEditScreen";
+import ProfileOwnerScreen from "./ProfileOwnerScreen";
 
 const ProfileStack = createStackNavigator();
 
@@ -51,8 +48,10 @@ function ProfileStackScreen(props) {
           component={ProfileReviewsScreen}
         />
         <ProfileStack.Screen name="ReviewUser" component={ReviewUserScreen} />
-        <ProfileStack.Screen name="ProfileEdit" component={ProfileEditScreen} />
-        <ProfileStack.Screen name="ProfileInfo" component={ProfileInfoScreen} />
+        <ProfileStack.Screen
+          name="ProfileOwner"
+          component={ProfileOwnerScreen}
+        />
         <ProfileStack.Screen
           name="ProfileRoomsOptions"
           component={ProfileRoomsOptionsScreen}

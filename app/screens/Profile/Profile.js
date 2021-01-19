@@ -20,6 +20,7 @@ import BnbFormBubbleInfo from "../../components/BnbFormBubbleInfo";
 import getAverage from "../../helpers/getAverage";
 import { ScrollView } from "react-native-gesture-handler";
 import BnbError from "../../components/BnbError";
+import ProfileEdit from "./ProfileEdit";
 
 /**Este es de solo lectura, generico y debe sevir para cualquier usuario */
 function Profile({ route, navigation }) {
@@ -31,17 +32,26 @@ function Profile({ route, navigation }) {
   const [_hostRatings, setHostRatings] = useState();
   const [_error, setError] = useState();
 
+  /**Flag para ver si esta habilitado a hacer una review */
+  const [_can_review, setCanReview] = useState(false);
   const [_is_owner, setIsOwner] = useState(false);
 
-  const _handleProfileEdit = () => {
-    navigation.navigate("ProfileEdit");
+  const [_show_info, setShowInfo] = useState(false);
+
+  const _handleGoToOwnerScreen = () => {
+    navigation.navigate("ProfileOwner");
   };
 
+  /**TODO is_guest esta hardcodeado */
   const _handleReviewUser = () => {
     navigation.navigate("ReviewUser", {
       is_guest: false,
       reviewed_id: user.id,
     });
+  };
+
+  const _handleProfileImagePress = () => {
+    navigation.navigate("ImagePick");
   };
 
   const _handleProfileReviewsButtonPress = () => {
@@ -57,6 +67,14 @@ function Profile({ route, navigation }) {
         "No puedes chatear contigo mismo, el boton no deberia poder verse en tu propio perfil"
       );
     }
+  };
+
+  const _toggleShowProfileEdit = () => {
+    setShowInfo(!_show_info);
+  };
+
+  const _handleTextChange = (key, value) => {
+    setUser((previous) => ({ ...previous, [key]: value }));
   };
 
   useEffect(() => {
@@ -126,7 +144,8 @@ function Profile({ route, navigation }) {
               <BnbImage
                 imageStyle={styles.userLogo}
                 uri={user.photo}
-              ></BnbImage>
+                onPress={_is_owner ? _handleProfileImagePress : null}
+              />
             )}
             {user && (
               <Text style={styles.userName}>
@@ -165,25 +184,32 @@ function Profile({ route, navigation }) {
           <Divider style={bnbStyleSheet.divider} />
           {user && (
             <View style={styles.buttonsContainer}>
-              {_is_owner && (
-                <BnbButton
-                  title="Editar perfil"
-                  onPress={_handleProfileEdit}
-                ></BnbButton>
-              )}
-              {_is_owner && (
+              {!_is_owner && _can_review && (
                 <BnbButton
                   title="Escribir una reseña"
                   onPress={_handleReviewUser}
-                ></BnbButton>
+                />
               )}
+              <BnbButton
+                title="Ver reseñas"
+                onPress={_handleProfileReviewsButtonPress}
+              />
               {_is_owner && (
                 <BnbButton
-                  title="Ver reseñas"
-                  onPress={_handleProfileReviewsButtonPress}
-                ></BnbButton>
+                  title="Detalles de mi cuenta"
+                  onPress={_handleGoToOwnerScreen}
+                />
+              )}
+              {_is_owner && user && (
+                <BnbButton
+                  title={!_show_info ? "Editar mi perfil" : "Contraer"}
+                  onPress={_toggleShowProfileEdit}
+                />
               )}
             </View>
+          )}
+          {_show_info && user && (
+            <ProfileEdit me={user} onTextChange={_handleTextChange} />
           )}
         </ScrollView>
       </BnbBodyView>
