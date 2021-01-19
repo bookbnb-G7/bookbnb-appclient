@@ -8,6 +8,9 @@ jobs:
     name: Install and publish
     env:
       GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
+      ANDROID_CLIENT_ID: ${{ secrets.ANDROID_CLIENT_ID }}
+      FACEBOOK_APP_ID: ${{ FACEBOOK_APP_ID }}
+      FACEBOOK_APP_NAME: ${{ FACEBOOK_APP_NAME }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
