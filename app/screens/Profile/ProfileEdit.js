@@ -110,8 +110,8 @@ function ProfileEdit({ me, onTextChange }) {
 
   return (
     <BnbMainView style={{ backgroundColor: "white" }}>
-      <Text style={bnbStyleSheet.headerTextBlack}>Tus datos</Text>
-      <View style={styles.userInfoContainer}>
+      <Text style={bnbStyleSheet.headerTextBlack}>Detalles</Text>
+      <View>
         {me ? (
           <View>
             <BnbTextInputObject
@@ -170,9 +170,6 @@ const styles = StyleSheet.create({
   title: {
     color: "black",
     fontSize: fonts.bigBig,
-  },
-  userInfoContainer: {
-    //flexDirection: "row",
   },
   row: {
     flexDirection: "row",

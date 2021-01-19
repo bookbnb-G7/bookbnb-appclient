@@ -89,6 +89,7 @@ function RoomCreateScreen({ navigation }) {
 
   const _handleNextButtonPress = () => {
     if (isANumber(_room.price_per_day.toString())) {
+      setIsAwaiting(true);
       httpPostTokenRequest(
         "POST",
         urls.URL_ROOMS,
@@ -100,7 +101,6 @@ function RoomCreateScreen({ navigation }) {
         _handleApiResponse,
         _handleApiError
       );
-      setIsAwaiting(true);
     } else {
       alert("El precio por dia debe ser un valor numerico");
     }
@@ -120,7 +120,7 @@ function RoomCreateScreen({ navigation }) {
   }, []);
 
   if (_is_awaiting) {
-    return null;
+    return <BnbLoading></BnbLoading>;
   } else {
     return (
       <BnbMainView>

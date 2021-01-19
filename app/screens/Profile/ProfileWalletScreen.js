@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import BnbSecureStore from "../../classes/BnbSecureStore";
 import BnbBodyView from "../../components/BnbBodyView";
 import BnbButton from "../../components/BnbButton";
@@ -64,7 +65,7 @@ function ProfileWalletScreen(props) {
         <View style={styles.walletInfoContainer}>
           <Text style={bnbStyleSheet.headerTextBlack}>Detalles</Text>
           <Text style={bnbStyleSheet.subHeaderText}>Address</Text>
-          <BnbIconText iconName="ios-wallet">{_wallet.address}</BnbIconText>
+          <TextInput editable={false}>{_wallet.address}</TextInput>
           <Text style={bnbStyleSheet.subHeaderText}>Mnemonic</Text>
           {_show_mnemonic && <Text>{_wallet.mnemonic}</Text>}
           <BnbButton

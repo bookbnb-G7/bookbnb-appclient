@@ -196,13 +196,13 @@ function Profile({ route, navigation }) {
               />
               {_is_owner && (
                 <BnbButton
-                  title="Detalles de mi cuenta"
+                  title="Habitaciones y Reservas"
                   onPress={_handleGoToOwnerScreen}
                 />
               )}
               {_is_owner && user && (
                 <BnbButton
-                  title={!_show_info ? "Editar mi perfil" : "Contraer"}
+                  title={!_show_info ? "Ver detalles perfil" : "Contraer"}
                   onPress={_toggleShowProfileEdit}
                 />
               )}

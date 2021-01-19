@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     marginVertical: styling.separator,
     flexDirection: "row",
-    alignItems: "center",
     height: 50,
   },
   icon: {
@@ -37,6 +36,7 @@ const styles = StyleSheet.create({
   text: {
     paddingHorizontal: 10,
     fontSize: fonts.semi,
+    textAlignVertical: "center",
     color: "gray",
   },
 });
