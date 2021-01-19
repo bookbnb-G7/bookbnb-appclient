@@ -8,7 +8,6 @@ import styling from "../config/styling";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
 import firebase from "firebase";
-import "firebase/messaging";
 import BnbImageSlider from "../components/BnbImageSlider";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import urls from "../constant/urls";
