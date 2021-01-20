@@ -72,7 +72,7 @@ function HomeScreen({ navigation }) {
       }
     };
     registerForPushNotificationsAsync();
-  }, []);
+  });
 
   function _handleSearchRoomsButton() {
     navigation.navigate("SearchRooms");

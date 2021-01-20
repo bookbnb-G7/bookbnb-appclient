@@ -43,7 +43,7 @@ function ImagePickScreen({ route, navigation }) {
 
     /**guardo */
     BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser).then(() => {
-      navigation.navigate("ProfileEdit", { photo: data.photo });
+      navigation.navigate("Profile", { photo: data.photo });
     });
   };
 

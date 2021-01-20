@@ -26,7 +26,7 @@ function HomeStack({ route }) {
     Welcome: WelcomeScreen,
     RegisterSelect: RegisterSelectScreen,
     SignUp: SignUpScreen,
-    OAuthSingup: OAuthSignupScreen,
+    OAuthSignup: OAuthSignupScreen,
     LoginSelect: LoginSelectScreen,
     UserLogin: UserLoginScreen,
     PasswordRecover: SendPassResetEmailScreen,
