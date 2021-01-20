@@ -12,7 +12,7 @@ import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
-import Clipboard from "@react-native-community/clipboard";
+import Clipboard from "expo-clipboard";
 
 function ProfileWalletScreen(props) {
   const [_wallet, setWallet] = useState();
