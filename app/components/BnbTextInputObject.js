@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import colors from "../config/colors";
@@ -9,6 +9,11 @@ import Separator from "./Separator";
 
 // Simil BnbTextInput pero pasando un objeto como parametro en vez de un valor
 const BnbTextInputObject = (props) => {
+  const [prevState, setPrevState] = useState();
+  useEffect(() => {
+    setPrevState(props.object);
+  }, []);
+
   return (
     <View style={styles.mainContainer}>
       <Separator style={{ borderBottomWidth: 0 }}></Separator>
@@ -20,14 +25,15 @@ const BnbTextInputObject = (props) => {
         elevation={5}
         style={{ ...styles.customStyle, ...props.customStyle }}
       >
-        <TextInput
-          style={{ ...styles.valueText, ...props.style }}
-          defaultValue={props.object[props.id].toString()}
-          editable={props.editable}
-          onChangeText={(text) => props.onChange(props.id, text)}
-          onSubmitEditing={() => {}}
-          multiline={props.multiline}
-        ></TextInput>
+        {prevState && (
+          <TextInput
+            style={{ ...styles.valueText, ...props.style }}
+            defaultValue={prevState[props.id].toString()}
+            editable={props.editable}
+            onChangeText={(text) => props.onChange(props.id, text)}
+            multiline={props.multiline}
+          ></TextInput>
+        )}
       </View>
     </View>
   );

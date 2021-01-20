@@ -1,6 +1,7 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import colors from "../config/colors";
 import styling from "../config/styling";
 
 const BnbImage = (props) => {
@@ -24,6 +25,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: styling.smallCornerRadius,
+    backgroundColor: colors.graySoft,
   },
   noImageText: {
     textAlign: "center",

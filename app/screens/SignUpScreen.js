@@ -65,15 +65,27 @@ function SignUpScreen({ route, navigation }) {
             httpPostTokenRequest("POST", urls.URL_USERS, appServerUser, {
               "Content-Type": "application/json",
               "x-access-token": id_token,
-            }).then((data) => {
-              if (data) {
-                const storeUser = {
-                  auth_token: id_token,
-                  userData: data,
-                };
-                BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
+            }).then(
+              (data) => {
+                if (data) {
+                  const storeUser = {
+                    auth_token: id_token,
+                    userData: data,
+                  };
+                  BnbSecureStore.remember(
+                    constants.CACHE_USER_KEY,
+                    storeUser
+                  ).then(() => {
+                    navigation.navigate("HomeStack", { isLoggedIn: true });
+                  });
+                }
+              },
+              (error) => {
+                console.log("No se puedo crear el usuario, no habia data");
+                firebase.auth().signOut();
+                setIsAwaiting(false);
               }
-            });
+            );
           });
         })
         .catch((error) => {

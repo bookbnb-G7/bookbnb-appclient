@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ImageBackground } from "react-native";
-import Constants from 'expo-constants';
-import * as Notifications from 'expo-notifications';
+import Constants from "expo-constants";
+import * as Notifications from "expo-notifications";
 import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
 import styling from "../config/styling";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
 import firebase from "firebase";
-import "firebase/messaging";
 import BnbImageSlider from "../components/BnbImageSlider";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import urls from "../constant/urls";
@@ -26,54 +25,65 @@ function HomeScreen({ navigation }) {
   useEffect(() => {
     const registerForPushNotificationsAsync = async () => {
       if (Constants.isDevice) {
-        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        const {
+          status: existingStatus,
+        } = await Notifications.getPermissionsAsync();
         let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
+        if (existingStatus !== "granted") {
           const { status } = await Notifications.requestPermissionsAsync();
           finalStatus = status;
         }
-        if (finalStatus !== 'granted') {
-          alert('Failed to get push token for push notification!');
+        if (finalStatus !== "granted") {
+          alert("Failed to get push token for push notification!");
           return;
         }
         const token = (await Notifications.getDevicePushTokenAsync()).data;
 
         console.log(token);
-  
+
+        /**Ojo que al logear/signear el BnbSecureStore.remember puede llegar mas tarde
+         * y no estar guardado para el momento que haces el .read =>
+         * Unhandled Promise reject user.auth_token is null
+         */
         const user = await BnbSecureStore.read(constants.CACHE_USER_KEY);
-  
-        await httpPostTokenRequest("POST", urls.URL_NOTIFICATION_TOKEN, {
-          push_token: token,
-        }, {
-          "Content-Type": "application/json",
-          "x-access-token": user.auth_token,
-        });
-  
+
+        await httpPostTokenRequest(
+          "POST",
+          urls.URL_NOTIFICATION_TOKEN,
+          {
+            push_token: token,
+          },
+          {
+            "Content-Type": "application/json",
+            "x-access-token": user.auth_token,
+          }
+        );
       } else {
-        alert('Must use physical device for Push Notifications');
+        alert("Must use physical device for Push Notifications");
       }
-  
-      if (Platform.OS === 'android') {
-        Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
+
+      if (Platform.OS === "android") {
+        Notifications.setNotificationChannelAsync("default", {
+          name: "default",
           importance: Notifications.AndroidImportance.MAX,
           vibrationPattern: [0, 250, 250, 250],
-          lightColor: '#FF231F7C',
+          lightColor: "#FF231F7C",
         });
       }
     };
     registerForPushNotificationsAsync();
-  }, [])
+  }, []);
 
   function _handleSearchRoomsButton() {
     navigation.navigate("SearchRooms");
   }
 
   const _handleLogOutButton = () => {
-    firebase.auth()
+    firebase
+      .auth()
       .signOut()
       .then(() => console.log(storedUser.userData.email + " Cerro sesion"))
-      .then(() => navigation.navigate("HomeStack"))
+      .then(() => navigation.navigate("HomeStack", { isLoggedIn: false }))
       .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY));
   };
 

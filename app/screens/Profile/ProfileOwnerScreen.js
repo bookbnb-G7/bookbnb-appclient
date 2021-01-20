@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image, StatusBar } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import colors from "../../config/colors";
 import fonts from "../../config/fonts";
 
@@ -12,11 +12,9 @@ import BnbSecureStore from "../../classes/BnbSecureStore";
 import constants from "../../constant/constants";
 import BnbButton from "../../components/BnbButton";
 import firebase from "../../database/firebase";
-import BnbImage from "../../components/BnbImage";
 import bnbStyleSheet from "../../constant/bnbStyleSheet";
-import { Divider } from "react-native-elements";
 
-function ProfileEditScreen({ route, navigation }) {
+function ProfileOwnerScreen({ route, navigation }) {
   const [storedUser, setStoredUser] = useState();
 
   useEffect(() => {
@@ -25,16 +23,8 @@ function ProfileEditScreen({ route, navigation }) {
     });
   }, []);
 
-  const _handleProfileInfoPress = () => {
-    navigation.navigate("ProfileInfo");
-  };
-
   const _handleRoomsInfoPress = () => {
     navigation.navigate("ProfileRoomsOptions");
-  };
-
-  const _handleProfileImagePress = () => {
-    navigation.navigate("ImagePick");
   };
 
   const _handleWalletPress = () => {
@@ -46,7 +36,7 @@ function ProfileEditScreen({ route, navigation }) {
       firebase.auth
         .signOut()
         .then(() => console.log(storedUser.userData.email + " Cerro sesion"))
-        .then(() => navigation.navigate("HomeStack"));
+        .then(() => navigation.navigate("HomeStack", { isLoggedIn: false }));
     });
   };
 
@@ -55,53 +45,36 @@ function ProfileEditScreen({ route, navigation }) {
   };
 
   const PROFILE_OPTIONS = [
-    { id: 0, title: "Informacion de la cuenta" },
-    { id: 1, title: "Habitaciones" },
-    { id: 2, title: "Billetera" },
+    { id: 0, title: "Habitaciones" },
+    { id: 1, title: "Billetera" },
+    { id: 2, title: "Chats" },
   ];
 
-  const ICONS_NAMES = ["ios-person", "ios-home", "ios-wallet"];
+  const ICONS_NAMES = ["ios-home", "ios-wallet", "ios-chatbox"];
   const HANDLERS = [
-    _handleProfileInfoPress,
     _handleRoomsInfoPress,
     _handleWalletPress,
+    _handleChatsButtonPress,
   ];
 
   return (
     <BnbMainView>
       <BnbBodyView>
-        <View style={styles.userInfoContainer}>
-          {storedUser && (
-            <BnbImage
-              imageStyle={styles.userLogo}
-              uri={storedUser.userData.photo}
-              onPress={_handleProfileImagePress}
-            ></BnbImage>
-          )}
-          <View style={styles.userInfoAndButtons}>
-            <View>
-              {storedUser && (
-                <Text style={styles.userName}>
-                  {storedUser.userData.firstname} {storedUser.userData.lastname}
-                </Text>
-              )}
-              {storedUser && (
-                <Text style={styles.userName}>{storedUser.userData.email}</Text>
-              )}
-            </View>
-            <View>
-              <BnbButton
-                title="Chats"
-                onPress={_handleChatsButtonPress}
-              ></BnbButton>
-            </View>
-          </View>
-        </View>
+        {storedUser && (
+          <Text style={bnbStyleSheet.headerTextBlack}>
+            {storedUser.userData.firstname} {storedUser.userData.lastname}
+          </Text>
+        )}
+        {storedUser && (
+          <Text style={bnbStyleSheet.headerTextBlack}>
+            {storedUser.userData.email}
+          </Text>
+        )}
         <View style={styles.bodyContainer}>
           {PROFILE_OPTIONS.map((element) => (
             <View key={element.id}>
-              <Separator />
               <TouchableOpacity onPress={HANDLERS[element.id]}>
+                <Separator></Separator>
                 <BnbIconText
                   style={styles.iconText}
                   iconName={ICONS_NAMES[element.id]}
@@ -140,8 +113,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   iconText: {
-    height: 30,
+    height: 50,
   },
 });
 
-export default ProfileEditScreen;
+export default ProfileOwnerScreen;

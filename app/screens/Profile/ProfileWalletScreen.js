@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import BnbSecureStore from "../../classes/BnbSecureStore";
 import BnbBodyView from "../../components/BnbBodyView";
 import BnbButton from "../../components/BnbButton";
@@ -11,14 +12,13 @@ import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
+import Clipboard from "@react-native-community/clipboard";
 
 function ProfileWalletScreen(props) {
   const [_wallet, setWallet] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
   const [_show_mnemonic, setShowMnemonic] = useState(false);
-
-  const [mock_balance, setBalance] = useState(0);
 
   const _handleApiResponse = (wallet) => {
     setWallet(wallet);
@@ -33,6 +33,10 @@ function ProfileWalletScreen(props) {
 
   const _toggleShowMnemonic = () => {
     setShowMnemonic(!_show_mnemonic);
+  };
+
+  const _copyToClipboard = () => {
+    Clipboard.setString(_wallet.address);
   };
 
   useEffect(() => {
@@ -50,7 +54,6 @@ function ProfileWalletScreen(props) {
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
   }
-
   if (_is_loading) {
     return <BnbLoading text="Cargando..."></BnbLoading>;
   }
@@ -59,12 +62,15 @@ function ProfileWalletScreen(props) {
       <BnbBodyView>
         <View style={styles.walletBalanceContainer}>
           <Text style={bnbStyleSheet.headerTextBlack}>Balance</Text>
-          <Text style={bnbStyleSheet.normalText}>Ethereum: {mock_balance}</Text>
+          <Text style={bnbStyleSheet.normalText}>
+            Ethereum: {_wallet.balance}
+          </Text>
         </View>
         <View style={styles.walletInfoContainer}>
           <Text style={bnbStyleSheet.headerTextBlack}>Detalles</Text>
           <Text style={bnbStyleSheet.subHeaderText}>Address</Text>
-          <BnbIconText iconName="ios-wallet">{_wallet.address}</BnbIconText>
+          <Text>{_wallet.address}</Text>
+          <BnbButton title="Copiar" onPress={_copyToClipboard}></BnbButton>
           <Text style={bnbStyleSheet.subHeaderText}>Mnemonic</Text>
           {_show_mnemonic && <Text>{_wallet.mnemonic}</Text>}
           <BnbButton

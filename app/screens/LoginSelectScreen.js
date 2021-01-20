@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
-import * as Google from 'expo-google-app-auth';
-import * as Facebook from 'expo-facebook';
+import * as Google from "expo-google-app-auth";
+import * as Facebook from "expo-facebook";
 import BnbBodyView from "../components/BnbBodyView";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbMainView from "../components/BnbMainView";
@@ -13,7 +13,6 @@ import firebase from "firebase";
 import urls from "../constant/urls";
 import constants from "../constant/constants";
 import BnbLoading from "../components/BnbLoading";
-
 
 const LoginSelectScreen = ({ navigation }) => {
   const [_is_awaiting, setIsAwaiting] = useState(false);
@@ -27,24 +26,24 @@ const LoginSelectScreen = ({ navigation }) => {
   };
 
   const signInWithOauthCredential = async (credential) => {
-      const userCredential = await firebase.auth().signInWithCredential(credential);
-      const id_token = await userCredential.user.getIdToken();
-      const data = await httpGetTokenRequest("GET", urls.URL_ME, {
-          "x-access-token": id_token,
-      });
-      if (data) {
-        const storeUser = {
-          auth_token: id_token,
-          userData: data,
-        };
-        await BnbSecureStore.remember(
-          constants.CACHE_USER_KEY,
-          storeUser
-        );
-      } else {
-        firebase.auth.signOut();
-      }
-  }
+    const userCredential = await firebase
+      .auth()
+      .signInWithCredential(credential);
+    const id_token = await userCredential.user.getIdToken();
+    const data = await httpGetTokenRequest("GET", urls.URL_ME, {
+      "x-access-token": id_token,
+    });
+    if (data) {
+      const storeUser = {
+        auth_token: id_token,
+        userData: data,
+      };
+      await BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
+      navigation.navigate("HomeStack", { isLoggedIn: true });
+    } else {
+      firebase.auth.signOut();
+    }
+  };
 
   const signInWithFacebook = async () => {
     try {
@@ -53,10 +52,9 @@ const LoginSelectScreen = ({ navigation }) => {
         appName: process.env.FACEBOOK_APP_NAME,
       });
       const { type, token } = await Facebook.logInWithReadPermissionsAsync({
-          permissions: ["email"],
-        }
-      );
-      if (type === 'success') {
+        permissions: ["email"],
+      });
+      if (type === "success") {
         setIsAwaiting(true);
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
         await signInWithOauthCredential(credential);
@@ -71,51 +69,56 @@ const LoginSelectScreen = ({ navigation }) => {
     try {
       const { type, accessToken, idToken } = await Google.logInAsync({
         androidClientId: process.env.ANDROID_CLIENT_ID,
-        scopes: ['profile', 'email']
+        scopes: ["profile", "email"],
       });
-      
-      if (type  === 'success') {
+
+      if (type === "success") {
         setIsAwaiting(true);
-        const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
+        const credential = firebase.auth.GoogleAuthProvider.credential(
+          idToken,
+          accessToken
+        );
         await signInWithOauthCredential(credential);
         setIsAwaiting(false);
       }
     } catch ({ message }) {
       setIsAwaiting(false);
-      console.log('login: Error:' + message);
+      console.log("login: Error:" + message);
     }
-  }
+  };
   if (_is_awaiting) {
     return <BnbLoading />;
   } else {
     return (
       <BnbMainView>
         <BnbBodyView style={styles.centerContainer}>
-          <Text style={styles.headerText}>Elija el metodo de autenticacion</Text>
+          <Text style={styles.headerText}>
+            Elija el metodo de autenticacion
+          </Text>
           <View>
             <BnbButton
-                  title="Email y contraseña"
-                  style={styles.buttonText}
-                  buttonStyle={styles.buttonStyle}
-                  onPress={handleEmailPassSignin}
-            />
-            
-            <BnbButton
-                  title="Continuar con Google"
-                  style={styles.buttonText}
-                  buttonStyle={styles.buttonStyle}
-                  onPress={signInWithGoogle}
-                  iconName="logo-google"
-                  iconColor="white"
+              title="Email y contraseña"
+              style={styles.buttonText}
+              buttonStyle={styles.buttonStyle}
+              onPress={handleEmailPassSignin}
             />
 
             <BnbButton
-                  title="Continuar con Facebook"
-                  style={styles.buttonText}
-                  buttonStyle={styles.buttonStyle}
-                  onPress={signInWithFacebook}
-                  iconName="logo-facebook"
-                  iconColor="white"
+              title="Continuar con Google"
+              style={styles.buttonText}
+              buttonStyle={styles.buttonStyle}
+              onPress={signInWithGoogle}
+              iconName="logo-google"
+              iconColor="white"
+            />
+
+            <BnbButton
+              title="Continuar con Facebook"
+              style={styles.buttonText}
+              buttonStyle={styles.buttonStyle}
+              onPress={signInWithFacebook}
+              iconName="logo-facebook"
+              iconColor="white"
             />
 
             <View style={styles.inlineTextButton}>
@@ -126,15 +129,16 @@ const LoginSelectScreen = ({ navigation }) => {
             </View>
           </View>
         </BnbBodyView>
-      </BnbMainView>)
+      </BnbMainView>
+    );
   }
-}
+};
 
 const styles = StyleSheet.create({
   headerText: {
     fontSize: 28,
     fontFamily: "Raleway_400Regular",
-    color: '#333',
+    color: "#333",
     textAlign: "center",
   },
   centerContainer: {

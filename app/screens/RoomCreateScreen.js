@@ -64,17 +64,11 @@ function RoomCreateScreen({ navigation }) {
   };
 
   const _handleApiResponse = (room) => {
-    Alert.alert("Creacion de habitacion", "Habitacion creada con exito", [
-      {
-        text: "Entendido",
-        onPress: () => {
-          navigation.navigate("ImagesEdit", {
-            room_id: room.id,
-            isCreatingRoom: true,
-          });
-        },
-      },
-    ]);
+    setIsAwaiting(false);
+    navigation.navigate("ImagesEdit", {
+      room_id: room.id,
+      isCreatingRoom: true,
+    });
   };
 
   const _handleApiError = (error) => {
@@ -89,6 +83,7 @@ function RoomCreateScreen({ navigation }) {
 
   const _handleNextButtonPress = () => {
     if (isANumber(_room.price_per_day.toString())) {
+      setIsAwaiting(true);
       httpPostTokenRequest(
         "POST",
         urls.URL_ROOMS,
@@ -100,7 +95,6 @@ function RoomCreateScreen({ navigation }) {
         _handleApiResponse,
         _handleApiError
       );
-      setIsAwaiting(true);
     } else {
       alert("El precio por dia debe ser un valor numerico");
     }
@@ -120,7 +114,7 @@ function RoomCreateScreen({ navigation }) {
   }, []);
 
   if (_is_awaiting) {
-    return null;
+    return <BnbLoading text="Creando habitacion..."></BnbLoading>;
   } else {
     return (
       <BnbMainView>
