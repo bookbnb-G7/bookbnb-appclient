@@ -55,7 +55,7 @@ function ProfileWalletScreen(props) {
     return <BnbError>{_error.message}</BnbError>;
   }
   if (_is_loading) {
-    return <BnbLoading text="Cargando..."></BnbLoading>;
+    return <BnbLoading text="Cargando billetera..."></BnbLoading>;
   }
   return (
     <BnbMainView>

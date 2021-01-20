@@ -149,7 +149,10 @@ function RoomScreen({ route, navigation }) {
       "POST",
       urls.URL_ROOMS + "/" + room_id + "/comments",
       _comment,
-      { "x-access-token": storedUser.auth_token },
+      {
+        "Content-Type": "application/json",
+        "x-access-token": storedUser.auth_token,
+      },
       _handleApiResponse
     ).then(
       (value) => {

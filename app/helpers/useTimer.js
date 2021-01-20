@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 function useTimer(seconds, callback) {
   // initialize timeLeft with the seconds prop
   const [timeLeft, setTimeLeft] = useState(seconds);
+  //console.log(timeLeft);
   useEffect(() => {
     // exit early when we reach 0
     if (!timeLeft) return;

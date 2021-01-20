@@ -35,6 +35,11 @@ function ImagesEditScreen({ route, navigation }) {
     setIsLoading(false);
     /**TODO: navegar al room screen que acabo de crear como si lo hiciera por Mis Habitaciones */
     if (isCreatingRoom) {
+      BnbAlert(
+        "Creacion finalizada",
+        "Puede ver su nueva habitacion en Mis habitaciones",
+        "Entendido"
+      );
       navigation.popToTop();
     }
   };
@@ -168,9 +173,7 @@ function ImagesEditScreen({ route, navigation }) {
           {isCreatingRoom && (
             <BnbButton
               title={"No agregar imagen y terminar"}
-              onPress={() => {
-                navigation.navigate("Home");
-              }}
+              onPress={_handleApiResponse}
             ></BnbButton>
           )}
         </BnbBodyView>

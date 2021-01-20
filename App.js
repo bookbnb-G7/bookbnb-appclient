@@ -19,6 +19,8 @@ import colors from "./app/config/colors";
 import firebase from "./app/database/firebase";
 import { LogBox } from "react-native";
 import useTimer from "./app/helpers/useTimer";
+import BnbSecureStore from "./app/classes/BnbSecureStore";
+import constants from "./app/constant/constants";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -60,7 +62,7 @@ export default function App() {
     });
   }, []);
   */
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(true);
   const triggerRefresh = () => {
     setRefresh(true);
   };
@@ -73,7 +75,16 @@ export default function App() {
       if (user) {
         console.log("TOKEN: user esta logeado, token refresheado");
         /**En cada re renderizado de la app, si el user esta logeado refresheo el token */
-        user.getIdToken(true);
+        user.getIdToken(true).then(async (token) => {
+          const storedUser = await BnbSecureStore.read(
+            constants.CACHE_USER_KEY
+          );
+          const storeUser = {
+            userData: storedUser.userData,
+            auth_token: token,
+          };
+          BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
+        });
       }
     }
     return () => {
