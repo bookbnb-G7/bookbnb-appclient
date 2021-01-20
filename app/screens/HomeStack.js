@@ -10,6 +10,7 @@ import SendPassResetEmailScreen from "./SendPassResetEmailScreen";
 import LoginSelectScreen from "./LoginSelectScreen";
 import RegisterSelectScreen from "./RegisterSelectScreen";
 import OAuthSignupScreen from "./OAuthSignupScreen";
+import DebugGoToRoomProfile from "./DebugGoToRoomProfile";
 
 const HomeStackNav = createStackNavigator();
 
@@ -20,6 +21,7 @@ function HomeStack({ route }) {
    */
   const userScreens = {
     Home: HomeScreen,
+    DebugGoToRoomProfile: DebugGoToRoomProfile,
   };
 
   const authScreens = {
@@ -42,8 +44,6 @@ function HomeStack({ route }) {
 
   const [_is_logged_in, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    console.log(route.params.isLoggedIn);
-    console.log(_is_logged_in);
     setIsLoggedIn(route.params.isLoggedIn);
   }, [route.params?.isLoggedIn]);
 

@@ -1,3 +1,4 @@
+import React from "react";
 import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import {
   TextInput,
@@ -21,6 +22,8 @@ class BnbComment extends Component {
 
     this.handleUsernameTap = this.handleUsernameTap.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleMakeReply = this.handleMakeReply.bind(this);
+    this.handleSendReply = this.handleSendReply.bind(this);
   }
 
   handleUsernameTap() {
@@ -43,7 +46,7 @@ class BnbComment extends Component {
           onPress: () => null,
         },
       ],
-      true
+      false
     );
     this.setState({ menu_visible: false });
   }
@@ -56,7 +59,9 @@ class BnbComment extends Component {
 
   handleSendReply() {
     if (this.props.onReply) {
+      this.setState({ reply_visible: false });
       this.props.onReply(this.state.comment, this.props.id);
+      this.setState({ comment: "" });
     }
   }
 
@@ -78,11 +83,11 @@ class BnbComment extends Component {
             </View>
           </TouchableHighlight>
         </View>
+        <Text style={styles.timeStamp}>{this.props.timeStamp}</Text>
         <View style={styles.body}>
           <Text>{this.props.comment}</Text>
         </View>
         <View style={styles.actionBar}>
-          <Text style={styles.timeStamp}>{this.props.timeStamp}</Text>
           {this.props.canEdit && (
             <TouchableOpacity
               style={styles.menuItem}
@@ -97,27 +102,27 @@ class BnbComment extends Component {
           >
             <Text> Responder </Text>
           </TouchableOpacity>
-          {this.state.reply_visible && (
-            <View>
-              <View style={styles.addCommentContainer}>
-                <TextInput
-                  style={styles.textInput}
-                  multiline
-                  numberOfLines={4}
-                  maxLength={constants.maxTextLength}
-                  onChangeText={(value) => this.setState({ comment: value })}
-                  value={this.state.comment}
-                ></TextInput>
-              </View>
-              <TouchableOpacity
-                style={styles.menuItem}
-                onPress={this.handleSendReply}
-              >
-                <Text> Publicar </Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </View>
+        {this.state.reply_visible && (
+          <View style={styles.replyContainer}>
+            <View>
+              <TextInput
+                style={styles.textInput}
+                multiline
+                numberOfLines={4}
+                maxLength={constants.maxTextLength}
+                onChangeText={(value) => this.setState({ comment: value })}
+                value={this.state.comment}
+              ></TextInput>
+            </View>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={this.handleSendReply}
+            >
+              <Text> Publicar </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     );
   }
@@ -128,6 +133,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
+    backgroundColor: colors.graySoft,
   },
   user: {
     flexDirection: "row",
@@ -141,6 +147,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginVertical: styling.separator,
   },
+  menuItem: {
+    borderWidth: 1,
+  },
+  replyContainer: {
+    marginLeft: 40,
+  },
 });
 
 BnbComment.propTypes = {
@@ -151,6 +163,7 @@ BnbComment.propTypes = {
   username: PropTypes.string,
   onUsernameTap: PropTypes.func,
   onDeleteTap: PropTypes.func,
+  onReply: PropTypes.func,
 };
 
 export default BnbComment;
