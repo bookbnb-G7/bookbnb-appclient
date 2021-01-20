@@ -17,9 +17,8 @@ import HomeStack from "./app/screens/HomeStack";
 import SearchStack from "./app/screens/SearchStack";
 import colors from "./app/config/colors";
 import firebase from "./app/database/firebase";
-import BnbSecureStore from "./app/classes/BnbSecureStore";
-import constants from "./app/constant/constants";
 import { LogBox } from "react-native";
+import useTimer from "./app/helpers/useTimer";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -37,34 +36,55 @@ export default function App() {
     Raleway_600SemiBold,
   });
 
+  /** 
   useEffect(() => {
     firebase.auth.onIdTokenChanged(function (user) {
       if (user) {
-        /**ojo con el loop de refresheo de tokens, idToken refreshea por lo que activa onIdToken Changed */
-        /**No se activa al expirar el token, ver si el token tiene un tiempo de expiracion */
-        //console.log("Signin or token refresh");
+        ojo con el loop de refresheo de tokens, idToken refreshea por lo que activa onIdToken Changed
+        No se activa al expirar el token, ver si el token tiene un tiempo de expiracion 
+        console.log("Signin or token refresh");
         user.getIdToken().then((id_token) => {
-          //console.log("onIdTokenChanged: " + id_token + "\n");
+          console.log("onIdTokenChanged: " + id_token + "\n");
 
           BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
             if (storedUser && id_token != storedUser.auth_token) {
-              //console.log("Refresheando token");
-              /**Si tengo un user en el Storage y su token es distinto,
-               * lo reemplazo por el mas nuevo*/
-              //storedUser.auth_token = id_token;
-              //BnbSecureStore.remember(constants.CACHE_USER_KEY, storedUser);
+              console.log("Refresheando token");
+              Si tengo un user en el Storage y su token es distinto,
+              lo reemplazo por el mas nuevo
+              storedUser.auth_token = id_token;
+              BnbSecureStore.remember(constants.CACHE_USER_KEY, storedUser);
             }
           });
         });
       }
     });
   }, []);
+  */
+  const [refresh, setRefresh] = useState(false);
+  const triggerRefresh = () => {
+    setRefresh(true);
+  };
+  /**El idToken de firebase dura 1 hora => 3600 segundos */
+  /**Lo refresheo cada 3300 para asegurarme de que se refreshea antes de expirar*/
+  useTimer(3300, triggerRefresh);
+  useEffect(() => {
+    if (refresh) {
+      const user = firebase.auth.currentUser;
+      if (user) {
+        console.log("TOKEN: user esta logeado, token refresheado");
+        /**En cada re renderizado de la app, si el user esta logeado refresheo el token */
+        user.getIdToken(true);
+      }
+    }
+    return () => {
+      setRefresh(false);
+    };
+  }, [refresh]);
 
   if (!loaded) {
     return <BnbLoading text="Cargando fuentes..." />;
   }
 
-  console.log("##############");
   if (_is_refreshing) {
     return <BnbLoading text={"Refresheando sesión"} />;
   }
