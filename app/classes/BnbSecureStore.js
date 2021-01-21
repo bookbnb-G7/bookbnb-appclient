@@ -7,21 +7,37 @@ class BnbSecureStore {
     try {
       if (key === constants.CACHE_USER_KEY) {
         const item = await SecureStore.getItemAsync(key);
-        return JSON.parse(item);
+        if (!item) {
+          throw new Error(`La key ${key} no se encuentra`);
+        } else {
+          return JSON.parse(item);
+        }
       }
     } catch (e) {
-      console.log(e);
+      console.warn(e);
     }
   }
 
   static async remember(key, value) {
     try {
-      /**if (key == constants.CACHE_USER_KEY) {
-        value = value.toJSON();
-      }*/
       await SecureStore.setItemAsync(key, JSON.stringify(value));
     } catch (e) {
-      console.log(e);
+      console.warn(e);
+    }
+  }
+
+  static async rememberMe(id_token, user) {
+    try {
+      const storeUser = {
+        auth_token: id_token,
+        userData: user,
+      };
+      await SecureStore.setItemAsync(
+        constants.CACHE_USER_KEY,
+        JSON.stringify(storeUser)
+      );
+    } catch (e) {
+      console.warn(e);
     }
   }
 
@@ -29,7 +45,7 @@ class BnbSecureStore {
     try {
       await SecureStore.deleteItemAsync(key);
     } catch (e) {
-      console.log(e);
+      console.warn(e);
     }
   }
 }

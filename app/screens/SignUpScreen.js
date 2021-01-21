@@ -68,14 +68,7 @@ function SignUpScreen({ route, navigation }) {
             }).then(
               (data) => {
                 if (data) {
-                  const storeUser = {
-                    auth_token: id_token,
-                    userData: data,
-                  };
-                  BnbSecureStore.remember(
-                    constants.CACHE_USER_KEY,
-                    storeUser
-                  ).then(() => {
+                  BnbSecureStore.rememberMe(id_token, data).then(() => {
                     navigation.navigate("HomeStack", { isLoggedIn: true });
                   });
                 }
