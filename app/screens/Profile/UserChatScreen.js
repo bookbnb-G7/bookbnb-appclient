@@ -5,10 +5,10 @@ import urls from "../../constant/urls";
 import BnbSecureStore from "../../classes/BnbSecureStore";
 import constants from "../../constant/constants";
 import { GiftedChat } from "react-native-gifted-chat";
+import { Text } from "react-native";
 
 function UserChatScreen({ route, navigation }) {
   const other_uuid = route.other_uuid;
-  const [_fetched_messages, setFetchedMessages] = useState([]);
   const [_messages, setMessages] = useState([]);
   const [storedUser, setStoredUser] = useState({});
 
@@ -34,19 +34,23 @@ function UserChatScreen({ route, navigation }) {
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
+      setStoredUser(user);
       httpGetTokenRequest("GET", urls.URL_ME + "/chats/", {
         "x-access-token": user.auth_token,
       }).then((chat) => {
-        setFetchedMessages(chat.messages);
         /**Los mensajes del appserver los modifico para ser usados en el GiftedChat */
         let messages = [];
-        _fetched_messages.forEach((element) => {
+        chat.messages.forEach((element) => {
           messages.push(buildChatMessage(element));
         });
         setMessages(messages);
       });
     });
   }, []);
+
+  if (!storedUser || !_messages) {
+    <Text style={{ alignSelf: "center" }}>Cargando...</Text>;
+  }
 
   return (
     <BnbMainView>
@@ -57,7 +61,7 @@ function UserChatScreen({ route, navigation }) {
           _id: storedUser.userData.id,
           name: storedUser.userData.firstname,
         }}
-      ></GiftedChat>
+      />
     </BnbMainView>
   );
 }

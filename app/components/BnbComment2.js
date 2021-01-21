@@ -27,7 +27,7 @@ class BnbComment2 extends Component {
 
   handleUsernameTap() {
     if (this.props.onUsernameTap) {
-      this.props.onUsernameTap(this.props.comment.username);
+      this.props.onUsernameTap(this.props.comment.commentator_id);
     }
   }
 
@@ -138,6 +138,7 @@ class BnbComment2 extends Component {
                 comment={item}
                 me_id={this.props.me_id}
                 onDeleteTap={this.props.onDeleteTap}
+                onUsernameTap={this.props.onUsernameTap}
               />
             </View>
           ))}

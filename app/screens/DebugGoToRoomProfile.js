@@ -20,7 +20,7 @@ function DebugGoToRoomProfile({ navigation }) {
         <BnbButton
           title="Room"
           onPress={() => {
-            navigation.navigate("ProfileStack", {
+            navigation.navigate("SearchRooms", {
               screen: "Room",
               params: { room_id: id },
             });
@@ -29,7 +29,7 @@ function DebugGoToRoomProfile({ navigation }) {
         <BnbButton
           title="User"
           onPress={() => {
-            navigation.navigate("ProfileStack", {
+            navigation.navigate("SearchRooms", {
               screen: "Profile",
               params: { user_id: id },
             });

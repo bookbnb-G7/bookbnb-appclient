@@ -222,6 +222,11 @@ function RoomScreen({ route, navigation }) {
     navigation.navigate("Profile", { user_id: _owner.id });
   };
 
+  const _handleUsernameTap = (user_id) => {
+    console.log("USER_ID:" + user_id);
+    navigation.navigate("Profile", { user_id: user_id });
+  };
+
   /**Fetcheo los datos del room */
   useEffect(() => {
     if (_is_loading) {
@@ -422,6 +427,7 @@ function RoomScreen({ route, navigation }) {
                       me_id={storedUser.userData.id}
                       onDeleteTap={_handleDeleteComment}
                       onReply={_handleReplyComment}
+                      onUsernameTap={_handleUsernameTap}
                     />
                   </View>
                 </View>
