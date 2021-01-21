@@ -7,6 +7,7 @@ import constants from "../../constant/constants";
 import { GiftedChat } from "react-native-gifted-chat";
 import { Text } from "react-native";
 import BnbError from "../../components/BnbError";
+import httpPostTokenRequest from "../../helpers/httpPostTokenRequest";
 
 function UserChatScreen({ route, navigation }) {
   const other_uuid = route.params.other_uuid;
@@ -14,38 +15,56 @@ function UserChatScreen({ route, navigation }) {
   const [storedUser, setStoredUser] = useState();
   const [_error, setError] = useState();
 
-  /**_id del mensaje de GiftedChat es necesario? */
-  const [_id, setId] = useState(1);
-
-  const buildChatMessage = (message) => {
+  /**Se supone que uso esto para darle el formato de gitedChat a los mensajes que obtengo
+   * del app server que tienen otro formato, no deberia usarlo para POST de mensajes
+   * solo cuando hago un GET
+   */
+  const buildChatMessage = (message, id) => {
     const giftedMessage = {
-      _id: _id,
+      _id: id,
       text: message.message,
       createdAt: new Date(message.timestamp),
       user: { _id: message.sender_uuid, name: message.sender_name },
     };
-    setId(_id + 1);
     return giftedMessage;
   };
 
-  const onSend = useCallback((messages = []) => {
+  const onSend = useCallback((messages = [], auth_token) => {
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, messages)
+    );
+    httpPostTokenRequest(
+      "POST",
+      urls.URL_ME + "/chats/" + other_uuid,
+      { message: messages[messages.length - 1].text },
+      {
+        "Content-Type": "application/json",
+        "x-access-token": auth_token,
+      }
+    ).then(
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.log(error.message);
+      }
     );
   }, []);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
       setStoredUser(user);
+      console.log(user);
       httpGetTokenRequest("GET", urls.URL_ME + "/chats/" + other_uuid, {
         "x-access-token": user.auth_token,
       }).then(
         (chat) => {
           /**Los mensajes del appserver los modifico para ser usados en el GiftedChat */
           let messages = [];
-          chat.messages.forEach((element) => {
-            messages.push(buildChatMessage(element));
-          });
+          /**Los itero de forma invertida dado que el appserver los guarda al reves que GiftedChat */
+          for (var i = chat.messages.length - 1; i >= 0; i--) {
+            messages.push(buildChatMessage(chat.messages[i], messages.length));
+          }
           setMessages(messages);
         },
         (error) => {
@@ -59,14 +78,17 @@ function UserChatScreen({ route, navigation }) {
     return <BnbError>{_error.message}</BnbError>;
   }
 
-  if (!storedUser || !_messages) {
+  if (!storedUser) {
     return <Text style={{ alignSelf: "center" }}>Cargando...</Text>;
   }
+
   return (
     <BnbMainView>
+      <Text>Tu id: {storedUser.userData.id}</Text>
+      <Text>Chateando con other_uuid: {other_uuid}</Text>
       <GiftedChat
         messages={_messages}
-        onSend={(messages) => onSend(messages)}
+        onSend={(messages) => onSend(messages, storedUser.auth_token)}
         user={{
           _id: storedUser.userData.id,
           name: storedUser.userData.firstname,
