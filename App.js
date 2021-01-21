@@ -62,7 +62,7 @@ export default function App() {
     });
   }, []);
   */
-  const [refresh, setRefresh] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const triggerRefresh = () => {
     setRefresh(true);
   };
@@ -86,10 +86,8 @@ export default function App() {
           BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
         });
       }
-    }
-    return () => {
       setRefresh(false);
-    };
+    }
   }, [refresh]);
 
   if (!loaded) {

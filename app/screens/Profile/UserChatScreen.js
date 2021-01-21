@@ -6,11 +6,13 @@ import BnbSecureStore from "../../classes/BnbSecureStore";
 import constants from "../../constant/constants";
 import { GiftedChat } from "react-native-gifted-chat";
 import { Text } from "react-native";
+import BnbError from "../../components/BnbError";
 
 function UserChatScreen({ route, navigation }) {
-  const other_uuid = route.other_uuid;
+  const other_uuid = route.params.other_uuid;
   const [_messages, setMessages] = useState([]);
-  const [storedUser, setStoredUser] = useState({});
+  const [storedUser, setStoredUser] = useState();
+  const [_error, setError] = useState();
 
   /**_id del mensaje de GiftedChat es necesario? */
   const [_id, setId] = useState(1);
@@ -28,34 +30,42 @@ function UserChatScreen({ route, navigation }) {
 
   const onSend = useCallback((messages = []) => {
     setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, message)
+      GiftedChat.append(previousMessages, messages)
     );
   }, []);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
       setStoredUser(user);
-      httpGetTokenRequest("GET", urls.URL_ME + "/chats/", {
+      httpGetTokenRequest("GET", urls.URL_ME + "/chats/" + other_uuid, {
         "x-access-token": user.auth_token,
-      }).then((chat) => {
-        /**Los mensajes del appserver los modifico para ser usados en el GiftedChat */
-        let messages = [];
-        chat.messages.forEach((element) => {
-          messages.push(buildChatMessage(element));
-        });
-        setMessages(messages);
-      });
+      }).then(
+        (chat) => {
+          /**Los mensajes del appserver los modifico para ser usados en el GiftedChat */
+          let messages = [];
+          chat.messages.forEach((element) => {
+            messages.push(buildChatMessage(element));
+          });
+          setMessages(messages);
+        },
+        (error) => {
+          setError(error);
+        }
+      );
     });
   }, []);
 
-  if (!storedUser || !_messages) {
-    <Text style={{ alignSelf: "center" }}>Cargando...</Text>;
+  if (_error) {
+    return <BnbError>{_error.message}</BnbError>;
   }
 
+  if (!storedUser || !_messages) {
+    return <Text style={{ alignSelf: "center" }}>Cargando...</Text>;
+  }
   return (
     <BnbMainView>
       <GiftedChat
-        message={_messages}
+        messages={_messages}
         onSend={(messages) => onSend(messages)}
         user={{
           _id: storedUser.userData.id,

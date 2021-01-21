@@ -18,7 +18,7 @@ async function httpGetTokenRequest(method, url, header, onResponse, onError) {
         return data;
       } else {
         const error = (data && JSON.stringify(data)) || response.statusText;
-        alert("Respuesta de red OK pero HTTP no:" + error);
+        console.log("Respuesta de red OK pero HTTP no:" + error);
         if (onError) {
           onError(error);
         } else {
