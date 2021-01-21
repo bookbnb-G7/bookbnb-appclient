@@ -27,6 +27,7 @@ import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import BnbIconText from "../components/BnbIconText";
 import BnbAlert from "../components/BnbAlert";
+import BnbComment2 from "../components/BnbComment2";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -302,7 +303,7 @@ function RoomScreen({ route, navigation }) {
 
   /**Fetch comentarios de la publicacion*/
   useEffect(() => {
-    if (_room && !_comments) {
+    if (_room) {
       httpGetTokenRequest(
         "GET",
         urls.URL_ROOMS + "/" + _room.id + "/comments",
@@ -415,33 +416,14 @@ function RoomScreen({ route, navigation }) {
               _comments.comments.map((item, index) => (
                 <View>
                   <View key={item.comment.id}>
-                    <BnbComment
-                      id={item.comment.id}
-                      username={item.comment.commentator}
-                      comment={item.comment.comment}
-                      timeStamp={item.comment.created_at}
-                      canEdit={
-                        item.comment.commentator_id === storedUser.userData.id
-                      }
+                    <BnbComment2
+                      comment={item.comment}
+                      answers={item.answers}
+                      me_id={storedUser.userData.id}
                       onDeleteTap={_handleDeleteComment}
                       onReply={_handleReplyComment}
-                    ></BnbComment>
+                    />
                   </View>
-                  {item.answers.map((item, index) => {
-                    <View key={item.comment.id}>
-                      <BnbComment
-                        id={item.comment.id}
-                        username={item.comment.commentaor}
-                        comment={item.comment.comment}
-                        timeStamp={item.comment.created_at}
-                        canEdit={
-                          item.comment.commentator_id === storedUser.userData.id
-                        }
-                        onDeleteTap={_handleDeleteComment}
-                        onReply={_handleReplyComment}
-                      ></BnbComment>
-                    </View>;
-                  })}
                 </View>
               ))}
             <View style={styles.addCommentContainer}>
