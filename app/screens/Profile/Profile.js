@@ -13,7 +13,6 @@ import BnbImage from "../../components/BnbImage";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 import urls from "../../constant/urls";
 import BnbLoading from "../../components/BnbLoading";
-import { color } from "react-native-reanimated";
 import { Divider } from "react-native-elements";
 import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import BnbFormBubbleInfo from "../../components/BnbFormBubbleInfo";
@@ -21,6 +20,7 @@ import getAverage from "../../helpers/getAverage";
 import { ScrollView } from "react-native-gesture-handler";
 import BnbError from "../../components/BnbError";
 import ProfileEdit from "./ProfileEdit";
+import BnbIconText from "../../components/BnbIconText";
 
 /**Este es de solo lectura, generico y debe sevir para cualquier usuario */
 function Profile({ route, navigation }) {
@@ -156,7 +156,7 @@ function Profile({ route, navigation }) {
                 {user.firstname} {user.lastname}
               </Text>
             )}
-            {user && <Text style={styles.userName}>{user.email}</Text>}
+            {user && <Text style={styles.userEmail}>{user.email}</Text>}
             <View style={styles.ratingsRow}>
               <BnbFormBubbleInfo
                 iconName="star"
@@ -232,7 +232,12 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   userName: {
+    marginTop: 10,
     fontSize: fonts.big,
+    fontFamily: "Raleway_700Bold",
+  },
+  userEmail: {
+    color: colors.textSoftBlack,
   },
   ratingsRow: {
     flexDirection: "row",
