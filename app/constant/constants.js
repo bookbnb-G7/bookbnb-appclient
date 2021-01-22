@@ -13,4 +13,5 @@ export default {
   CACHE_USER_KEY: "loggedInUser",
   STATE_PENDING: 1,
   STATE_ACCEPTED: 2,
+  MAX_DESCRIPTION_LENGTH: 256,
 };

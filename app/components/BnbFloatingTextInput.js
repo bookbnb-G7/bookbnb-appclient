@@ -24,10 +24,19 @@ const BnbFloatingTextInput = (props) => (
       mask={props.mask}
       hint={props.hint}
       ref={props.inputRef}
+      showCountdown={props.showCountdown}
+      showCountdownStyles={props.showCountdownStyles}
+      countdownLabel={props.countdownLabel}
+      maxLength={props.maxLength}
       returnKeyType={props.returnKeyType}
       keyboardType={props.keyboardType}
       autoFocus={props.autoFocus}
       blurOnSubmit={false}
+      multiline={props.multiline}
+      staticLabel
+      customLabelStyles={{
+        fontSizeFocused: 14,
+      }}
     />
   </View>
 )
@@ -38,17 +47,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   label: {
-    fontFamily: "Raleway_400Regular"
+    fontFamily: "Raleway_400Regular",
+    backgroundColor: "white",
+    paddingHorizontal: 7,
   },
   container: {
     borderWidth: 1,
     paddingHorizontal: 10,
+    paddingVertical: 10,
     backgroundColor: '#fff',
     borderRadius: 40,
-    height: 50,
+    minHeight: 50,
   },
   viewContainer: {
-    marginBottom: 10,
+    marginVertical: 6,
   }
 });
 

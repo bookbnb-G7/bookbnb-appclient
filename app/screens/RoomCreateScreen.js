@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Keyboard } from "react-native";
+import { Overlay } from 'react-native-elements';
+import DropDownPicker from 'react-native-dropdown-picker';
 import BnbAlert from "../components/BnbAlert";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
-import BnbContainer from "../components/BnbContainer";
 import BnbMainView from "../components/BnbMainView";
-import BnbTextInputObject from "../components/BnbTextInputObject";
-import BnbTitleText from "../components/BnbTitleText";
-import Separator from "../components/Separator";
 import fonts from "../config/fonts";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
@@ -17,12 +15,9 @@ import constants from "../constant/constants";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import urls from "../constant/urls";
 import BnbFloatingTextInput from "../components/BnbFloatingTextInput";
-import { ButtonGroup, Divider } from "react-native-elements";
-import BnbButtonGroup from "../components/BnbButtonGroup";
 import { ScrollView } from "react-native-gesture-handler";
-import BnbIconTextInput from "../components/BnbIconTextInput";
-import BnbIconText from "../components/BnbIconText";
-import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
+import GooglePlacesInput from "../components/GooglePlacesInput";
+import colors from "../config/colors";
 
 function RoomCreateScreen({ navigation }) {
   const [_room, setRoom] = useState({
@@ -30,24 +25,30 @@ function RoomCreateScreen({ navigation }) {
     description: "",
     type: "",
     price_per_day: "",
-    latitude: 0,
-    longitude: 0,
+    latitude: "",
+    longitude: "",
     location: "",
-    capacity: 0,
+    capacity: "",
   });
   const [_is_awaiting, setIsAwaiting] = useState(false);
   const [_showButtonGroup, setShowButtonGroup] = useState(false);
   const [storedUser, setStoredUser] = useState();
   const [_selectedIndexes, setSelectedIndexes] = useState([]);
+  const [propertyType, setPropertyType] = useState(null);
+
+
+  const [tempLocation, setTempLocation] = useState("");
+  const [locationInput, setLocationInput] = useState("");
+
+  const [visible, setVisible] = useState(false);
 
   const ref_title = useRef();
   const ref_description = useRef();
   const ref_type = useRef();
-  const ref_price_per_day = useRef();
-  const ref_latitude = useRef();
-  const ref_longitude = useRef();
-  const ref_location = useRef();
   const ref_capacity = useRef();
+  const ref_price_per_day = useRef();
+  const ref_scrollview = useRef();
+
 
   /**Repetido de OptionalFiltersSCreen */
   const propertyTypes = [
@@ -59,16 +60,21 @@ function RoomCreateScreen({ navigation }) {
     "Loft",
   ];
 
+  const toggleOverlay = () => {
+    console.log(visible);
+    setVisible(!visible);
+  };
+
   const _handleTextChange = (key, value) => {
     setRoom({ ..._room, [key]: value });
   };
 
   const _handleApiResponse = (room) => {
     setIsAwaiting(false);
-    navigation.navigate("ImagesEdit", {
-      room_id: room.id,
-      isCreatingRoom: true,
-    });
+          navigation.navigate("ImagesEdit", {
+            room_id: room.id,
+            isCreatingRoom: true,
+          });
   };
 
   const _handleApiError = (error) => {
@@ -82,7 +88,8 @@ function RoomCreateScreen({ navigation }) {
   };
 
   const _handleNextButtonPress = () => {
-    if (isANumber(_room.price_per_day.toString())) {
+    if (isANumber(_room.price_per_day.toString()) && _room.price_per_day > 0) {
+      console.log(JSON.stringify(_room));
       setIsAwaiting(true);
       httpPostTokenRequest(
         "POST",
@@ -107,6 +114,23 @@ function RoomCreateScreen({ navigation }) {
     }
   };
 
+  const _handleLocationDropdownPress = (selection) => {
+    setPropertyType(selection);
+    setRoom({ ..._room, ["type"]: selection });
+    console.log(JSON.stringify(_room));
+  }
+
+  const _handleEndEditingLocation = (location, coordinates) => {
+    setRoom({
+      ..._room,
+      location: location,
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude,
+    });
+    setTempLocation(location);
+    toggleOverlay();
+  };
+
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
       setStoredUser(response);
@@ -118,12 +142,11 @@ function RoomCreateScreen({ navigation }) {
   } else {
     return (
       <BnbMainView>
-        <BnbBodyView>
-          <ScrollView>
-            <Text style={bnbStyleSheet.headerTextBlack}>
-              Crear una habitación
-            </Text>
-            <Divider style={bnbStyleSheet.divider} />
+        <BnbBodyView style={styles.bodyView}>
+          <Text style={bnbStyleSheet.headerTextBlack}>
+            Crear una habitación
+          </Text>
+          <ScrollView keyboardShouldPersistTaps="always" ref={ref_scrollview}>
             <View>
               <BnbFloatingTextInput
                 name="Titulo"
@@ -140,74 +163,89 @@ function RoomCreateScreen({ navigation }) {
                 object={_room}
                 onChange={_handleTextChange}
                 inputRef={ref_description}
-                onSubmit={() => ref_type.current?.focus()}
+                onSubmit={() => ref_price_per_day.current?.focus()}
                 returnKeyType="next"
+                multiline={true}
+                containerStyle={styles.descriptionContainerStyle}
+                countdownLabel="restantes"
+                maxLength={constants.MAX_DESCRIPTION_LENGTH}
+                showCountdown={true}
+                showCountdownStyles={styles.showCountdownStyles}
               />
-              <Text>Tipo: {propertyTypes[_selectedIndexes[0]]}</Text>
-              {_showButtonGroup && (
-                <BnbButtonGroup
-                  buttons={propertyTypes}
-                  selectedIndexes={_selectedIndexes}
-                  onPress={_handleButtonGroupPress}
-                ></BnbButtonGroup>
-              )}
-              <BnbButton
-                title="Seleccionar tipo"
-                onPress={() => setShowButtonGroup(!_showButtonGroup)}
-              ></BnbButton>
               <BnbFloatingTextInput
                 name="Precio por dia"
                 id={"price_per_day"}
                 object={_room}
                 onChange={_handleTextChange}
                 inputRef={ref_price_per_day}
-                onSubmit={() => ref_latitude.current?.focus()}
-                keyboardType="numeric"
-                returnKeyType="next"
-              />
-              <BnbFloatingTextInput
-                name="Latitud"
-                id={"latitude"}
-                object={_room}
-                onChange={_handleTextChange}
-                inputRef={ref_latitude}
-                onSubmit={() => ref_longitude.current?.focus()}
-                keyboardType="numeric"
-                returnKeyType="next"
-              />
-              <BnbFloatingTextInput
-                name="Longitud"
-                id={"longitude"}
-                object={_room}
-                onChange={_handleTextChange}
-                inputRef={ref_longitude}
-                onSubmit={() => ref_location.current?.focus()}
-                keyboardType="numeric"
-                returnKeyType="next"
-              />
-              <BnbFloatingTextInput
-                name="Locacion"
-                id={"location"}
-                object={_room}
-                onChange={_handleTextChange}
-                inputRef={ref_location}
                 onSubmit={() => ref_capacity.current?.focus()}
+                keyboardType="numeric"
                 returnKeyType="next"
               />
               <BnbFloatingTextInput
                 name="Capacidad"
                 id={"capacity"}
                 object={_room}
+                returnKeyType="next"
                 onChange={_handleTextChange}
                 inputRef={ref_capacity}
                 keyboardType="numeric"
-                onSubmit={_handleNextButtonPress}
+                onSubmit={() => {
+                  Keyboard.dismiss();
+                  ref_type.current?.open();
+                  ref_scrollview.current?.scrollToEnd();
+                }}
               />
+              <DropDownPicker
+                items={propertyTypes.map((prop) => {return {
+                  label: prop,
+                  value: prop,
+                }})}
+                containerStyle={styles.dropdownContainerStyle}
+                style={styles.dropDownStyle}
+                dropDownStyle={styles.dropDownBoxStyle}
+                placeholder="Tipo de propiedad"
+                placeholderStyle={styles.dropdownPlaceholderStyle}
+                onChangeItem={item => _handleLocationDropdownPress(item.value)}
+                selectedLabelStyle={styles.dropdownSelectedtLabelStyle}
+                itemStyle={styles.dropdownItemStyle}
+                ref={ref_type}
+                defaultValue={propertyType}
+                labelStyle={styles.dropdownItemLabelStyle}
+              />
+
+              <BnbButton
+                title="Ingresar ubicacion"
+                onPress={toggleOverlay}
+                buttonStyle={styles.locationButtonContainerStyle}
+                style={styles.locationButtonTextStyle}
+              />
+              <Overlay
+                animationType="slide"
+                isVisible={visible}
+                onBackdropPress={toggleOverlay}
+              >
+                <GooglePlacesInput
+                  placeholder="Direccion"
+                  onChangeText={setTempLocation}
+                  onEndEditing={_handleEndEditingLocation}
+                  onPress={setLocationInput}
+                  value={tempLocation}
+                  object={_room}
+                  locationType="address"
+                />    
+              </Overlay>
+
             </View>
-            {storedUser && (
-              <BnbButton title="Continuar" onPress={_handleNextButtonPress} />
-            )}
           </ScrollView>
+          {storedUser && (
+            <BnbButton
+              title="Continuar"
+              onPress={_handleNextButtonPress}
+              buttonStyle={styles.continueButtonContainerStyle}
+              style={styles.continueButtonTextStyle}
+            />
+          )}
         </BnbBodyView>
       </BnbMainView>
     );
@@ -218,6 +256,68 @@ const styles = StyleSheet.create({
   titleText: {
     alignSelf: "center",
     fontSize: fonts.bigBig,
+  },
+  bodyView: {
+    justifyContent: "center"
+  },
+  descriptionContainerStyle: {
+  },
+  showCountdownStyles: {
+    paddingRight: 20,
+    paddingBottom: 1,
+    fontSize: 12,
+    fontFamily: "Raleway_400Regular",
+  },
+  dropdownContainerStyle: {
+    height: 50,
+    marginVertical: 6,
+  },
+  dropDownBoxStyle: {
+    height: 150,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderColor: colors.black,
+    paddingBottom: 20,
+    borderTopWidth: 1,
+  },
+  dropDownStyle: {
+    borderWidth: 1,
+    borderColor: colors.black,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+  },
+  dropdownPlaceholderStyle: {
+    color: colors.textSoftBlack,
+    fontFamily: "Raleway_400Regular",
+  },
+  dropdownSelectedtLabelStyle: {
+    color: colors.textSoftBlack,
+  },
+  dropdownItemStyle: {
+    justifyContent: 'flex-start'
+  },
+  dropdownItemLabelStyle: {
+    color: colors.textSoftBlack,
+    fontFamily: "Raleway_400Regular",
+  },
+  continueButtonContainerStyle: {
+    backgroundColor: colors.redAirBNB,
+    marginBottom: 10,
+  },
+  continueButtonTextStyle: {
+    color: colors.white,
+  },
+  locationButtonContainerStyle: {
+    backgroundColor: colors.redAirBNBSoft,
+    marginTop: 6,
+    marginBottom: 100,
+  },
+  locationButtonTextStyle: {
+    color: colors.white,
   },
 });
 

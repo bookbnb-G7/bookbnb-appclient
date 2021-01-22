@@ -27,7 +27,7 @@ function SearchInputScreen({ navigation }) {
           onEndEditing={_handleEndEditing}
           onPress={setLocationInput}
           value={tempLocation}
-          stateVar={_location_input}
+          locationType="(cities)"
         />
       </BnbBodyView>
     </BnbMainView>
