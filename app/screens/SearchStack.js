@@ -7,6 +7,8 @@ import BnbLoading from "../components/BnbLoading";
 import constants from "../constant/constants";
 import ImagesEditScreen from "./ImagesEditScreen";
 import OptionalFiltersScreen from "./OptionalFiltersScreen";
+import Profile from "./Profile/Profile";
+import UserChatScreen from "./Profile/UserChatScreen";
 import RoomEditScreen from "./RoomEditScreen";
 import RoomScreen from "./RoomScreen";
 import SearchCountersScreen from "./SearchCountersScreen";
@@ -59,6 +61,10 @@ function SearchStack(props) {
           component={SearchResultRooms}
         />
         <SearchStackNav.Screen name="Room" component={RoomScreen} />
+        {/**Este profile es para del dueño del room o del comentario, no el del usuario*/}
+        <SearchStackNav.Screen name="Profile" component={Profile} />
+        <SearchStackNav.Screen name="UserChat" component={UserChatScreen} />
+
         <SearchStackNav.Screen name="ImagesEdit" component={ImagesEditScreen} />
       </SearchStackNav.Navigator>
     );

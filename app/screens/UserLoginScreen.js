@@ -50,14 +50,7 @@ function UserLoginScreen({ navigation }) {
               "x-access-token": id_token,
             });
             if (data) {
-              const storeUser = {
-                auth_token: id_token,
-                userData: data,
-              };
-              await BnbSecureStore.remember(
-                constants.CACHE_USER_KEY,
-                storeUser
-              );
+              await BnbSecureStore.rememberMe(id_token, data);
               navigation.navigate("HomeStack", { isLoggedIn: true });
             } else {
               console.log("Se deslogeo en user login screen, no habia data");

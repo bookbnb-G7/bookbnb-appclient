@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import { Alert, Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import {
   ScrollView,
   TextInput,
@@ -27,6 +27,7 @@ import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import BnbIconText from "../components/BnbIconText";
 import BnbAlert from "../components/BnbAlert";
+import BnbComment2 from "../components/BnbComment2";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -45,7 +46,7 @@ function RoomScreen({ route, navigation }) {
   const [_error, setError] = useState();
   const [_photos_url, setPhotosUrl] = useState([]);
 
-  const [_comments, setComments] = useState([]);
+  const [_comments, setComments] = useState();
   const [_comment, setComment] = useState({
     comment: "",
   });
@@ -149,7 +150,10 @@ function RoomScreen({ route, navigation }) {
       "POST",
       urls.URL_ROOMS + "/" + room_id + "/comments",
       _comment,
-      { "x-access-token": storedUser.auth_token },
+      {
+        "Content-Type": "application/json",
+        "x-access-token": storedUser.auth_token,
+      },
       _handleApiResponse
     ).then(
       (value) => {
@@ -182,7 +186,10 @@ function RoomScreen({ route, navigation }) {
       "POST",
       urls.URL_ROOMS + "/" + _room.id + "/comments",
       endPointComment,
-      { "x-access-token": storedUser.auth_token }
+      {
+        "Content-Type": "application/json",
+        "x-access-token": storedUser.auth_token,
+      }
     ).then(
       (comment) => {
         setIsLoading(false);
@@ -194,6 +201,7 @@ function RoomScreen({ route, navigation }) {
           "Entendido",
           false
         );
+        //setError(error);
         setIsLoading(false);
       }
     );
@@ -212,6 +220,11 @@ function RoomScreen({ route, navigation }) {
 
   const _handleRoomOwnerPress = () => {
     navigation.navigate("Profile", { user_id: _owner.id });
+  };
+
+  const _handleUsernameTap = (user_id) => {
+    console.log("USER_ID:" + user_id);
+    navigation.navigate("Profile", { user_id: user_id });
   };
 
   /**Fetcheo los datos del room */
@@ -240,8 +253,7 @@ function RoomScreen({ route, navigation }) {
             "GET",
             urls.URL_ROOMS + "/" + room_id + "/reviews",
             {},
-            null,
-            _handleApiError
+            null
           );
         })
         .then((reviews) => {
@@ -250,8 +262,7 @@ function RoomScreen({ route, navigation }) {
             "GET",
             urls.URL_ROOMS + "/" + room_id + "/ratings",
             {},
-            null,
-            _handleApiError
+            null
           );
         })
         .then((ratings) => {
@@ -259,7 +270,6 @@ function RoomScreen({ route, navigation }) {
           setIsLoading(false);
         })
         .catch((error) => {
-          setError(error);
           setIsLoading(false);
         });
     }
@@ -280,7 +290,7 @@ function RoomScreen({ route, navigation }) {
 
   /**Fetcheo el owner aca para no tocar la cadena de promesa del room fetch */
   useEffect(() => {
-    if (_room) {
+    if (_room && !_owner) {
       httpGetTokenRequest(
         "GET",
         urls.URL_USERS + "/" + _room.owner_uuid,
@@ -407,33 +417,19 @@ function RoomScreen({ route, navigation }) {
               />
             )}
             <Text style={bnbStyleSheet.headerTextBlack}>Comentarios</Text>
-            {_comments.length > 0 &&
+            {_comments &&
               _comments.comments.map((item, index) => (
                 <View>
-                  <View key={item.id}>
-                    <BnbComment
-                      id={item.id}
-                      username={item.commentator}
+                  <View key={item.comment.id}>
+                    <BnbComment2
                       comment={item.comment}
-                      timeStamp={item.created_at}
-                      canEdit={item.commentator_id === storedUser.userData.id}
+                      answers={item.answers}
+                      me_id={storedUser.userData.id}
                       onDeleteTap={_handleDeleteComment}
                       onReply={_handleReplyComment}
-                    ></BnbComment>
+                      onUsernameTap={_handleUsernameTap}
+                    />
                   </View>
-                  {item.answers.map((item, index) => {
-                    <View key={item.id}>
-                      <BnbComment
-                        id={item.id}
-                        username={item.commentaor}
-                        comment={item.comment}
-                        timeStamp={item.created_at}
-                        canEdit={item.commentator_id === storedUser.userData.id}
-                        onDeleteTap={_handleDeleteComment}
-                        onReply={_handleReplyComment}
-                      ></BnbComment>
-                    </View>;
-                  })}
                 </View>
               ))}
             <View style={styles.addCommentContainer}>
@@ -445,7 +441,10 @@ function RoomScreen({ route, navigation }) {
                 onChangeText={(value) => _handleTextChange("comment", value)}
                 value={_comment.comment}
               ></TextInput>
-              <BnbButton title="Comentar" onPress={_handleAddParentComment} />
+              <BnbButton
+                title="Agregar comentario"
+                onPress={_handleAddParentComment}
+              />
             </View>
             <Separator />
             {_is_owner && _room && (

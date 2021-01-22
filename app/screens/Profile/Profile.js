@@ -25,7 +25,7 @@ import ProfileEdit from "./ProfileEdit";
 /**Este es de solo lectura, generico y debe sevir para cualquier usuario */
 function Profile({ route, navigation }) {
   /**user_id es el id del perfil del usuario que queremos ver */
-  let user_id = route?.params?.user_id;
+  let user_id = route.params?.user_id;
   const [user, setUser] = useState();
   const [_is_loading, setIsLoading] = useState(user_id === 0);
   const [_guestRatings, setGuestRatings] = useState();
@@ -86,11 +86,15 @@ function Profile({ route, navigation }) {
     BnbSecureStore.read(constants.CACHE_USER_KEY)
       .then((user) => {
         let async_user_id = user_id;
+        console.log(user_id);
+        console.log(async_user_id);
+        console.log(user.userData.id);
         if (!user_id || user_id === user.userData.id) {
+          console.log("Es dueño");
           async_user_id = user.userData.id;
           setIsOwner(true);
-          return async_user_id;
         }
+        return async_user_id;
       })
       .then((async_user_id) => {
         return httpGetTokenRequest(

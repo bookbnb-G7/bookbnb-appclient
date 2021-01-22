@@ -12,7 +12,7 @@ import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
-import Clipboard from "@react-native-community/clipboard";
+import Clipboard from "expo-clipboard";
 
 function ProfileWalletScreen(props) {
   const [_wallet, setWallet] = useState();
@@ -55,7 +55,7 @@ function ProfileWalletScreen(props) {
     return <BnbError>{_error.message}</BnbError>;
   }
   if (_is_loading) {
-    return <BnbLoading text="Cargando..."></BnbLoading>;
+    return <BnbLoading text="Cargando billetera..."></BnbLoading>;
   }
   return (
     <BnbMainView>

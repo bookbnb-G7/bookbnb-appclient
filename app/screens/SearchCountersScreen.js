@@ -34,7 +34,7 @@ class SearchCountersScreen extends Component {
       this.state.counters[0].quantity + this.state.counters[1].quantity;
     const searchForm = {
       ...this.props.route.params,
-      "amount_of_people": amount_of_people
+      amount_of_people: amount_of_people,
     };
     this.props.navigation.navigate("OptionalFilters", searchForm);
   };
