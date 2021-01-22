@@ -27,7 +27,6 @@ function ProfileChatsScreen({ navigation }) {
       }).then(
         (chats) => {
           setChats(chats);
-          console.log(chats);
           /**si obtengo los chats, busco los usuarios para fetchear las imagenes */
           /**chats.chats.forEach((chat) => {
             httpGetTokenRequest(

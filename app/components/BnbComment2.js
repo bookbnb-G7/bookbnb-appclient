@@ -73,10 +73,9 @@ class BnbComment2 extends Component {
     }
     return (
       <View style={styles.mainContainer}>
-        <Separator />
         <View style={styles.header}>
           <TouchableHighlight onPress={this.handleUsernameTap}>
-            <View style={styles.user}>
+            <View style={styles.userContainer}>
               <Image
                 style={styles.image}
                 source={
@@ -85,15 +84,15 @@ class BnbComment2 extends Component {
                     : { uri: this.props.image }
                 }
               ></Image>
-              <Text style={styles.username}>
+              <Text style={styles.boldText}>
                 {this.props.comment.commentator}
               </Text>
             </View>
           </TouchableHighlight>
-          <Text style={styles.timeStamp}>{this.props.comment.created_at}</Text>
+          <Text style={styles.boldText}>{this.props.comment.created_at}</Text>
         </View>
         <View style={styles.body}>
-          <Text>{this.props.comment.comment}</Text>
+          <Text style={styles.menuItemText}>{this.props.comment.comment}</Text>
         </View>
         <View style={styles.actionBar}>
           {this.props.comment.commentator_id === this.props.me_id && (
@@ -101,7 +100,7 @@ class BnbComment2 extends Component {
               style={styles.menuItem}
               onPress={this.handleDelete}
             >
-              <Text> DELETE </Text>
+              <Text style={styles.actionBarText}>Borrar</Text>
             </TouchableOpacity>
           )}
           {!this.props.comment.main_comment_id && (
@@ -109,7 +108,7 @@ class BnbComment2 extends Component {
               style={styles.menuItem}
               onPress={this.handleMakeReply}
             >
-              <Text> Responder </Text>
+              <Text style={styles.actionBarText}>Responder</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -129,10 +128,11 @@ class BnbComment2 extends Component {
               style={styles.menuItem}
               onPress={this.handleSendReply}
             >
-              <Text style={styles.menuItemText}> Publicar </Text>
+              <Text style={styles.actionBarText}> Publicar </Text>
             </TouchableOpacity>
           </View>
         )}
+        <Separator style={{ width: "100%" }} />
         {this.props.answers &&
           this.props.answers.map((item, index) => (
             <View key={item.id} style={styles.replyContainer}>
@@ -150,32 +150,42 @@ class BnbComment2 extends Component {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {},
   image: {
     width: 30,
     height: 30,
     borderRadius: 15,
     backgroundColor: colors.graySoft,
+    marginRight: 10,
   },
   header: {},
-  body: {},
-  user: {
+  body: {
+    margin: 10,
+  },
+  userContainer: {
     flexDirection: "row",
   },
   actionBar: {
+    backgroundColor: colors.alpha08,
+    margin: 10,
     flexDirection: "row",
+  },
+  actionBarText: {
+    fontFamily: "Raleway_700Bold",
+    color: colors.redAirBNB,
   },
   textInput: {
     borderRadius: styling.smallCornerRadius,
-    backgroundColor: colors.redAirBNBSoft,
     borderWidth: 1,
+    backgroundColor: colors.graySoft,
     marginVertical: styling.separator,
   },
-  menuItem: {
-    backgroundColor: colors.redAirBNBSoft,
+  menuItem: {},
+  boldText: {
+    fontFamily: "Raleway_700Bold",
   },
   menuItemText: {
-    color: colors.white,
-    fontFamily: "Raleway_700Bold",
+    fontFamily: "Raleway_400Regular",
   },
   replyContainer: {
     marginLeft: 40,

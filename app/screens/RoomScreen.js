@@ -145,31 +145,39 @@ function RoomScreen({ route, navigation }) {
   };
 
   const _handleAddParentComment = () => {
-    setIsLoading(true);
-    httpPostTokenRequest(
-      "POST",
-      urls.URL_ROOMS + "/" + room_id + "/comments",
-      _comment,
-      {
-        "Content-Type": "application/json",
-        "x-access-token": storedUser.auth_token,
-      },
-      _handleApiResponse
-    ).then(
-      (value) => {
-        setComment("");
-        setIsLoading(false);
-      },
-      (error) => {
-        BnbAlert(
-          "Error al publicar comentario",
-          error.message,
-          "Entendido",
-          false
-        );
-        setIsLoading(false);
-      }
-    );
+    if (_comment.comment != "" && _comment) {
+      setIsLoading(true);
+      httpPostTokenRequest(
+        "POST",
+        urls.URL_ROOMS + "/" + room_id + "/comments",
+        _comment,
+        {
+          "Content-Type": "application/json",
+          "x-access-token": storedUser.auth_token,
+        },
+        _handleApiResponse
+      ).then(
+        (value) => {
+          setComment("");
+          setIsLoading(false);
+        },
+        (error) => {
+          BnbAlert(
+            "Error al publicar comentario",
+            error.message,
+            "Entendido",
+            false
+          );
+          setIsLoading(false);
+        }
+      );
+    } else {
+      BnbAlert(
+        "Publicar",
+        "No puede publicar un comentario vacio",
+        "Entendido"
+      );
+    }
   };
 
   const _handleReplyComment = (comment, parent_id) => {
@@ -443,6 +451,9 @@ function RoomScreen({ route, navigation }) {
                 </View>
               ))}
             <View style={styles.addCommentContainer}>
+              <Text style={bnbStyleSheet.subHeaderText}>
+                Comenta esta publicacion
+              </Text>
               <TextInput
                 style={styles.textInput}
                 multiline
@@ -451,10 +462,7 @@ function RoomScreen({ route, navigation }) {
                 onChangeText={(value) => _handleTextChange("comment", value)}
                 value={_comment.comment}
               ></TextInput>
-              <BnbButton
-                title="Agregar comentario"
-                onPress={_handleAddParentComment}
-              />
+              <BnbButton title="Publicar" onPress={_handleAddParentComment} />
             </View>
             <Separator />
             {_is_owner && _room && (
