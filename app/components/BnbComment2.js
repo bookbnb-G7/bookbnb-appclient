@@ -10,6 +10,7 @@ import { Component } from "react";
 import constants from "../constant/constants";
 import styling from "../config/styling";
 import colors from "../config/colors";
+import Separator from "./Separator";
 
 class BnbComment2 extends Component {
   constructor(props) {
@@ -71,14 +72,15 @@ class BnbComment2 extends Component {
       return null;
     }
     return (
-      <View>
+      <View style={styles.mainContainer}>
+        <Separator />
         <View style={styles.header}>
           <TouchableHighlight onPress={this.handleUsernameTap}>
             <View style={styles.user}>
               <Image
                 style={styles.image}
                 source={
-                  this.props.image === ""
+                  this.props.image
                     ? require("../assets/profile_icon.png")
                     : { uri: this.props.image }
                 }
@@ -88,8 +90,8 @@ class BnbComment2 extends Component {
               </Text>
             </View>
           </TouchableHighlight>
+          <Text style={styles.timeStamp}>{this.props.comment.created_at}</Text>
         </View>
-        <Text style={styles.timeStamp}>{this.props.comment.created_at}</Text>
         <View style={styles.body}>
           <Text>{this.props.comment.comment}</Text>
         </View>
@@ -127,7 +129,7 @@ class BnbComment2 extends Component {
               style={styles.menuItem}
               onPress={this.handleSendReply}
             >
-              <Text> Publicar </Text>
+              <Text style={styles.menuItemText}> Publicar </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -154,6 +156,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: colors.graySoft,
   },
+  header: {},
+  body: {},
   user: {
     flexDirection: "row",
   },
@@ -162,12 +166,16 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderRadius: styling.smallCornerRadius,
-    backgroundColor: colors.graySoft,
+    backgroundColor: colors.redAirBNBSoft,
     borderWidth: 1,
     marginVertical: styling.separator,
   },
   menuItem: {
-    borderWidth: 1,
+    backgroundColor: colors.redAirBNBSoft,
+  },
+  menuItemText: {
+    color: colors.white,
+    fontFamily: "Raleway_700Bold",
   },
   replyContainer: {
     marginLeft: 40,

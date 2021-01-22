@@ -62,9 +62,7 @@ function SearchStack(props) {
         />
         <SearchStackNav.Screen name="Room" component={RoomScreen} />
         {/**Este profile es para del dueño del room o del comentario, no el del usuario*/}
-        <SearchStackNav.Screen name="Profile" component={Profile} />
-        <SearchStackNav.Screen name="UserChat" component={UserChatScreen} />
-
+        <SearchStackNav.Screen name="User" component={Profile} />
         <SearchStackNav.Screen name="ImagesEdit" component={ImagesEditScreen} />
       </SearchStackNav.Navigator>
     );

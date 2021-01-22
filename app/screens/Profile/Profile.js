@@ -27,7 +27,7 @@ function Profile({ route, navigation }) {
   /**user_id es el id del perfil del usuario que queremos ver */
   let user_id = route.params?.user_id;
   const [user, setUser] = useState();
-  const [_is_loading, setIsLoading] = useState(user_id === 0);
+  const [_is_loading, setIsLoading] = useState(false);
   const [_guestRatings, setGuestRatings] = useState();
   const [_hostRatings, setHostRatings] = useState();
   const [_error, setError] = useState();
@@ -61,7 +61,10 @@ function Profile({ route, navigation }) {
   const _handleChatButtonPress = () => {
     if (!_is_owner) {
       /**El other_uuid es el del perfil que estoy viendo en este momento */
-      navigation.navigate("UserChat", { other_uuid: user.id });
+      navigation.navigate("ChatStack", {
+        screen: "UserChat",
+        params: { other_uuid: user.id },
+      });
     } else {
       console.error(
         "No puedes chatear contigo mismo, el boton no deberia poder verse en tu propio perfil"
@@ -86,11 +89,7 @@ function Profile({ route, navigation }) {
     BnbSecureStore.read(constants.CACHE_USER_KEY)
       .then((user) => {
         let async_user_id = user_id;
-        console.log(user_id);
-        console.log(async_user_id);
-        console.log(user.userData.id);
-        if (!user_id || user_id === user.userData.id) {
-          console.log("Es dueño");
+        if (!user_id || user_id == user.userData.id) {
           async_user_id = user.userData.id;
           setIsOwner(true);
         }
@@ -100,8 +99,7 @@ function Profile({ route, navigation }) {
         return httpGetTokenRequest(
           "GET",
           urls.URL_USERS + "/" + async_user_id,
-          {},
-          null
+          {}
         );
       })
       .then((user) => {

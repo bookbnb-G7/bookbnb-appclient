@@ -30,7 +30,7 @@ function DebugGoToRoomProfile({ navigation }) {
           title="User"
           onPress={() => {
             navigation.navigate("SearchRooms", {
-              screen: "Profile",
+              screen: "User",
               params: { user_id: id },
             });
           }}

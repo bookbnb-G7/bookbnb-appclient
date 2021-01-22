@@ -64,7 +64,7 @@ export default function App() {
     });
   }, []);
   */
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(true);
   const triggerRefresh = () => {
     setRefresh(true);
   };
@@ -124,10 +124,9 @@ export default function App() {
               iconName = "person";
             } else if (route.name === "SearchRooms") {
               iconName = "search";
-            } else if (route.name === "Chats") {
+            } else if (route.name === "ChatStack") {
               iconName = "chatbox";
             }
-            
 
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -152,7 +151,7 @@ export default function App() {
         )}
         {user && (
           <Tab.Screen
-            name="Chats"
+            name="ChatStack"
             component={ChatStack}
             options={{ title: "Chat" }}
           />

@@ -218,13 +218,23 @@ function RoomScreen({ route, navigation }) {
     );
   };
 
+  /**Estaria bueno que si es el owner del room lo envie directamente al ProfileStack
+   * y no al searchStack
+   */
   const _handleRoomOwnerPress = () => {
-    navigation.navigate("Profile", { user_id: _owner.id });
+    if (_owner.id == storedUser.userData.id) {
+      navigation.navigate("ProfileStack", { screen: "Profile" });
+    } else {
+      navigation.navigate("User", { user_id: _owner.id });
+    }
   };
 
   const _handleUsernameTap = (user_id) => {
-    console.log("USER_ID:" + user_id);
-    navigation.navigate("Profile", { user_id: user_id });
+    if (user_id == storedUser.userData.id) {
+      navigation.navigate("ProfileStack", { screen: "Profile" });
+    } else {
+      navigation.navigate("User", { user_id: user_id });
+    }
   };
 
   /**Fetcheo los datos del room */
