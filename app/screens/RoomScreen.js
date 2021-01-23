@@ -5,6 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native-gesture-handler";
+import { useFocusEffect } from '@react-navigation/native';
+import { Calendar } from 'react-native-calendars';
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbTitleText from "../components/BnbTitleText";
@@ -28,11 +30,13 @@ import bnbStyleSheet from "../constant/bnbStyleSheet";
 import BnbIconText from "../components/BnbIconText";
 import BnbAlert from "../components/BnbAlert";
 import BnbComment2 from "../components/BnbComment2";
+import { isLoading } from "expo-font";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
+  
   const searchForm = route.params?.searchForm;
-  const [_room, setRoom] = useState();
+  const [_room, setRoom] = useState();  
   const [_is_owner, setIsOwner] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [storedUser, setStoredUser] = useState();
@@ -246,52 +250,66 @@ function RoomScreen({ route, navigation }) {
   };
 
   /**Fetcheo los datos del room */
-  useEffect(() => {
-    if (_is_loading) {
-      httpGetTokenRequest(
-        "GET",
-        urls.URL_ROOMS + "/" + room_id,
-        {},
-        null,
-        _handleApiError
-      )
-        .then((room) => {
-          setRoom(room);
-          return httpGetTokenRequest(
-            "GET",
-            urls.URL_ROOMS + "/" + room_id + "/photos",
-            {},
-            null,
-            _handleApiError
-          );
-        })
-        .then((photos) => {
-          setPhotosUrl(getUrlFromPhotos(photos.room_photos));
-          return httpGetTokenRequest(
-            "GET",
-            urls.URL_ROOMS + "/" + room_id + "/reviews",
-            {},
-            null
-          );
-        })
-        .then((reviews) => {
-          setReviews(reviews);
-          return httpGetTokenRequest(
-            "GET",
-            urls.URL_ROOMS + "/" + room_id + "/ratings",
-            {},
-            null
-          );
-        })
-        .then((ratings) => {
-          getAverageRating(ratings);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          setIsLoading(false);
-        });
-    }
-  }, []);
+  const fetchRoomData = async () => {
+    httpGetTokenRequest(
+      "GET",
+      urls.URL_ROOMS + "/" + room_id,
+      {},
+      null,
+      _handleApiError
+    )
+      .then((room) => {
+        setRoom(room);
+        return httpGetTokenRequest(
+          "GET",
+          urls.URL_ROOMS + "/" + room_id + "/photos",
+          {},
+          null,
+          _handleApiError
+        );
+      })
+      .then((photos) => {
+        setPhotosUrl(getUrlFromPhotos(photos.room_photos));
+        return httpGetTokenRequest(
+          "GET",
+          urls.URL_ROOMS + "/" + room_id + "/reviews",
+          {},
+          null
+        );
+      })
+      .then((reviews) => {
+        setReviews(reviews);
+        return httpGetTokenRequest(
+          "GET",
+          urls.URL_ROOMS + "/" + room_id + "/ratings",
+          {},
+          null
+        );
+      })
+      .then((ratings) => {
+        getAverageRating(ratings);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+      });
+  };
+
+  // Sin esto no se vuelve a hacer el fetch cuando se entra por segunda vez 
+  // a esta pantalla, por mas que haya cambiado el room_id
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchIfRoomChanged = async () => {
+        const last_room_id = await BnbSecureStore.readUnsafe(constants.CACHE_ROOM_KEY);
+        if (last_room_id !== route.params?.room_id) {
+          await BnbSecureStore.remember(constants.CACHE_ROOM_KEY, room_id);
+          setIsLoading(true);
+          await fetchRoomData();
+        }
+      };
+      fetchIfRoomChanged();
+    }, [route.params?.room_id])
+  );
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
@@ -308,7 +326,8 @@ function RoomScreen({ route, navigation }) {
 
   /**Fetcheo el owner aca para no tocar la cadena de promesa del room fetch */
   useEffect(() => {
-    if (_room && !_owner) {
+    if (_room && (!_owner || _owner.id !== _room.owner_uuid)) {
+      setIsLoading(true);
       httpGetTokenRequest(
         "GET",
         urls.URL_USERS + "/" + _room.owner_uuid,
@@ -316,9 +335,11 @@ function RoomScreen({ route, navigation }) {
       ).then(
         (owner) => {
           setOwner(owner);
+          setIsLoading(false);
         },
         (error) => {
           setError(error);
+          setIsLoading(false);
         }
       );
     }

@@ -18,6 +18,16 @@ class BnbSecureStore {
     }
   }
 
+  // Igual que el read, pero no tira error si la clave no se encuentra
+  static async readUnsafe(key) {
+    try {
+      const item = await SecureStore.getItemAsync(key);
+      return JSON.parse(item);
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
   static async remember(key, value) {
     try {
       await SecureStore.setItemAsync(key, JSON.stringify(value));

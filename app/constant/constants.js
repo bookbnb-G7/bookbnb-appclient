@@ -11,6 +11,7 @@ export default {
   ERR_RATING_ZERO: "Puntaje no puede ser 0",
   FORGOT_PASSWORD_MESSAGE: "¿Olvidaste tu contraseña?",
   CACHE_USER_KEY: "loggedInUser",
+  CACHE_ROOM_KEY: "currentRoom",
   STATE_PENDING: 1,
   STATE_ACCEPTED: 2,
   MAX_DESCRIPTION_LENGTH: 256,
