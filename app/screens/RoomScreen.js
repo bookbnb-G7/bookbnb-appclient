@@ -30,7 +30,6 @@ import bnbStyleSheet from "../constant/bnbStyleSheet";
 import BnbIconText from "../components/BnbIconText";
 import BnbAlert from "../components/BnbAlert";
 import BnbComment2 from "../components/BnbComment2";
-import { isLoading } from "expo-font";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -54,6 +53,8 @@ function RoomScreen({ route, navigation }) {
   const [_comment, setComment] = useState({
     comment: "",
   });
+
+  const [_bookings, setBookings] = useState();
 
   const [_owner, setOwner] = useState();
 
@@ -308,6 +309,8 @@ function RoomScreen({ route, navigation }) {
         }
       };
       fetchIfRoomChanged();
+
+      return () => BnbSecureStore.clear(constants.CACHE_ROOM_KEY);
     }, [route.params?.room_id])
   );
 
@@ -358,6 +361,35 @@ function RoomScreen({ route, navigation }) {
         },
         (reason) => {
           setError(reason);
+        }
+      );
+    }
+  }, [_room]);
+
+  // Fetchear bookings y convertirlos al formato que pide el componente del calendario
+  useEffect(() => {
+    if (_room) {
+      httpGetTokenRequest(
+        "GET",
+        urls.URL_BOOKINGS + "?" + new URLSearchParams({"roomId": _room.id}),
+        {}
+      ).then(
+        (bookings) => {
+          let markedDates = {};
+          for (let i = 0; i < bookings.amount; i++) {
+            markedDates[bookings.bookings[i]["date_from"]] = {
+              startingDay: true,
+              textColor: "#d9e1e8"
+            }
+            markedDates[bookings.bookings[i]["date_to"]] = {
+              endingDay: true,
+              textColor: "#d9e1e8"
+            }
+          }
+          setBookings(markedDates);
+        },
+        (error) => {
+          setError(error);
         }
       );
     }
@@ -485,6 +517,25 @@ function RoomScreen({ route, navigation }) {
               ></TextInput>
               <BnbButton title="Publicar" onPress={_handleAddParentComment} />
             </View>
+            <Separator />
+            <Text style={bnbStyleSheet.headerTextBlack}>Disponibilidad</Text>
+            <Calendar
+              minDate={Date()}
+              markedDates={_bookings}
+              markingType={'period'}
+              enableSwipeMonths={true}
+
+              style={{
+                borderWidth:1,
+                borderColor: "#d9e1e8",
+                borderRadius: 10,
+              }}
+              theme={{
+                todayTextColor: colors.redAirBNBSoft,
+                arrowColor: colors.redAirBNBSoft,
+              }}
+            />
+
             <Separator />
             {_is_owner && _room && (
               <BnbButton
