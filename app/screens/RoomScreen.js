@@ -5,8 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native-gesture-handler";
-import { useFocusEffect } from '@react-navigation/native';
-import { Calendar } from 'react-native-calendars';
+import { useFocusEffect } from "@react-navigation/native";
+import { Calendar } from "react-native-calendars";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbTitleText from "../components/BnbTitleText";
@@ -30,19 +30,18 @@ import bnbStyleSheet from "../constant/bnbStyleSheet";
 import BnbIconText from "../components/BnbIconText";
 import BnbAlert from "../components/BnbAlert";
 import BnbComment2 from "../components/BnbComment2";
+import RoomReviews from "../components/RoomReviews";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
-  
+
   const searchForm = route.params?.searchForm;
-  const [_room, setRoom] = useState();  
+  const [_room, setRoom] = useState();
   const [_is_owner, setIsOwner] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [storedUser, setStoredUser] = useState();
 
-  const [_reviews, setReviews] = useState();
   const [_average_rating, setAverageRating] = useState(0);
-  const [_review, setReview] = useState("");
   const [_rating, setRating] = useState({
     quantity: 0,
   });
@@ -79,14 +78,14 @@ function RoomScreen({ route, navigation }) {
     setIsLoading(false);
   };
 
-  const _handlePostAReview = () => {
-    if (_review != "") {
+  const _handlePostAReview = (input) => {
+    if (input != "") {
       setIsLoading(true);
       httpPostTokenRequest(
         "POST",
         urls.URL_ROOMS + "/" + room_id + "/reviews",
         {
-          review: _review,
+          review: input,
         },
         {
           "Content-Type": "application/json",
@@ -95,7 +94,6 @@ function RoomScreen({ route, navigation }) {
         _handleApiResponse,
         _handleApiError
       );
-      setReview("");
     } else {
       alert("No puede publicar una reseña vacia");
     }
@@ -273,15 +271,6 @@ function RoomScreen({ route, navigation }) {
         setPhotosUrl(getUrlFromPhotos(photos.room_photos));
         return httpGetTokenRequest(
           "GET",
-          urls.URL_ROOMS + "/" + room_id + "/reviews",
-          {},
-          null
-        );
-      })
-      .then((reviews) => {
-        setReviews(reviews);
-        return httpGetTokenRequest(
-          "GET",
           urls.URL_ROOMS + "/" + room_id + "/ratings",
           {},
           null
@@ -296,12 +285,14 @@ function RoomScreen({ route, navigation }) {
       });
   };
 
-  // Sin esto no se vuelve a hacer el fetch cuando se entra por segunda vez 
+  // Sin esto no se vuelve a hacer el fetch cuando se entra por segunda vez
   // a esta pantalla, por mas que haya cambiado el room_id
   useFocusEffect(
     React.useCallback(() => {
       const fetchIfRoomChanged = async () => {
-        const last_room_id = await BnbSecureStore.readUnsafe(constants.CACHE_ROOM_KEY);
+        const last_room_id = await BnbSecureStore.readUnsafe(
+          constants.CACHE_ROOM_KEY
+        );
         if (last_room_id !== route.params?.room_id) {
           await BnbSecureStore.remember(constants.CACHE_ROOM_KEY, room_id);
           setIsLoading(true);
@@ -371,7 +362,7 @@ function RoomScreen({ route, navigation }) {
     if (_room) {
       httpGetTokenRequest(
         "GET",
-        urls.URL_BOOKINGS + "?" + new URLSearchParams({"roomId": _room.id}),
+        urls.URL_BOOKINGS + "?" + new URLSearchParams({ roomId: _room.id }),
         {}
       ).then(
         (bookings) => {
@@ -379,12 +370,12 @@ function RoomScreen({ route, navigation }) {
           for (let i = 0; i < bookings.amount; i++) {
             markedDates[bookings.bookings[i]["date_from"]] = {
               startingDay: true,
-              textColor: "#d9e1e8"
-            }
+              textColor: "#d9e1e8",
+            };
             markedDates[bookings.bookings[i]["date_to"]] = {
               endingDay: true,
-              textColor: "#d9e1e8"
-            }
+              textColor: "#d9e1e8",
+            };
           }
           setBookings(markedDates);
         },
@@ -397,16 +388,16 @@ function RoomScreen({ route, navigation }) {
 
   if (_is_loading || !storedUser) {
     return <BnbLoading text={"Cargando habitacion..."}></BnbLoading>;
-  } else if (_error) {
-    return <Text>{_error.message}</Text>;
   } else {
     return (
       <BnbMainView>
         <ScrollView>
           <BnbBodyView>
-            <Text style={bnbStyleSheet.headerTextBlack}>
-              {_room.description}
-            </Text>
+            {_room && (
+              <Text style={bnbStyleSheet.headerTextBlack}>
+                {_room.description}
+              </Text>
+            )}
             <View style={styles.imageSlider}>
               <BnbImageSlider images={_photos_url} width={200}></BnbImageSlider>
             </View>
@@ -430,38 +421,11 @@ function RoomScreen({ route, navigation }) {
                 </TouchableOpacity>
               )}
             </View>
-            <Separator></Separator>
-            <View style={styles.reviewsContainer}>
-              <Text style={bnbStyleSheet.headerTextBlack}>Reseñas</Text>
-              {_reviews && (
-                <View>
-                  {_reviews.reviews.map((item, index) => (
-                    <View key={item.id}>
-                      <RoomReview
-                        reviewer={item.reviewer}
-                        date={item.created_at}
-                        review={item.review}
-                      ></RoomReview>
-                    </View>
-                  ))}
-                </View>
-              )}
-            </View>
-            {!_is_owner && (
-              <View style={styles.writeAReviewContainer}>
-                <TextInput
-                  multiline
-                  placeholder="Escribe aqui tu reseña"
-                  maxLength={constants.maxTextLength}
-                  onChangeText={setReview}
-                  style={styles.textInput}
-                ></TextInput>
-                <View>
-                  <BnbButton title="Publicar" onPress={_handlePostAReview} />
-                  <Separator />
-                </View>
-              </View>
-            )}
+            <RoomReviews
+              room_id={room_id}
+              is_owner={_is_owner}
+              onPostReview={_handlePostAReview}
+            />
             {!_is_owner && (
               <View style={styles.rateRoomContainer}>
                 <BnbTitleText style={styles.titleText}>
@@ -522,11 +486,10 @@ function RoomScreen({ route, navigation }) {
             <Calendar
               minDate={Date()}
               markedDates={_bookings}
-              markingType={'period'}
+              markingType={"period"}
               enableSwipeMonths={true}
-
               style={{
-                borderWidth:1,
+                borderWidth: 1,
                 borderColor: "#d9e1e8",
                 borderRadius: 10,
               }}
@@ -550,8 +513,6 @@ function RoomScreen({ route, navigation }) {
     );
   }
 }
-
-const dimensions = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   roomImage: {
