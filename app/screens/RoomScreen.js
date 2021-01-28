@@ -9,27 +9,21 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Calendar } from "react-native-calendars";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
-import BnbTitleText from "../components/BnbTitleText";
 import BnbMainView from "../components/BnbMainView";
-import RoomReview from "../components/RoomReview";
 import colors from "../config/colors";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
 import constants from "../constant/constants";
 import Separator from "../components/Separator";
-import Counter from "../components/Counter";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import urls from "../constant/urls";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbImageSlider from "../components/BnbImageSlider";
 import BnbLoading from "../components/BnbLoading";
-import BnbComment from "../components/BnbComment";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import BnbIconText from "../components/BnbIconText";
-import BnbAlert from "../components/BnbAlert";
-import BnbComment2 from "../components/BnbComment2";
 import RoomReviews from "../components/RoomReviews";
 import RoomRating from "../components/RoomRating";
 import getAverage from "../helpers/getAverage";
@@ -49,17 +43,8 @@ function RoomScreen({ route, navigation }) {
   const [_error, setError] = useState();
   const [_photos_url, setPhotosUrl] = useState([]);
 
-  const [_comments, setComments] = useState();
-  const [_comment, setComment] = useState({
-    comment: "",
-  });
-
   const [_bookings, setBookings] = useState();
   const [_owner, setOwner] = useState();
-
-  const _handleTextChange = (key, text) => {
-    setComment({ ..._comment, [key]: text });
-  };
 
   const _handleApiResponse = (data) => {
     fetchRoomRatings();
@@ -109,101 +94,11 @@ function RoomScreen({ route, navigation }) {
     );
   };
 
-  const _handleAddParentComment = (comment) => {
-    if (comment && comment.comment != "") {
-      setIsLoading(true);
-      httpPostTokenRequest(
-        "POST",
-        urls.URL_ROOMS + "/" + room_id + "/comments",
-        comment,
-        {
-          "Content-Type": "application/json",
-          "x-access-token": storedUser.auth_token,
-        },
-        _handleApiResponse
-      ).then(
-        (value) => {
-          setComment("");
-          setIsLoading(false);
-        },
-        (error) => {
-          BnbAlert(
-            "Error al publicar comentario",
-            error.message,
-            "Entendido",
-            false
-          );
-          setIsLoading(false);
-        }
-      );
-    } else {
-      BnbAlert(
-        "Publicar",
-        "No puede publicar un comentario vacio",
-        "Entendido"
-      );
-    }
-  };
-
-  const _handleReplyComment = (comment, parent_id) => {
-    /**Creo un comentario con el body requerido por el endpoint */
-    setIsLoading(true);
-    const endPointComment = {
-      comment: comment,
-      main_comment_id: parent_id,
-    };
-    httpPostTokenRequest(
-      "POST",
-      urls.URL_ROOMS + "/" + _room.id + "/comments",
-      endPointComment,
-      {
-        "Content-Type": "application/json",
-        "x-access-token": storedUser.auth_token,
-      }
-    ).then(
-      (comment) => {
-        setIsLoading(false);
-      },
-      (error) => {
-        BnbAlert(
-          "Hubo un error al querer publicar la respuesta",
-          `Error: ${error}`,
-          "Entendido",
-          false
-        );
-        //setError(error);
-        setIsLoading(false);
-      }
-    );
-  };
-
-  const _handleDeleteComment = (comment_id) => {
-    setIsLoading(true);
-    httpGetTokenRequest(
-      "DELETE",
-      urls.URL_ROOMS + "/" + _room.id + "/comments/" + comment_id,
-      { "x-access-token": storedUser.auth_token },
-      _handleApiResponse,
-      _handleApiError
-    );
-  };
-
-  /**Estaria bueno que si es el owner del room lo envie directamente al ProfileStack
-   * y no al searchStack
-   */
   const _handleRoomOwnerPress = () => {
     if (_owner.id == storedUser.userData.id) {
       navigation.navigate("ProfileStack", { screen: "Profile" });
     } else {
       navigation.navigate("User", { user_id: _owner.id });
-    }
-  };
-
-  const _handleUsernameTap = (user_id) => {
-    if (user_id == storedUser.userData.id) {
-      navigation.navigate("ProfileStack", { screen: "Profile" });
-    } else {
-      navigation.navigate("User", { user_id: user_id });
     }
   };
 
@@ -305,24 +200,6 @@ function RoomScreen({ route, navigation }) {
     }
   }, [_room]);
 
-  /**Fetch comentarios de la publicacion*/
-  useEffect(() => {
-    if (_room) {
-      httpGetTokenRequest(
-        "GET",
-        urls.URL_ROOMS + "/" + _room.id + "/comments",
-        {}
-      ).then(
-        (comments) => {
-          setComments(comments);
-        },
-        (reason) => {
-          setError(reason);
-        }
-      );
-    }
-  }, [_room]);
-
   // Fetchear bookings y convertirlos al formato que pide el componente del calendario
   useEffect(() => {
     if (_room) {
@@ -374,11 +251,17 @@ function RoomScreen({ route, navigation }) {
                   ? "Sin puntaje"
                   : _average_rating + " de 5 estrellas"}
               </Text>
-              <Text style={bnbStyleSheet.subHeaderText}>Precio por dia</Text>
-              <Text>{_room.price_per_day}</Text>
-              <Text style={bnbStyleSheet.subHeaderText}>Categoria</Text>
-              <Text>{_room.type}</Text>
-              <Text style={bnbStyleSheet.subHeaderText}>Dueño</Text>
+              {_room && (
+                <View>
+                  <Text style={bnbStyleSheet.subHeaderText}>
+                    Precio por dia
+                  </Text>
+                  <Text>{_room.price_per_day}</Text>
+                  <Text style={bnbStyleSheet.subHeaderText}>Categoria</Text>
+                  <Text>{_room.type}</Text>
+                  <Text style={bnbStyleSheet.subHeaderText}>Dueño</Text>
+                </View>
+              )}
               {_owner && (
                 <TouchableOpacity onPress={_handleRoomOwnerPress}>
                   <BnbIconText logo={_owner.photo}>
@@ -409,10 +292,8 @@ function RoomScreen({ route, navigation }) {
               room_id={room_id}
               me_id={storedUser.userData.id}
               is_owner={_is_owner}
-              onDeleteTap={_handleDeleteComment}
-              onReply={_handleReplyComment}
-              onUsernameTap={_handleUsernameTap}
-              onAddParentComment={_handleAddParentComment}
+              token={storedUser.auth_token}
+              navigation={navigation}
             />
             <Text style={bnbStyleSheet.headerTextBlack}>Disponibilidad</Text>
             <Calendar

@@ -7,34 +7,33 @@ import bnbStyleSheet from "../constant/bnbStyleSheet";
 import constants from "../constant/constants";
 import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
+import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
+import BnbAlert from "./BnbAlert";
 import BnbButton from "./BnbButton";
 import BnbComment2 from "./BnbComment2";
 import BnbError from "./BnbError";
 import Separator from "./Separator";
 
-function RoomComments({
-  room_id,
-  me_id,
-  is_owner,
-  onDeleteTap,
-  onReply,
-  onUsernameTap,
-  onAddParentComment,
-}) {
+function RoomComments({ room_id, me_id, is_owner, token, navigation }) {
   const [_room_comments, setRoomComments] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
   const [_input_comment, setInputComment] = useState({ comment: "" });
 
+  const _handleApiResponse = () => {
+    fetchRoomComments();
+  };
+
+  const _handleApiError = (error) => {
+    setError(error);
+    setIsLoading(false);
+  };
+
   const _handleTextChange = (key, value) => {
     setInputComment({ ..._input_comment, [key]: value });
   };
 
-  const _handleAddParentComment = () => {
-    onAddParentComment(_input_comment);
-  };
-
-  useEffect(() => {
+  const fetchRoomComments = async () => {
     httpGetTokenRequest(
       "GET",
       urls.URL_ROOMS + "/" + room_id + "/comments",
@@ -49,6 +48,95 @@ function RoomComments({
         setIsLoading(false);
       }
     );
+  };
+
+  const _handleAddParentComment = () => {
+    if (_input_comment && _input_comment.comment != "") {
+      setIsLoading(true);
+      httpPostTokenRequest(
+        "POST",
+        urls.URL_ROOMS + "/" + room_id + "/comments",
+        _input_comment,
+        {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        }
+      ).then(
+        (response) => {
+          setInputComment({ ..._input_comment, comment: "" });
+          fetchRoomComments();
+        },
+        (error) => {
+          BnbAlert(
+            "Error al publicar comentario",
+            error.message,
+            "Entendido",
+            false
+          );
+          setIsLoading(false);
+        }
+      );
+    } else {
+      BnbAlert(
+        "Publicar",
+        "No puede publicar un comentario vacio",
+        "Entendido"
+      );
+    }
+  };
+
+  const _handleUsernameTap = (user_id) => {
+    if (user_id == me_id) {
+      navigation.navigate("ProfileStack", { screen: "Profile" });
+    } else {
+      navigation.navigate("User", { user_id: user_id });
+    }
+  };
+
+  const _handleDeleteComment = (comment_id) => {
+    setIsLoading(true);
+    httpGetTokenRequest(
+      "DELETE",
+      urls.URL_ROOMS + "/" + room_id + "/comments/" + comment_id,
+      { "x-access-token": token },
+      _handleApiResponse,
+      _handleApiError
+    );
+  };
+
+  const _handleReplyComment = (comment, parent_id) => {
+    /**Creo un comentario con el body requerido por el endpoint */
+    setIsLoading(true);
+    const endPointComment = {
+      comment: comment,
+      main_comment_id: parent_id,
+    };
+    httpPostTokenRequest(
+      "POST",
+      urls.URL_ROOMS + "/" + room_id + "/comments",
+      endPointComment,
+      {
+        "Content-Type": "application/json",
+        "x-access-token": token,
+      }
+    ).then(
+      (comment) => {
+        fetchRoomComments();
+      },
+      (error) => {
+        BnbAlert(
+          "Hubo un error al querer publicar la respuesta",
+          `Error: ${error}`,
+          "Entendido",
+          false
+        );
+        setIsLoading(false);
+      }
+    );
+  };
+
+  useEffect(() => {
+    fetchRoomComments();
     return function cleanup() {
       setError(undefined);
     };
@@ -70,9 +158,9 @@ function RoomComments({
               comment={item.comment}
               answers={item.answers}
               me_id={me_id}
-              onDeleteTap={onDeleteTap}
-              onReply={onReply}
-              onUsernameTap={onUsernameTap}
+              onDeleteTap={_handleDeleteComment}
+              onReply={_handleReplyComment}
+              onUsernameTap={_handleUsernameTap}
             />
           </View>
         ))}
