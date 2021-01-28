@@ -31,6 +31,8 @@ import BnbIconText from "../components/BnbIconText";
 import BnbAlert from "../components/BnbAlert";
 import BnbComment2 from "../components/BnbComment2";
 import RoomReviews from "../components/RoomReviews";
+import RoomRating from "../components/RoomRating";
+import getAverage from "../helpers/getAverage";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -42,9 +44,7 @@ function RoomScreen({ route, navigation }) {
   const [storedUser, setStoredUser] = useState();
 
   const [_average_rating, setAverageRating] = useState(0);
-  const [_rating, setRating] = useState({
-    quantity: 0,
-  });
+
   const [_error, setError] = useState();
   const [_photos_url, setPhotosUrl] = useState([]);
 
@@ -54,22 +54,14 @@ function RoomScreen({ route, navigation }) {
   });
 
   const [_bookings, setBookings] = useState();
-
   const [_owner, setOwner] = useState();
-
-  const _handleRatingChange = (counter, offset) => {
-    const new_quantity = _rating.quantity + offset;
-    setRating((prevState) => ({
-      ...prevState,
-      quantity: new_quantity,
-    }));
-  };
 
   const _handleTextChange = (key, text) => {
     setComment({ ..._comment, [key]: text });
   };
 
   const _handleApiResponse = (data) => {
+    fetchRoomRatings();
     setIsLoading(false);
   };
 
@@ -99,14 +91,14 @@ function RoomScreen({ route, navigation }) {
     }
   };
 
-  const _handleRateRoomButtonPress = () => {
-    if (_rating.quantity !== 0) {
+  const _handleRateRoomButtonPress = (quantity) => {
+    if (quantity !== 0) {
       setIsLoading(true);
       httpPostTokenRequest(
         "POST",
         urls.URL_ROOMS + "/" + room_id + "/ratings",
         {
-          rating: _rating.quantity,
+          rating: quantity,
         },
 
         {
@@ -116,7 +108,6 @@ function RoomScreen({ route, navigation }) {
         _handleApiResponse,
         _handleApiError
       );
-      setRating({ quantity: 0 });
     } else {
       alert("Puntaje no puede ser 0");
     }
@@ -136,15 +127,6 @@ function RoomScreen({ route, navigation }) {
       _handleApiResponse,
       _handleApiError
     );
-  };
-
-  const getAverageRating = (ratings) => {
-    let average_rating = 0;
-    ratings.ratings.forEach(function (item, index, array) {
-      average_rating += item.rating;
-    });
-    average_rating = average_rating / ratings.ratings.length;
-    setAverageRating(average_rating);
   };
 
   const _handleAddParentComment = () => {
@@ -248,6 +230,20 @@ function RoomScreen({ route, navigation }) {
     }
   };
 
+  /**Defino funcion fetch ratings */
+  const fetchRoomRatings = async () => {
+    httpGetTokenRequest(
+      "GET",
+      urls.URL_ROOMS + "/" + room_id + "/ratings",
+      {}
+    ).then(
+      (ratings) => {
+        setAverageRating(getAverage(ratings.ratings, "rating"));
+      },
+      (error) => {}
+    );
+  };
+
   /**Fetcheo los datos del room */
   const fetchRoomData = async () => {
     httpGetTokenRequest(
@@ -269,16 +265,9 @@ function RoomScreen({ route, navigation }) {
       })
       .then((photos) => {
         setPhotosUrl(getUrlFromPhotos(photos.room_photos));
-        return httpGetTokenRequest(
-          "GET",
-          urls.URL_ROOMS + "/" + room_id + "/ratings",
-          {},
-          null
-        );
-      })
-      .then((ratings) => {
-        getAverageRating(ratings);
-        setIsLoading(false);
+        fetchRoomRatings().then(() => {
+          setIsLoading(false);
+        });
       })
       .catch((error) => {
         setIsLoading(false);
@@ -406,7 +395,7 @@ function RoomScreen({ route, navigation }) {
               <Text>
                 {isNaN(_average_rating)
                   ? "Sin puntaje"
-                  : _average_rating + "de 5 estrellas"}{" "}
+                  : _average_rating + " de 5 estrellas"}
               </Text>
               <Text style={bnbStyleSheet.subHeaderText}>Precio por dia</Text>
               <Text>{_room.price_per_day}</Text>
@@ -426,23 +415,10 @@ function RoomScreen({ route, navigation }) {
               is_owner={_is_owner}
               onPostReview={_handlePostAReview}
             />
-            {!_is_owner && (
-              <View style={styles.rateRoomContainer}>
-                <BnbTitleText style={styles.titleText}>
-                  Puntua esta habitación
-                </BnbTitleText>
-                <Counter
-                  title="Rating"
-                  onIncrement={_handleRatingChange}
-                  counter={_rating}
-                  maxCount={constants.maxRating}
-                ></Counter>
-                <BnbButton
-                  title="Puntuar"
-                  onPress={_handleRateRoomButtonPress}
-                />
-              </View>
-            )}
+            <RoomRating
+              is_owner={_is_owner}
+              onRateRoom={_handleRateRoomButtonPress}
+            />
             <Separator />
             {!_is_owner && (
               <BnbButton

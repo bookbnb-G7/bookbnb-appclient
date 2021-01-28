@@ -51,8 +51,8 @@ function RoomReviews({ room_id, is_owner, onPostReview }) {
   return (
     <View>
       <Separator />
+      <Text style={bnbStyleSheet.headerTextBlack}>Reseñas</Text>
       <View style={styles.roomReviewsContainer}>
-        <Text style={bnbStyleSheet.headerTextBlack}>Reseñas</Text>
         {_room_reviews &&
           _room_reviews.reviews.map((item, index) => (
             <View key={item.id}>
@@ -83,11 +83,9 @@ function RoomReviews({ room_id, is_owner, onPostReview }) {
 
 const styles = StyleSheet.create({
   roomReviewsContainer: {
-    borderWidth: 1,
+    marginLeft: 10,
   },
-  writeAReviewContainer: {
-    borderWidth: 1,
-  },
+  writeAReviewContainer: {},
   textInput: {
     borderRadius: styling.smallCornerRadius,
     backgroundColor: colors.graySoft,

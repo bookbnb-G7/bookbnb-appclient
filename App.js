@@ -64,7 +64,7 @@ export default function App() {
     });
   }, []);
   */
-  const [refresh, setRefresh] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const triggerRefresh = () => {
     setRefresh(true);
   };
