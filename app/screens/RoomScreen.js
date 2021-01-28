@@ -33,6 +33,7 @@ import BnbComment2 from "../components/BnbComment2";
 import RoomReviews from "../components/RoomReviews";
 import RoomRating from "../components/RoomRating";
 import getAverage from "../helpers/getAverage";
+import RoomComments from "../components/RoomComments";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -68,27 +69,6 @@ function RoomScreen({ route, navigation }) {
   const _handleApiError = (error) => {
     setError(error);
     setIsLoading(false);
-  };
-
-  const _handlePostAReview = (input) => {
-    if (input != "") {
-      setIsLoading(true);
-      httpPostTokenRequest(
-        "POST",
-        urls.URL_ROOMS + "/" + room_id + "/reviews",
-        {
-          review: input,
-        },
-        {
-          "Content-Type": "application/json",
-          "x-access-token": storedUser.auth_token,
-        },
-        _handleApiResponse,
-        _handleApiError
-      );
-    } else {
-      alert("No puede publicar una reseña vacia");
-    }
   };
 
   const _handleRateRoomButtonPress = (quantity) => {
@@ -129,13 +109,13 @@ function RoomScreen({ route, navigation }) {
     );
   };
 
-  const _handleAddParentComment = () => {
-    if (_comment.comment != "" && _comment) {
+  const _handleAddParentComment = (comment) => {
+    if (comment && comment.comment != "") {
       setIsLoading(true);
       httpPostTokenRequest(
         "POST",
         urls.URL_ROOMS + "/" + room_id + "/comments",
-        _comment,
+        comment,
         {
           "Content-Type": "application/json",
           "x-access-token": storedUser.auth_token,
@@ -172,9 +152,6 @@ function RoomScreen({ route, navigation }) {
       comment: comment,
       main_comment_id: parent_id,
     };
-    /**Como modifico el flag _is_loading ejecuto el hook que carga los comentarios
-     * deberian re-renderizar con el nuevo comentario
-     */
     httpPostTokenRequest(
       "POST",
       urls.URL_ROOMS + "/" + _room.id + "/comments",
@@ -413,7 +390,7 @@ function RoomScreen({ route, navigation }) {
             <RoomReviews
               room_id={room_id}
               is_owner={_is_owner}
-              onPostReview={_handlePostAReview}
+              token={storedUser.auth_token}
             />
             <RoomRating
               is_owner={_is_owner}
@@ -427,37 +404,16 @@ function RoomScreen({ route, navigation }) {
                 onPress={_handleRoomBooking}
               />
             )}
-            <Text style={bnbStyleSheet.headerTextBlack}>Comentarios</Text>
-            {_comments &&
-              _comments.comments.map((item, index) => (
-                <View>
-                  <View key={item.comment.id}>
-                    <BnbComment2
-                      comment={item.comment}
-                      answers={item.answers}
-                      me_id={storedUser.userData.id}
-                      onDeleteTap={_handleDeleteComment}
-                      onReply={_handleReplyComment}
-                      onUsernameTap={_handleUsernameTap}
-                    />
-                  </View>
-                </View>
-              ))}
-            <View style={styles.addCommentContainer}>
-              <Text style={bnbStyleSheet.subHeaderText}>
-                Comenta esta publicacion
-              </Text>
-              <TextInput
-                style={styles.textInput}
-                multiline
-                numberOfLines={4}
-                maxLength={constants.maxTextLength}
-                onChangeText={(value) => _handleTextChange("comment", value)}
-                value={_comment.comment}
-              ></TextInput>
-              <BnbButton title="Publicar" onPress={_handleAddParentComment} />
-            </View>
             <Separator />
+            <RoomComments
+              room_id={room_id}
+              me_id={storedUser.userData.id}
+              is_owner={_is_owner}
+              onDeleteTap={_handleDeleteComment}
+              onReply={_handleReplyComment}
+              onUsernameTap={_handleUsernameTap}
+              onAddParentComment={_handleAddParentComment}
+            />
             <Text style={bnbStyleSheet.headerTextBlack}>Disponibilidad</Text>
             <Calendar
               minDate={Date()}

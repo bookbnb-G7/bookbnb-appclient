@@ -95,20 +95,21 @@ class BnbComment2 extends Component {
           <Text style={styles.menuItemText}>{this.props.comment.comment}</Text>
         </View>
         <View style={styles.actionBar}>
+          {!this.props.comment.main_comment_id &&
+            this.props.comment.commentator_id === this.props.me_id && (
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={this.handleMakeReply}
+              >
+                <Text style={styles.actionBarText}>Responder</Text>
+              </TouchableOpacity>
+            )}
           {this.props.comment.commentator_id === this.props.me_id && (
             <TouchableOpacity
               style={styles.menuItem}
               onPress={this.handleDelete}
             >
-              <Text style={styles.actionBarText}>Borrar</Text>
-            </TouchableOpacity>
-          )}
-          {!this.props.comment.main_comment_id && (
-            <TouchableOpacity
-              style={styles.menuItem}
-              onPress={this.handleMakeReply}
-            >
-              <Text style={styles.actionBarText}>Responder</Text>
+              <Text style={styles.actionBarText}> Borrar</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -132,7 +133,9 @@ class BnbComment2 extends Component {
             </TouchableOpacity>
           </View>
         )}
-        <Separator style={{ width: "100%" }} />
+        {this.props.answers?.length > 0 && (
+          <Separator style={{ width: "100%" }} />
+        )}
         {this.props.answers &&
           this.props.answers.map((item, index) => (
             <View key={item.id} style={styles.replyContainer}>

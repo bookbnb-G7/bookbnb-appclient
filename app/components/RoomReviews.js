@@ -11,18 +11,44 @@ import RoomReview from "./RoomReview";
 import colors from "../config/colors";
 import constants from "../constant/constants";
 import Separator from "./Separator";
+import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 
 /**Se encarga del fetcheo y manejo de las reviews del RoomScreen */
-function RoomReviews({ room_id, is_owner, onPostReview }) {
+function RoomReviews({ room_id, is_owner, token }) {
   const [_room_reviews, setRoomReviews] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
   const [_review_input, setReviewInput] = useState("");
 
   const _handlePostReview = () => {
-    onPostReview(_review_input);
+    if (_review_input != "") {
+      setIsLoading(true);
+      httpPostTokenRequest(
+        "POST",
+        urls.URL_ROOMS + "/" + room_id + "/reviews",
+        {
+          review: _review_input,
+        },
+        {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        }
+      ).then(
+        (response) => {
+          fetchRoomReviews();
+          setIsLoading(false);
+        },
+        (error) => {
+          setError(error);
+          setIsLoading(false);
+        }
+      );
+    } else {
+      alert("No puede publicar una reseña vacia");
+    }
   };
-  useEffect(() => {
+
+  const fetchRoomReviews = async () => {
     httpGetTokenRequest(
       "GET",
       urls.URL_ROOMS + "/" + room_id + "/reviews",
@@ -37,6 +63,10 @@ function RoomReviews({ room_id, is_owner, onPostReview }) {
         setIsLoading(false);
       }
     );
+  };
+
+  useEffect(() => {
+    fetchRoomReviews();
     return function cleanup() {
       setError(undefined);
     };
