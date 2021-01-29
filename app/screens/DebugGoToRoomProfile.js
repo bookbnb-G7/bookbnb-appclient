@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Keyboard } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
@@ -20,6 +21,7 @@ function DebugGoToRoomProfile({ navigation }) {
         <BnbButton
           title="Room"
           onPress={() => {
+            Keyboard.dismiss();
             navigation.navigate("SearchRooms", {
               screen: "Room",
               params: { room_id: id },
@@ -30,7 +32,7 @@ function DebugGoToRoomProfile({ navigation }) {
           title="User"
           onPress={() => {
             navigation.navigate("SearchRooms", {
-              screen: "Profile",
+              screen: "User",
               params: { user_id: id },
             });
           }}

@@ -27,7 +27,6 @@ function ProfileChatsScreen({ navigation }) {
       }).then(
         (chats) => {
           setChats(chats);
-          console.log(chats);
           /**si obtengo los chats, busco los usuarios para fetchear las imagenes */
           /**chats.chats.forEach((chat) => {
             httpGetTokenRequest(
@@ -75,13 +74,6 @@ function ProfileChatsScreen({ navigation }) {
       <BnbBodyView>
         <SafeAreaView>
           <Text style={bnbStyleSheet.headerTextBlack}>Mis chats</Text>
-          {_chats && (
-            <FlatList
-              data={_chats.chats}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.other_uuid}
-            />
-          )}
           {_chats &&
             _chats.chats.map((item, index) => (
               <View key={item.other_uuid}>

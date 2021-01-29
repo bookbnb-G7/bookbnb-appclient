@@ -13,7 +13,6 @@ import BnbImage from "../../components/BnbImage";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 import urls from "../../constant/urls";
 import BnbLoading from "../../components/BnbLoading";
-import { color } from "react-native-reanimated";
 import { Divider } from "react-native-elements";
 import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import BnbFormBubbleInfo from "../../components/BnbFormBubbleInfo";
@@ -21,19 +20,17 @@ import getAverage from "../../helpers/getAverage";
 import { ScrollView } from "react-native-gesture-handler";
 import BnbError from "../../components/BnbError";
 import ProfileEdit from "./ProfileEdit";
+import BnbIconText from "../../components/BnbIconText";
 
 /**Este es de solo lectura, generico y debe sevir para cualquier usuario */
 function Profile({ route, navigation }) {
   /**user_id es el id del perfil del usuario que queremos ver */
   let user_id = route.params?.user_id;
   const [user, setUser] = useState();
-  const [_is_loading, setIsLoading] = useState(user_id === 0);
+  const [_is_loading, setIsLoading] = useState(false);
   const [_guestRatings, setGuestRatings] = useState();
   const [_hostRatings, setHostRatings] = useState();
   const [_error, setError] = useState();
-
-  /**Flag para ver si esta habilitado a hacer una review */
-  const [_can_review, setCanReview] = useState(false);
   const [_is_owner, setIsOwner] = useState(false);
 
   const [_show_info, setShowInfo] = useState(false);
@@ -42,26 +39,23 @@ function Profile({ route, navigation }) {
     navigation.navigate("ProfileOwner");
   };
 
-  /**TODO is_guest esta hardcodeado */
-  const _handleReviewUser = () => {
-    navigation.navigate("ReviewUser", {
-      is_guest: false,
-      reviewed_id: user.id,
-    });
-  };
-
   const _handleProfileImagePress = () => {
     navigation.navigate("ImagePick");
   };
 
   const _handleProfileReviewsButtonPress = () => {
-    navigation.navigate("ProfileReviews", { user_id: user.id });
+    navigation.navigate(_is_owner ? "ProfileReviews" : "UserReviews", {
+      user_id: user.id,
+    });
   };
 
   const _handleChatButtonPress = () => {
     if (!_is_owner) {
       /**El other_uuid es el del perfil que estoy viendo en este momento */
-      navigation.navigate("UserChat", { other_uuid: user.id });
+      navigation.navigate("ChatStack", {
+        screen: "UserChat",
+        params: { other_uuid: user.id },
+      });
     } else {
       console.error(
         "No puedes chatear contigo mismo, el boton no deberia poder verse en tu propio perfil"
@@ -86,11 +80,7 @@ function Profile({ route, navigation }) {
     BnbSecureStore.read(constants.CACHE_USER_KEY)
       .then((user) => {
         let async_user_id = user_id;
-        console.log(user_id);
-        console.log(async_user_id);
-        console.log(user.userData.id);
-        if (!user_id || user_id === user.userData.id) {
-          console.log("Es dueño");
+        if (!user_id || user_id == user.userData.id) {
           async_user_id = user.userData.id;
           setIsOwner(true);
         }
@@ -100,8 +90,7 @@ function Profile({ route, navigation }) {
         return httpGetTokenRequest(
           "GET",
           urls.URL_USERS + "/" + async_user_id,
-          {},
-          null
+          {}
         );
       })
       .then((user) => {
@@ -129,7 +118,7 @@ function Profile({ route, navigation }) {
         setError(error);
         setIsLoading(false);
       });
-  }, []);
+  }, [route.params?.user_id]);
 
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
@@ -156,7 +145,7 @@ function Profile({ route, navigation }) {
                 {user.firstname} {user.lastname}
               </Text>
             )}
-            {user && <Text style={styles.userName}>{user.email}</Text>}
+            {user && <Text style={styles.userEmail}>{user.email}</Text>}
             <View style={styles.ratingsRow}>
               <BnbFormBubbleInfo
                 iconName="star"
@@ -188,12 +177,6 @@ function Profile({ route, navigation }) {
           <Divider style={bnbStyleSheet.divider} />
           {user && (
             <View style={styles.buttonsContainer}>
-              {!_is_owner && _can_review && (
-                <BnbButton
-                  title="Escribir una reseña"
-                  onPress={_handleReviewUser}
-                />
-              )}
               <BnbButton
                 title="Ver reseñas"
                 onPress={_handleProfileReviewsButtonPress}
@@ -232,7 +215,12 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   userName: {
+    marginTop: 10,
     fontSize: fonts.big,
+    fontFamily: "Raleway_700Bold",
+  },
+  userEmail: {
+    color: colors.textSoftBlack,
   },
   ratingsRow: {
     flexDirection: "row",

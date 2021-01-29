@@ -21,6 +21,8 @@ import { LogBox } from "react-native";
 import useTimer from "./app/helpers/useTimer";
 import BnbSecureStore from "./app/classes/BnbSecureStore";
 import constants from "./app/constant/constants";
+import ProfileChatsScreen from "./app/screens/Profile/ProfileChatsScreen";
+import ChatStack from "./app/screens/ChatStack";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -62,7 +64,7 @@ export default function App() {
     });
   }, []);
   */
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(true);
   const triggerRefresh = () => {
     setRefresh(true);
   };
@@ -88,7 +90,7 @@ export default function App() {
       }
       setRefresh(false);
     }
-  }, [refresh]);
+  }, []);
 
   if (!loaded) {
     return <BnbLoading text="Cargando fuentes..." />;
@@ -122,6 +124,8 @@ export default function App() {
               iconName = "person";
             } else if (route.name === "SearchRooms") {
               iconName = "search";
+            } else if (route.name === "ChatStack") {
+              iconName = "chatbox";
             }
 
             // You can return any component that you like here!
@@ -143,6 +147,13 @@ export default function App() {
             name="SearchRooms"
             component={SearchStack}
             options={{ title: "Buscar" }}
+          />
+        )}
+        {user && (
+          <Tab.Screen
+            name="ChatStack"
+            component={ChatStack}
+            options={{ title: "Chat" }}
           />
         )}
         {user && (

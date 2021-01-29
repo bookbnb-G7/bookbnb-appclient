@@ -38,7 +38,14 @@ function ProfileRoomsScreen({ navigation }) {
         _handleApiError
       );
     });
+    return function cleanup() {
+      setError(undefined);
+    };
   }, []);
+
+  if (_error) {
+    return <BnbError>{_error.message}</BnbError>;
+  }
 
   if (_is_loading) {
     return <BnbLoading text="Cargando tus habitaciones..."></BnbLoading>;
@@ -46,29 +53,22 @@ function ProfileRoomsScreen({ navigation }) {
 
   return (
     <BnbMainView>
-      {_error == "" && (
-        <View style={styles.centerContainer}>
-          <Text style={styles.titleText}>
-            Tienes {_rooms.amount}{" "}
-            {_rooms.amount === 1 ? "habitacion" : "habitaciones"}
-          </Text>
-          <ScrollView>
-            {_rooms.rooms.map((item, index) => (
-              <View key={item.id}>
-                <BnbRoomPreview
-                  navigation={navigation}
-                  room={item}
-                ></BnbRoomPreview>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
-      )}
-      {_error != "" && (
-        <View>
-          <Text style={{ color: colors.error }}>{_error.message}</Text>
-        </View>
-      )}
+      <View style={styles.centerContainer}>
+        <Text style={styles.titleText}>
+          Tienes {_rooms.amount}{" "}
+          {_rooms.amount === 1 ? "habitacion" : "habitaciones"}
+        </Text>
+        <ScrollView>
+          {_rooms.rooms.map((item, index) => (
+            <View key={item.id}>
+              <BnbRoomPreview
+                navigation={navigation}
+                room={item}
+              ></BnbRoomPreview>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
     </BnbMainView>
   );
 }

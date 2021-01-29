@@ -41,7 +41,7 @@ function ProfileOwnerScreen({ route, navigation }) {
   };
 
   const _handleChatsButtonPress = () => {
-    navigation.navigate("ProfileChats");
+    navigation.navigate("ChatStack", { screen: "Chats" });
   };
 
   const PROFILE_OPTIONS = [

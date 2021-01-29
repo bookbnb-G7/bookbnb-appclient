@@ -14,7 +14,7 @@ function UserChatScreen({ route, navigation }) {
   const [_messages, setMessages] = useState([]);
   const [storedUser, setStoredUser] = useState();
   const [_error, setError] = useState();
-
+  const [_otherUser, setOtherUser] = useState();
   /**Se supone que uso esto para darle el formato de gitedChat a los mensajes que obtengo
    * del app server que tienen otro formato, no deberia usarlo para POST de mensajes
    * solo cuando hago un GET
@@ -74,6 +74,18 @@ function UserChatScreen({ route, navigation }) {
     });
   }, []);
 
+  /**Fetcheo other */
+  useEffect(() => {
+    httpGetTokenRequest("GET", urls.URL_USERS + "/" + other_uuid, {}).then(
+      (other) => {
+        setOtherUser(other);
+      },
+      (error) => {
+        console.log(error.message);
+      }
+    );
+  }, []);
+
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
   }
@@ -84,8 +96,15 @@ function UserChatScreen({ route, navigation }) {
 
   return (
     <BnbMainView>
-      <Text>Tu id: {storedUser.userData.id}</Text>
-      <Text>Chateando con other_uuid: {other_uuid}</Text>
+      <Text>
+        Tu {storedUser.userData.email} id:
+        {storedUser.userData.id}
+      </Text>
+      {_otherUser && (
+        <Text>
+          Chateando con {_otherUser.email} other_uuid: {other_uuid}
+        </Text>
+      )}
       <GiftedChat
         messages={_messages}
         onSend={(messages) => onSend(messages, storedUser.auth_token)}

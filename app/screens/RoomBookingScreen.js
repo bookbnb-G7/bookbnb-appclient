@@ -11,8 +11,8 @@ import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 
-function RoomBookingScreen(props) {
-  const { booking_id } = props.route.params;
+function RoomBookingScreen({ route }) {
+  const { booking_id } = route.params;
 
   const [storedUser, setStoredUser] = useState();
   const [_booking, setBooking] = useState();
@@ -41,7 +41,6 @@ function RoomBookingScreen(props) {
 
   const _handleAcceptBooking = () => {
     setIsLoading(true);
-    setError("");
     httpPostTokenRequest(
       "POST",
       urls.URL_BOOKINGS + "/" + booking_id + "/accept",
@@ -52,7 +51,6 @@ function RoomBookingScreen(props) {
 
   const _handleRejectBooking = () => {
     setIsLoading(true);
-    setError("");
     httpPostTokenRequest(
       "POST",
       urls.URL_BOOKINGS + "/" + booking_id + "/reject",

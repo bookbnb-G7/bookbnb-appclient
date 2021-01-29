@@ -9,22 +9,17 @@ import constants from "../constant/constants";
 import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbButton from "./BnbButton";
+import BnbImageSlider from "./BnbImageSlider";
 import BnbLoading from "./BnbLoading";
 
-const BnbBookingPreview = (navigation, booking) => {
-  /**Placeholder */
-  const room_image = require("../assets/bookbnb_1.png");
-
+const BnbBookingPreview = ({ navigation, booking }) => {
   const showBookingStatus = (state) => {
     return (
       <View>
         {state === 1 && <Text style={styles.redText}>Pendiente</Text>}
         {state === 2 && <Text style={styles.greenText}>Aceptado</Text>}
         {state === 1 && (
-          <BnbButton
-            title="Ver reserva"
-            onPress={_handleGoToBookingDetails}
-          ></BnbButton>
+          <BnbButton title="Ver reserva" onPress={_handleGoToBookingDetails} />
         )}
       </View>
     );
@@ -40,7 +35,7 @@ const BnbBookingPreview = (navigation, booking) => {
     <View style={styles.mainContainer}>
       <TouchableOpacity onPress={_handleImagePress}>
         <View style={styles.roomImageContainer}>
-          <Image source={room_image} style={styles.roomImage}></Image>
+          <BnbImageSlider />
         </View>
         <View style={styles.roomDescriptionContainer}>
           <View>{showBookingStatus(booking.state)}</View>

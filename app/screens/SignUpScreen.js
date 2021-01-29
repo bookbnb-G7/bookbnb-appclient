@@ -124,6 +124,7 @@ function SignUpScreen({ route, navigation }) {
               onSubmit={() => ref_password.current?.focus()}
               returnKeyType="next"
               autoFocus={true}
+              keyboardType="email-address"
             />
             <BnbFloatingTextInput
               name="Contraseña"

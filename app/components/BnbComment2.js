@@ -10,6 +10,7 @@ import { Component } from "react";
 import constants from "../constant/constants";
 import styling from "../config/styling";
 import colors from "../config/colors";
+import Separator from "./Separator";
 
 class BnbComment2 extends Component {
   constructor(props) {
@@ -71,43 +72,44 @@ class BnbComment2 extends Component {
       return null;
     }
     return (
-      <View>
+      <View style={styles.mainContainer}>
         <View style={styles.header}>
           <TouchableHighlight onPress={this.handleUsernameTap}>
-            <View style={styles.user}>
+            <View style={styles.userContainer}>
               <Image
                 style={styles.image}
                 source={
-                  this.props.image === ""
+                  this.props.image
                     ? require("../assets/profile_icon.png")
                     : { uri: this.props.image }
                 }
               ></Image>
-              <Text style={styles.username}>
+              <Text style={styles.boldText}>
                 {this.props.comment.commentator}
               </Text>
             </View>
           </TouchableHighlight>
+          <Text style={styles.boldText}>{this.props.comment.created_at}</Text>
         </View>
-        <Text style={styles.timeStamp}>{this.props.comment.created_at}</Text>
         <View style={styles.body}>
-          <Text>{this.props.comment.comment}</Text>
+          <Text style={styles.menuItemText}>{this.props.comment.comment}</Text>
         </View>
         <View style={styles.actionBar}>
+          {!this.props.comment.main_comment_id &&
+            this.props.comment.commentator_id === this.props.me_id && (
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={this.handleMakeReply}
+              >
+                <Text style={styles.actionBarText}>Responder</Text>
+              </TouchableOpacity>
+            )}
           {this.props.comment.commentator_id === this.props.me_id && (
             <TouchableOpacity
               style={styles.menuItem}
               onPress={this.handleDelete}
             >
-              <Text> DELETE </Text>
-            </TouchableOpacity>
-          )}
-          {!this.props.comment.main_comment_id && (
-            <TouchableOpacity
-              style={styles.menuItem}
-              onPress={this.handleMakeReply}
-            >
-              <Text> Responder </Text>
+              <Text style={styles.actionBarText}> Borrar</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -127,9 +129,12 @@ class BnbComment2 extends Component {
               style={styles.menuItem}
               onPress={this.handleSendReply}
             >
-              <Text> Publicar </Text>
+              <Text style={styles.actionBarText}> Publicar </Text>
             </TouchableOpacity>
           </View>
+        )}
+        {this.props.answers?.length > 0 && (
+          <Separator style={{ width: "100%" }} />
         )}
         {this.props.answers &&
           this.props.answers.map((item, index) => (
@@ -148,26 +153,42 @@ class BnbComment2 extends Component {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {},
   image: {
     width: 30,
     height: 30,
     borderRadius: 15,
     backgroundColor: colors.graySoft,
+    marginRight: 10,
   },
-  user: {
+  header: {},
+  body: {
+    margin: 10,
+  },
+  userContainer: {
     flexDirection: "row",
   },
   actionBar: {
+    backgroundColor: colors.alpha08,
+    margin: 10,
     flexDirection: "row",
+  },
+  actionBarText: {
+    fontFamily: "Raleway_700Bold",
+    color: colors.redAirBNB,
   },
   textInput: {
     borderRadius: styling.smallCornerRadius,
-    backgroundColor: colors.graySoft,
     borderWidth: 1,
+    backgroundColor: colors.graySoft,
     marginVertical: styling.separator,
   },
-  menuItem: {
-    borderWidth: 1,
+  menuItem: {},
+  boldText: {
+    fontFamily: "Raleway_700Bold",
+  },
+  menuItemText: {
+    fontFamily: "Raleway_400Regular",
   },
   replyContainer: {
     marginLeft: 40,

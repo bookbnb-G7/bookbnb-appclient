@@ -1,4 +1,5 @@
 import React, {useEffect, useRef} from 'react';
+import { StyleSheet } from "react-native";
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import {Input} from "react-native-elements";
 import Ionicons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -14,7 +15,7 @@ const GooglePlacesInput = (props) => {
       query={{
         key: GOOGLE_PLACES_API_KEY,
         language: 'es',
-        types: "(cities)",
+        types: props.locationType,
       }}
       fetchDetails={true}
       onPress={(data, details=null) => {
@@ -33,42 +34,76 @@ const GooglePlacesInput = (props) => {
         disabledInputStyle: { background: "#ddd" },
         leftIcon: <Ionicons name="map-search-outline" size={17} />,
         inputContainerStyle: {
-          borderRadius: 10,
-          borderWidth: 1,
-          paddingLeft: 14,
-          backgroundColor: colors.white,
+          ...styles.inputContainerStyle,
+          ...props.inputContainerStyle
         },
         inputStyle: {
-          paddingLeft: 5,
-          marginRight: 15,
+          ...styles.inputStyle,
+          ...props.inputStyle,
         },
         errorMessage: "",
         errorStyle: {
-          height: 0,
-          margin: 0,
+          ...styles.errorStyle,
+          ...props.errorStyle,
         },
       }}
       styles={{
         listView: {
-          marginLeft: 37,
+          ...styles.listView,
+          ...props.listView,
         },
         predefinedPlacesDescription: {
-          color: '#1faadb',
+          ...styles.predefinedPlacesDescription,
+          ...props.predefinedPlacesDescription,
         },
         separator: {
-          //backgroundColor: "white",
-          width: "95%",
+          ...styles.separator,
+          ...props.separator,
         },
         textInputContainer: {
-          flexDirection: "row",
-          margin: 0,
+          ...styles.textInputContainer,
+          ...props.textInputContainer,
         },
         container: {
-          overflow: "visible",
+          ...styles.container,
+          ...props.container,
         },
       }}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  inputContainerStyle: {
+    borderRadius: 10,
+    borderWidth: 1,
+    paddingLeft: 14,
+    backgroundColor: colors.white,
+  },
+  inputStyle: {
+    paddingLeft: 5,
+    marginRight: 15,
+  },
+  errorStyle: {
+    height: 0,
+    margin: 0,
+  },
+  listView: {
+    marginLeft: 37,
+  },
+  predefinedPlacesDescription: {
+    color: '#1faadb',
+  },
+  separator: {
+    width: "95%",
+  },
+  textInputContainer: {
+    flexDirection: "row",
+    margin: 0,
+  },
+  container: {
+    overflow: "visible",
+  },
+});
 
 export default GooglePlacesInput;

@@ -31,14 +31,13 @@ const BnbRoomPreview = (props) => {
   };
 
   const _handleImagePress = () => {
-    /**Si recibir un searchForm es porque soy un guest buscando rooms */
+    /**Si tengo  un searchForm es porque estoy buscando un room*/
     if (props?.searchForm) {
       props.navigation.navigate("Room", {
         room_id: props.room.id,
         searchForm: props.searchForm,
       });
     } else {
-      /**Caso contrario soy el dueño */
       props.navigation.navigate("Room", {
         room_id: props.room.id,
       });
