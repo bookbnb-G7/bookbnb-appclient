@@ -118,7 +118,7 @@ function Profile({ route, navigation }) {
         setError(error);
         setIsLoading(false);
       });
-  }, []);
+  }, [route.params?.user_id]);
 
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
