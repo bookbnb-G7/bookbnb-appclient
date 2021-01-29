@@ -32,7 +32,6 @@ import RoomComments from "../components/RoomComments";
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
 
-  const searchForm = route.params?.searchForm;
   const [_room, setRoom] = useState();
   const [_is_owner, setIsOwner] = useState();
   const [_is_loading, setIsLoading] = useState(true);
@@ -54,6 +53,11 @@ function RoomScreen({ route, navigation }) {
   const _handleApiError = (error) => {
     setError(error);
     setIsLoading(false);
+  };
+
+  const _handlePrintDebugDate = () => {
+    console.log(route.params.searchForm.dateBegin);
+    console.log(route.params.searchForm.dateEnd);
   };
 
   const _handleRateRoomButtonPress = (quantity) => {
@@ -83,11 +87,14 @@ function RoomScreen({ route, navigation }) {
   };
 
   const _handleRoomBooking = () => {
-    searchForm["user_id"] = storedUser.userData.id;
     httpPostTokenRequest(
       "POST",
       urls.URL_ROOMS + "/" + room_id + "/bookings",
-      searchForm,
+      {
+        room_id: _room.id,
+        date_from: route.params.searchForm.dateBegin,
+        date_to: route.params.searchForm.dateEnd,
+      },
       { "x-access-token": storedUser.auth_token },
       _handleApiResponse,
       _handleApiError
@@ -275,18 +282,11 @@ function RoomScreen({ route, navigation }) {
               is_owner={_is_owner}
               token={storedUser.auth_token}
             />
+            <Separator />
             <RoomRating
               is_owner={_is_owner}
               onRateRoom={_handleRateRoomButtonPress}
             />
-            <Separator />
-            {!_is_owner && (
-              <BnbButton
-                style={styles.center}
-                title="Reservar"
-                onPress={_handleRoomBooking}
-              />
-            )}
             <Separator />
             <RoomComments
               room_id={room_id}
@@ -311,7 +311,21 @@ function RoomScreen({ route, navigation }) {
                 arrowColor: colors.redAirBNBSoft,
               }}
             />
+            {!_is_owner && (
+              <View>
+                <BnbButton
+                  style={styles.center}
+                  title="Reservar"
+                  onPress={_handleRoomBooking}
+                />
+              </View>
+            )}
 
+            <BnbButton
+              style={styles.center}
+              title="DEBUG date"
+              onPress={_handlePrintDebugDate}
+            />
             <Separator />
             {_is_owner && _room && (
               <BnbButton

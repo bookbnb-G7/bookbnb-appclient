@@ -40,7 +40,9 @@ const BnbWindow = ({ navigation, style }) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate("ProfileStack", { screen: "ProfileRooms" })
+            navigation.navigate("ProfileStack", {
+              screen: "ProfileRoomsOptions",
+            })
           }
         >
           <View style={styles.windowIcon}>

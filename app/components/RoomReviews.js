@@ -106,7 +106,6 @@ function RoomReviews({ room_id, is_owner, token }) {
           <BnbButton title="Publicar" onPress={_handlePostReview} />
         </View>
       )}
-      <Separator />
     </View>
   );
 }

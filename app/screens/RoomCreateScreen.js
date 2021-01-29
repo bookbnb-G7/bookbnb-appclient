@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, Keyboard } from "react-native";
-import { Overlay } from 'react-native-elements';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { Overlay } from "react-native-elements";
+import DropDownPicker from "react-native-dropdown-picker";
 import BnbAlert from "../components/BnbAlert";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
@@ -36,7 +36,6 @@ function RoomCreateScreen({ navigation }) {
   const [_selectedIndexes, setSelectedIndexes] = useState([]);
   const [propertyType, setPropertyType] = useState(null);
 
-
   const [tempLocation, setTempLocation] = useState("");
   const [locationInput, setLocationInput] = useState("");
 
@@ -49,7 +48,6 @@ function RoomCreateScreen({ navigation }) {
   const ref_price_per_day = useRef();
   const ref_scrollview = useRef();
 
-
   /**Repetido de OptionalFiltersSCreen */
   const propertyTypes = [
     "Casa",
@@ -61,7 +59,6 @@ function RoomCreateScreen({ navigation }) {
   ];
 
   const toggleOverlay = () => {
-    console.log(visible);
     setVisible(!visible);
   };
 
@@ -71,10 +68,10 @@ function RoomCreateScreen({ navigation }) {
 
   const _handleApiResponse = (room) => {
     setIsAwaiting(false);
-          navigation.navigate("ImagesEdit", {
-            room_id: room.id,
-            isCreatingRoom: true,
-          });
+    navigation.navigate("ImagesEdit", {
+      room_id: room.id,
+      isCreatingRoom: true,
+    });
   };
 
   const _handleApiError = (error) => {
@@ -88,7 +85,12 @@ function RoomCreateScreen({ navigation }) {
   };
 
   const _handleNextButtonPress = () => {
-    if (isANumber(_room.price_per_day.toString()) && _room.price_per_day > 0) {
+    if (
+      isANumber(_room.price_per_day.toString()) &&
+      _room.price_per_day > 0 &&
+      _room.latitude !== "" &&
+      _room.longitude !== ""
+    ) {
       console.log(JSON.stringify(_room));
       setIsAwaiting(true);
       httpPostTokenRequest(
@@ -103,7 +105,7 @@ function RoomCreateScreen({ navigation }) {
         _handleApiError
       );
     } else {
-      alert("El precio por dia debe ser un valor numerico");
+      alert("Debe completar todos los campos para poder continuar");
     }
   };
 
@@ -117,8 +119,7 @@ function RoomCreateScreen({ navigation }) {
   const _handleLocationDropdownPress = (selection) => {
     setPropertyType(selection);
     setRoom({ ..._room, ["type"]: selection });
-    console.log(JSON.stringify(_room));
-  }
+  };
 
   const _handleEndEditingLocation = (location, coordinates) => {
     setRoom({
@@ -197,16 +198,20 @@ function RoomCreateScreen({ navigation }) {
                 }}
               />
               <DropDownPicker
-                items={propertyTypes.map((prop) => {return {
-                  label: prop,
-                  value: prop,
-                }})}
+                items={propertyTypes.map((prop) => {
+                  return {
+                    label: prop,
+                    value: prop,
+                  };
+                })}
                 containerStyle={styles.dropdownContainerStyle}
                 style={styles.dropDownStyle}
                 dropDownStyle={styles.dropDownBoxStyle}
                 placeholder="Tipo de propiedad"
                 placeholderStyle={styles.dropdownPlaceholderStyle}
-                onChangeItem={item => _handleLocationDropdownPress(item.value)}
+                onChangeItem={(item) =>
+                  _handleLocationDropdownPress(item.value)
+                }
                 selectedLabelStyle={styles.dropdownSelectedtLabelStyle}
                 itemStyle={styles.dropdownItemStyle}
                 ref={ref_type}
@@ -233,9 +238,14 @@ function RoomCreateScreen({ navigation }) {
                   value={tempLocation}
                   object={_room}
                   locationType="address"
-                />    
+                />
               </Overlay>
-
+              <Text style={bnbStyleSheet.normalText}>
+                Ubicacion:{" "}
+                {tempLocation !== ""
+                  ? tempLocation
+                  : "Seleccione una ubicacion"}
+              </Text>
             </View>
           </ScrollView>
           {storedUser && (
@@ -258,10 +268,9 @@ const styles = StyleSheet.create({
     fontSize: fonts.bigBig,
   },
   bodyView: {
-    justifyContent: "center"
+    justifyContent: "center",
   },
-  descriptionContainerStyle: {
-  },
+  descriptionContainerStyle: {},
   showCountdownStyles: {
     paddingRight: 20,
     paddingBottom: 1,
@@ -298,7 +307,7 @@ const styles = StyleSheet.create({
     color: colors.textSoftBlack,
   },
   dropdownItemStyle: {
-    justifyContent: 'flex-start'
+    justifyContent: "flex-start",
   },
   dropdownItemLabelStyle: {
     color: colors.textSoftBlack,

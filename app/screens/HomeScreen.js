@@ -14,6 +14,7 @@ import urls from "../constant/urls";
 import colors from "../config/colors";
 import BnbWindow from "../components/BnbWindow";
 import BnbBodyView from "../components/BnbBodyView";
+import { ScrollView } from "react-native-gesture-handler";
 
 function HomeScreen({ navigation }) {
   const [storedUser, setStoredUser] = useState();
@@ -88,27 +89,29 @@ function HomeScreen({ navigation }) {
   return (
     <BnbMainView style={styles.mainContainer}>
       <BnbBodyView style={styles.bodyContainer}>
-        <View style={styles.imageSlider}>
-          <BnbImageSlider
-            images={[require("../assets/Bookbnb_logo.png")]}
-            width={200}
-          />
-        </View>
-        <BnbWindow navigation={navigation} style={styles.window} />
-        <View style={styles.optionsContainer}>
-          <View>
-            <BnbButton
-              title="DEBUG Cerrar sesion"
-              onPress={_handleLogOutButton}
-            />
-            <BnbButton
-              title="DEBUG Room/Profile by id"
-              onPress={() => {
-                navigation.navigate("DebugGoToRoomProfile");
-              }}
+        <ScrollView>
+          <View style={styles.imageSlider}>
+            <BnbImageSlider
+              images={[require("../assets/Bookbnb_logo.png")]}
+              width={200}
             />
           </View>
-        </View>
+          <BnbWindow navigation={navigation} style={styles.window} />
+          <View style={styles.optionsContainer}>
+            <View>
+              <BnbButton
+                title="DEBUG Cerrar sesion"
+                onPress={_handleLogOutButton}
+              />
+              <BnbButton
+                title="DEBUG Room/Profile by id"
+                onPress={() => {
+                  navigation.navigate("DebugGoToRoomProfile");
+                }}
+              />
+            </View>
+          </View>
+        </ScrollView>
       </BnbBodyView>
     </BnbMainView>
   );
