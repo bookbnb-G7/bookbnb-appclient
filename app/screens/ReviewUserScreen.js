@@ -63,9 +63,6 @@ function ReviewUserScreen({ route, navigation }) {
         url,
         {
           review: _review_text,
-          reviewer:
-            storedUser.userData.firstname + " " + storedUser.userData.lastname,
-          reviewer_id: storedUser.userData.id,
         },
         {
           "Content-Type": "application/json",
@@ -91,9 +88,6 @@ function ReviewUserScreen({ route, navigation }) {
         url,
         {
           rating: _rating.quantity,
-          reviewer:
-            storedUser.userData.firstname + " " + storedUser.userData.lastname,
-          reviewer_id: storedUser.userData.id,
         },
         {
           "Content-Type": "application/json",

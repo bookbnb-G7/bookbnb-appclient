@@ -8,6 +8,7 @@ import constants from "../constant/constants";
 import ImagesEditScreen from "./ImagesEditScreen";
 import OptionalFiltersScreen from "./OptionalFiltersScreen";
 import Profile from "./Profile/Profile";
+import ProfileReviewsScreen from "./Profile/ProfileReviewsScreen";
 import UserChatScreen from "./Profile/UserChatScreen";
 import RoomEditScreen from "./RoomEditScreen";
 import RoomScreen from "./RoomScreen";
@@ -61,8 +62,12 @@ function SearchStack(props) {
           component={SearchResultRooms}
         />
         <SearchStackNav.Screen name="Room" component={RoomScreen} />
-        {/**Este profile es para del dueño del room o del comentario, no el del usuario*/}
+        {/**Estos screen son para ver los datos de otros usuarios, no para los de mi propio perfil*/}
         <SearchStackNav.Screen name="User" component={Profile} />
+        <SearchStackNav.Screen
+          name="UserReviews"
+          component={ProfileReviewsScreen}
+        />
         <SearchStackNav.Screen name="ImagesEdit" component={ImagesEditScreen} />
       </SearchStackNav.Navigator>
     );

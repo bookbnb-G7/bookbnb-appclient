@@ -45,7 +45,7 @@ function ProfileReviewsScreen({ route, navigation }) {
   }, []);
 
   if (_error) {
-    return <BnbError>{_error}</BnbError>;
+    return <BnbError>{_error.message}</BnbError>;
   }
 
   if (_is_loading) {

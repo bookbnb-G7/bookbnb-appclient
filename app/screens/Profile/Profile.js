@@ -31,9 +31,6 @@ function Profile({ route, navigation }) {
   const [_guestRatings, setGuestRatings] = useState();
   const [_hostRatings, setHostRatings] = useState();
   const [_error, setError] = useState();
-
-  /**Flag para ver si esta habilitado a hacer una review */
-  const [_can_review, setCanReview] = useState(false);
   const [_is_owner, setIsOwner] = useState(false);
 
   const [_show_info, setShowInfo] = useState(false);
@@ -42,20 +39,14 @@ function Profile({ route, navigation }) {
     navigation.navigate("ProfileOwner");
   };
 
-  /**TODO is_guest esta hardcodeado */
-  const _handleReviewUser = () => {
-    navigation.navigate("ReviewUser", {
-      is_guest: false,
-      reviewed_id: user.id,
-    });
-  };
-
   const _handleProfileImagePress = () => {
     navigation.navigate("ImagePick");
   };
 
   const _handleProfileReviewsButtonPress = () => {
-    navigation.navigate("ProfileReviews", { user_id: user.id });
+    navigation.navigate(_is_owner ? "ProfileReviews" : "UserReviews", {
+      user_id: user.id,
+    });
   };
 
   const _handleChatButtonPress = () => {
@@ -186,12 +177,6 @@ function Profile({ route, navigation }) {
           <Divider style={bnbStyleSheet.divider} />
           {user && (
             <View style={styles.buttonsContainer}>
-              {!_is_owner && _can_review && (
-                <BnbButton
-                  title="Escribir una reseña"
-                  onPress={_handleReviewUser}
-                />
-              )}
               <BnbButton
                 title="Ver reseñas"
                 onPress={_handleProfileReviewsButtonPress}

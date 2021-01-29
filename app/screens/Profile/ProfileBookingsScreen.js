@@ -62,7 +62,7 @@ function ProfileBookingsScreen({ navigation }) {
               {_bookings.made.bookings.map((item, index) => (
                 <View key={item.id}>
                   <BnbBookingPreview
-                    navigation={props.navigation}
+                    navigation={navigation}
                     booking={item}
                   ></BnbBookingPreview>
                 </View>
@@ -76,7 +76,7 @@ function ProfileBookingsScreen({ navigation }) {
               {_bookings.made.bookings.map((item, index) => (
                 <View key={item.id}>
                   <BnbBookingPreview
-                    navigation={props.navigation}
+                    navigation={navigation}
                     booking={item}
                   ></BnbBookingPreview>
                 </View>
