@@ -64,7 +64,7 @@ export default function App() {
     });
   }, []);
   */
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(true);
   const triggerRefresh = () => {
     setRefresh(true);
   };
@@ -90,7 +90,7 @@ export default function App() {
       }
       setRefresh(false);
     }
-  }, [refresh]);
+  }, []);
 
   if (!loaded) {
     return <BnbLoading text="Cargando fuentes..." />;

@@ -12,6 +12,8 @@ import BnbImageSlider from "../components/BnbImageSlider";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import urls from "../constant/urls";
 import colors from "../config/colors";
+import BnbWindow from "../components/BnbWindow";
+import BnbBodyView from "../components/BnbBodyView";
 
 function HomeScreen({ navigation }) {
   const [storedUser, setStoredUser] = useState();
@@ -74,10 +76,6 @@ function HomeScreen({ navigation }) {
     registerForPushNotificationsAsync();
   });
 
-  function _handleSearchRoomsButton() {
-    navigation.navigate("SearchRooms");
-  }
-
   const _handleLogOutButton = () => {
     firebase
       .auth()
@@ -89,30 +87,29 @@ function HomeScreen({ navigation }) {
 
   return (
     <BnbMainView style={styles.mainContainer}>
-      <View style={styles.imageSlider}>
-        <BnbImageSlider
-          images={[require("../assets/Bookbnb_logo.png")]}
-          width={200}
-        />
-      </View>
-      <View style={styles.optionsContainer}>
-        <View>
-          <BnbButton
-            onPress={_handleSearchRoomsButton}
-            title={"Buscar Habitaciones"}
-          />
-          <BnbButton
-            title="DEBUG Cerrar sesion"
-            onPress={_handleLogOutButton}
-          />
-          <BnbButton
-            title="DEBUG Room/Profile by id"
-            onPress={() => {
-              navigation.navigate("DebugGoToRoomProfile");
-            }}
+      <BnbBodyView style={styles.bodyContainer}>
+        <View style={styles.imageSlider}>
+          <BnbImageSlider
+            images={[require("../assets/Bookbnb_logo.png")]}
+            width={200}
           />
         </View>
-      </View>
+        <BnbWindow navigation={navigation} style={styles.window} />
+        <View style={styles.optionsContainer}>
+          <View>
+            <BnbButton
+              title="DEBUG Cerrar sesion"
+              onPress={_handleLogOutButton}
+            />
+            <BnbButton
+              title="DEBUG Room/Profile by id"
+              onPress={() => {
+                navigation.navigate("DebugGoToRoomProfile");
+              }}
+            />
+          </View>
+        </View>
+      </BnbBodyView>
     </BnbMainView>
   );
 }
@@ -124,6 +121,8 @@ const styles = StyleSheet.create({
   imageSlider: {
     flex: 1,
     alignItems: "center",
+    borderWidth: 1,
+    paddingBottom: 30,
   },
   optionsContainer: {
     flex: 1,
@@ -131,24 +130,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
   },
-  bodyContainer: {
-    backgroundColor: "rgba(0, 0, 0, 0)",
-    borderWidth: 1,
-    paddingHorizontal: 0,
-    paddingVertical: 0,
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    alignSelf: "center",
-    borderRadius: styling.bigCornerRadius,
-    backgroundColor: "white",
-  },
-  background: {
-    flex: 1,
-    paddingVertical: 10,
-    //width: "100%",
-    //resizeMode: "repeat",
+  bodyContainer: {},
+  window: {
+    marginTop: 15,
   },
 });
 
