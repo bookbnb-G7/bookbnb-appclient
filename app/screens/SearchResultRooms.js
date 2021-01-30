@@ -113,7 +113,7 @@ function SearchResultRooms({ route, navigation }) {
                     navigation={navigation}
                     room={item}
                     searchForm={searchForm}
-                  ></BnbRoomPreview>
+                  />
                 </View>
               ))}
             </ScrollView>

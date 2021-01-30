@@ -86,16 +86,33 @@ function RoomScreen({ route, navigation }) {
     navigation.navigate("RoomDetails", { room_id: _room.id });
   };
 
+  function formatDate(date) {
+    var d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+  }
+
   const _handleRoomBooking = () => {
+    let date_from = formatDate(route.params.searchForm.dateBegin);
+    let date_to = formatDate(route.params.searchForm.dateEnd);
     httpPostTokenRequest(
       "POST",
-      urls.URL_ROOMS + "/" + room_id + "/bookings",
+      urls.URL_BOOKINGS,
       {
-        room_id: _room.id,
-        date_from: route.params.searchForm.dateBegin,
-        date_to: route.params.searchForm.dateEnd,
+        room_id: room_id,
+        date_from: date_from,
+        date_to: date_to,
       },
-      { "x-access-token": storedUser.auth_token },
+      {
+        "Content-Type": "application/json",
+        "x-access-token": storedUser.auth_token,
+      },
       _handleApiResponse,
       _handleApiError
     );
@@ -153,25 +170,9 @@ function RoomScreen({ route, navigation }) {
       });
   };
 
-  // Sin esto no se vuelve a hacer el fetch cuando se entra por segunda vez
-  // a esta pantalla, por mas que haya cambiado el room_id
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchIfRoomChanged = async () => {
-        const last_room_id = await BnbSecureStore.readUnsafe(
-          constants.CACHE_ROOM_KEY
-        );
-        if (last_room_id !== route.params?.room_id) {
-          await BnbSecureStore.remember(constants.CACHE_ROOM_KEY, room_id);
-          setIsLoading(true);
-          await fetchRoomData();
-        }
-      };
-      fetchIfRoomChanged();
-
-      return () => BnbSecureStore.clear(constants.CACHE_ROOM_KEY);
-    }, [route.params?.room_id])
-  );
+  useEffect(() => {
+    fetchRoomData();
+  }, [route.params?.room_id]);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
