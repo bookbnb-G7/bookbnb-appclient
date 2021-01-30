@@ -80,4 +80,12 @@ export default StyleSheet.create({
   normalText: {
     fontFamily: "Raleway_400Regular",
   },
+  bnbButton: {
+    borderRadius: 10,
+    padding: 5,
+    backgroundColor: colors.redAirBNB,
+  },
+  bnbButtonText: {
+    color: colors.white,
+  },
 });

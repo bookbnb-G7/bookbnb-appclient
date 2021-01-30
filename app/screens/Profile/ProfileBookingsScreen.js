@@ -79,7 +79,8 @@ function ProfileBookingsScreen({ navigation }) {
                   <BnbBookingPreview
                     navigation={navigation}
                     booking_id={item.id}
-                  ></BnbBookingPreview>
+                  />
+                  <Separator />
                 </View>
               ))}
             </View>

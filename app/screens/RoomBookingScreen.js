@@ -1,15 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbButton from "../components/BnbButton";
 import BnbLoading from "../components/BnbLoading";
 import BnbMainView from "../components/BnbMainView";
+import BnbBodyView from "../components/BnbBodyView";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
+import bnbStyleSheet from "../constant/bnbStyleSheet";
 import constants from "../constant/constants";
 import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
+import BnbError from "../components/BnbError";
 
 function RoomBookingScreen({ route }) {
   const { booking_id } = route.params;
@@ -21,21 +24,12 @@ function RoomBookingScreen({ route }) {
 
   const [_is_owner, setIsOwner] = useState(false);
 
-  const _handleApiResponse = (data) => {
-    setBooking(data);
-    /**Si coinciden los ids, es el owner por lo tanto habilito los botones*/
-    if (data.room_owner_id === storedUser.userData.id) {
-      setIsOwner(true);
-    }
-    setIsLoading(false);
-  };
-
   const _handleApiError = (error) => {
     setError(error);
     setIsLoading(false);
   };
 
-  const _handleBookingResponse = (data) => {
+  const _handleBookingResponse = (response) => {
     setIsLoading(false);
   };
 
@@ -44,8 +38,10 @@ function RoomBookingScreen({ route }) {
     httpPostTokenRequest(
       "POST",
       urls.URL_BOOKINGS + "/" + booking_id + "/accept",
+      {},
       { "x-access-token": storedUser.auth_token },
-      _handleBookingResponse
+      _handleBookingResponse,
+      _handleApiError
     );
   };
 
@@ -54,18 +50,21 @@ function RoomBookingScreen({ route }) {
     httpPostTokenRequest(
       "POST",
       urls.URL_BOOKINGS + "/" + booking_id + "/reject",
+      {},
       { "x-access-token": storedUser.auth_token },
-      _handleBookingResponse
+      _handleBookingResponse,
+      _handleApiError
     );
   };
 
-  const showBookingStatus = (state) => {
+  const ShowBookingStatus = ({ status }) => {
     return (
       <View>
-        {state === constants.STATE_PENDING && (
-          <Text style={styles.redText}>Pendiente</Text>
+        <Text style={styles.bookingInfoText}>Estado de reserva:</Text>
+        {status === constants.BOOKING_STATUS_PENDING && (
+          <Text style={styles.orangeText}>Pendiente</Text>
         )}
-        {state === constants.STATE_ACCEPTED && (
+        {status === constants.BOOKING_STATUS_ACCEPTED && (
           <Text style={styles.greenText}>Aceptado</Text>
         )}
       </View>
@@ -75,46 +74,60 @@ function RoomBookingScreen({ route }) {
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
       setStoredUser(user);
-      httpGetTokenRequest(
-        "GET",
-        urls.URL_BOOKINGS + "/" + booking_id,
-        {},
-        _handleApiResponse,
-        _handleApiError
+      httpGetTokenRequest("GET", urls.URL_BOOKINGS + "/" + booking_id, {}).then(
+        (booking) => {
+          setBooking(booking);
+          if (booking.room_owner_id === user.userData.id) {
+            setIsOwner(true);
+          }
+          setIsLoading(false);
+        },
+        (error) => {
+          setError(error);
+        }
       );
     });
   }, []);
 
   if (_error) {
-    <BnbLoading style={styles.redText}>{_error.message}</BnbLoading>;
+    return <BnbError>{_error.message}</BnbError>;
   }
 
   if (_is_loading) {
-    <BnbLoading></BnbLoading>;
+    return <BnbLoading></BnbLoading>;
   } else {
     return (
       <BnbMainView>
-        <Text>Detalles de la reserva</Text>
-        <View>{showBookingStatus(_booking.state)}</View>
-        <Text style={styles.bookingInfoText}>Desde: {_booking.date_from}</Text>
-        <Text style={styles.bookingInfoText}>Hasta: {_booking.date_to}</Text>
-        <Text style={styles.bookingInfoText}>
-          Estado de la reserva: {_booking.booking_status}
-        </Text>
-        {_is_owner && (
-          <View>
-            <BnbButton
-              style={styles.greenText}
-              title="Confirmar reserva"
-              onPress={_handleAcceptBooking}
-            ></BnbButton>
-            <BnbButton
-              style={styles.redText}
-              title="Rechazar reserva"
-              onPress={_handleRejectBooking}
-            ></BnbButton>
-          </View>
-        )}
+        <BnbBodyView>
+          <Text style={bnbStyleSheet.headerTextBlack}>
+            Detalles de la reserva
+          </Text>
+          <Text style={styles.bookingInfoText}>
+            Desde: {_booking.date_from}
+          </Text>
+          <Text style={styles.bookingInfoText}>Hasta: {_booking.date_to}</Text>
+          {_booking && <ShowBookingStatus status={_booking.booking_status} />}
+          {_is_owner && (
+            <View>
+              <BnbButton
+                buttonStyle={{
+                  ...bnbStyleSheet.bnbButton,
+                  backgroundColor: "green",
+                  borderColor: "green",
+                }}
+                style={bnbStyleSheet.bnbButtonText}
+                title="Confirmar reserva"
+                onPress={_handleAcceptBooking}
+              ></BnbButton>
+              <BnbButton
+                buttonStyle={bnbStyleSheet.bnbButton}
+                style={bnbStyleSheet.bnbButtonText}
+                title="Rechazar reserva"
+                onPress={_handleRejectBooking}
+              ></BnbButton>
+            </View>
+          )}
+        </BnbBodyView>
       </BnbMainView>
     );
   }
@@ -127,13 +140,18 @@ const styles = StyleSheet.create({
     borderRadius: styling.mediumCornerRadius,
   },
   bookingInfoText: {
-    fontWeight: "bold",
     fontSize: fonts.big,
   },
   redText: {
+    fontSize: fonts.big,
     color: "red",
   },
+  orangeText: {
+    fontSize: fonts.big,
+    color: "orange",
+  },
   greenText: {
+    fontSize: fonts.big,
     color: "green",
   },
 });

@@ -19,21 +19,21 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
     navigation.navigate("RoomBooking", { booking_id: _booking.id });
   };
 
-  /**TODO ver porq carajo recibe un state=undefined */
-  const ShowBookingStatus = ({ state }) => {
+  const ShowBookingStatus = ({ status }) => {
     return (
       <View>
-        {state === 1 && <Text style={styles.orangeText}>Pendiente</Text>}
-        {state === 2 && <Text style={styles.greenText}>Aceptado</Text>}
-        {state === 3 && <Text style={styles.redText}>Rechazado</Text>}
-        {state === 1 && (
+        <Text style={styles.bookingInfoText}>Estado de reserva: </Text>
+        {status === 1 && <Text style={styles.orangeText}>Pendiente</Text>}
+        {status === 2 && <Text style={styles.greenText}>Aceptado</Text>}
+        {status === 3 && <Text style={styles.redText}>Rechazado</Text>}
+        {status === 1 && (
           <BnbButton title="Ver reserva" onPress={_handleGoToBookingDetails} />
         )}
       </View>
     );
   };
 
-  const _handleImagePress = () => {};
+  const _handleComponentPress = () => {};
 
   useEffect(() => {
     httpGetTokenRequest("GET", urls.URL_BOOKINGS + "/" + booking_id, {})
@@ -63,21 +63,14 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
   }
   return (
     <View style={styles.mainContainer}>
-      <TouchableOpacity onPress={_handleImagePress}>
-        <View style={styles.roomImageContainer}>
-          <BnbImageSlider images={_photos_urls} />
-        </View>
-        <View style={styles.roomDescriptionContainer}>
-          <ShowBookingStatus state={_booking.state} />
-          <Text style={styles.bookingInfoText}>
-            Desde: {_booking.date_from}
-          </Text>
-          <Text style={styles.bookingInfoText}>Hasta: {_booking.date_to}</Text>
-          <Text style={styles.bookingInfoText}>
-            Estado de reserva: {_booking.booking_status}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <View style={styles.roomImageContainer}>
+        <BnbImageSlider images={_photos_urls} />
+      </View>
+      <View style={styles.roomDescriptionContainer}>
+        <Text style={styles.bookingInfoText}>Desde: {_booking.date_from}</Text>
+        <Text style={styles.bookingInfoText}>Hasta: {_booking.date_to}</Text>
+        {_booking && <ShowBookingStatus status={_booking.booking_status} />}
+      </View>
     </View>
   );
 };
@@ -108,16 +101,18 @@ const styles = StyleSheet.create({
     fontSize: fonts.big,
   },
   bookingInfoText: {
-    fontWeight: "bold",
     fontSize: fonts.big,
   },
   redText: {
+    fontSize: fonts.big,
     color: "red",
   },
   orangeText: {
+    fontSize: fonts.big,
     color: "orange",
   },
   greenText: {
+    fontSize: fonts.big,
     color: "green",
   },
 });
