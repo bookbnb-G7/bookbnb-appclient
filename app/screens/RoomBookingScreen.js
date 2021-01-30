@@ -30,7 +30,7 @@ function RoomBookingScreen({ route, navigation }) {
   };
 
   const _handleBookingResponse = (response) => {
-    setIsLoading(false);
+    fetchBookingData(storedUser);
   };
 
   const _handleAcceptBooking = () => {
@@ -39,7 +39,10 @@ function RoomBookingScreen({ route, navigation }) {
       "POST",
       urls.URL_BOOKINGS + "/" + booking_id + "/accept",
       {},
-      { "x-access-token": storedUser.auth_token },
+      {
+        "Content-Type": "application/json",
+        "x-access-token": storedUser.auth_token,
+      },
       _handleBookingResponse,
       _handleApiError
     );
@@ -51,7 +54,10 @@ function RoomBookingScreen({ route, navigation }) {
       "POST",
       urls.URL_BOOKINGS + "/" + booking_id + "/reject",
       {},
-      { "x-access-token": storedUser.auth_token },
+      {
+        "Content-Type": "application/json",
+        "x-access-token": storedUser.auth_token,
+      },
       _handleBookingResponse,
       _handleApiError
     );
@@ -81,21 +87,25 @@ function RoomBookingScreen({ route, navigation }) {
     );
   };
 
+  const fetchBookingData = async (user) => {
+    httpGetTokenRequest("GET", urls.URL_BOOKINGS + "/" + booking_id, {}).then(
+      (booking) => {
+        setBooking(booking);
+        if (booking.room_owner_id === user.userData.id) {
+          setIsOwner(true);
+        }
+        setIsLoading(false);
+      },
+      (error) => {
+        setError(error);
+      }
+    );
+  };
+
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
       setStoredUser(user);
-      httpGetTokenRequest("GET", urls.URL_BOOKINGS + "/" + booking_id, {}).then(
-        (booking) => {
-          setBooking(booking);
-          if (booking.room_owner_id === user.userData.id) {
-            setIsOwner(true);
-          }
-          setIsLoading(false);
-        },
-        (error) => {
-          setError(error);
-        }
-      );
+      fetchBookingData(user);
     });
   }, []);
 
