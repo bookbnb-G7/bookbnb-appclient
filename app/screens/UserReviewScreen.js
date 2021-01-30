@@ -17,7 +17,7 @@ import BnbBodyView from "../components/BnbBodyView";
 import { Divider } from "react-native-elements";
 
 /**Esta pantalla sirve para tanto Guest como Host e incluye reviews cualitativos y cuantitativos */
-function ReviewUserScreen({ route, navigation }) {
+function UserReviewScreen({ route, navigation }) {
   /**is_guest true para reseñar a un guest o false para reseñar un host*/
   const { is_guest, reviewed_id } = route.params;
 
@@ -166,4 +166,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReviewUserScreen;
+export default UserReviewScreen;

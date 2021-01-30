@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
+import constants from "../constant/constants";
 import urls from "../constant/urls";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
@@ -20,13 +21,16 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
   };
 
   const ShowBookingStatus = ({ status }) => {
+    const showButton =
+      status === constants.BOOKING_STATUS_PENDING ||
+      status === constants.BOOKING_STATUS_ACCEPTED;
     return (
       <View>
         <Text style={styles.bookingInfoText}>Estado de reserva: </Text>
         {status === 1 && <Text style={styles.orangeText}>Pendiente</Text>}
         {status === 2 && <Text style={styles.greenText}>Aceptado</Text>}
         {status === 3 && <Text style={styles.redText}>Rechazado</Text>}
-        {status === 1 && (
+        {showButton && (
           <BnbButton title="Ver reserva" onPress={_handleGoToBookingDetails} />
         )}
       </View>

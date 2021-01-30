@@ -2,21 +2,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
 import { Text } from "react-native";
 import BnbSecureStore from "../classes/BnbSecureStore";
-import BnbHeaderUserInfo from "../components/BnbHeaderUserInfo";
-import BnbLoading from "../components/BnbLoading";
 import constants from "../constant/constants";
 import ImagesEditScreen from "./ImagesEditScreen";
 import OptionalFiltersScreen from "./OptionalFiltersScreen";
 import Profile from "./Profile/Profile";
-import ProfileReviewsScreen from "./Profile/ProfileReviewsScreen";
-import UserChatScreen from "./Profile/UserChatScreen";
-import RoomEditScreen from "./RoomEditScreen";
 import RoomScreen from "./RoomScreen";
 import SearchCountersScreen from "./SearchCountersScreen";
 import SearchDateTimePicker from "./SearchDateTimePicker";
 import SearchInputScreen from "./SearchInputScreen";
 import SearchResultRooms from "./SearchResultRooms";
-import SearchRoomsScreen from "./SearchRoomsScreen";
 
 const SearchStackNav = createStackNavigator();
 
@@ -64,10 +58,6 @@ function SearchStack(props) {
         <SearchStackNav.Screen name="Room" component={RoomScreen} />
         {/**Estos screen son para ver los datos de otros usuarios, no para los de mi propio perfil*/}
         <SearchStackNav.Screen name="User" component={Profile} />
-        <SearchStackNav.Screen
-          name="UserReviews"
-          component={ProfileReviewsScreen}
-        />
         <SearchStackNav.Screen name="ImagesEdit" component={ImagesEditScreen} />
       </SearchStackNav.Navigator>
     );
