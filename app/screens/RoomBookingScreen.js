@@ -13,12 +13,14 @@ import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import BnbError from "../components/BnbError";
+import Separator from "../components/Separator";
 
 function RoomBookingScreen({ route, navigation }) {
   const { booking_id } = route.params;
 
   const [storedUser, setStoredUser] = useState();
   const [_booking, setBooking] = useState();
+  const [_room, setRoom] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
 
@@ -98,6 +100,19 @@ function RoomBookingScreen({ route, navigation }) {
       },
       (error) => {
         setError(error);
+        setIsLoading(false);
+      }
+    );
+  };
+
+  const fetchRoomData = async (room_id) => {
+    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id).then(
+      (room) => {
+        setRoom(room);
+      },
+      (error) => {
+        setError(error);
+        setIsLoading(false);
       }
     );
   };
@@ -108,6 +123,12 @@ function RoomBookingScreen({ route, navigation }) {
       fetchBookingData(user);
     });
   }, []);
+
+  useEffect(() => {
+    if (_booking) {
+      fetchRoomData(_booking.room_id);
+    }
+  }, [_booking]);
 
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
@@ -122,6 +143,15 @@ function RoomBookingScreen({ route, navigation }) {
           <Text style={bnbStyleSheet.headerTextBlack}>
             Detalles de la reserva
           </Text>
+          <Text style={bnbStyleSheet.subHeaderText}>Habitación</Text>
+          {_room && (
+            <View style={styles.roomContainer}>
+              <Text style={styles.bookingInfoText}>{_room.title}</Text>
+              <Text style={styles.bookingInfoText}>{_room.description}</Text>
+            </View>
+          )}
+          <Separator />
+          <Text style={bnbStyleSheet.subHeaderText}>Reserva</Text>
           <Text style={styles.bookingInfoText}>
             Desde: {_booking.date_from}
           </Text>

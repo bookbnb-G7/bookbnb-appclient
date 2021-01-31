@@ -65,11 +65,11 @@ function ProfileBookingsScreen({ navigation }) {
                   <BnbBookingPreview
                     navigation={navigation}
                     booking_id={item.id}
-                  ></BnbBookingPreview>
+                  />
                 </View>
               ))}
             </View>
-            <Separator></Separator>
+            <Separator />
             <Text style={bnbStyleSheet.headerTextBlack}>
               Tienes {_bookings.received.bookings.length} solicitudes de reserva
             </Text>

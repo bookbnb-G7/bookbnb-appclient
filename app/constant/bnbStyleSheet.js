@@ -80,6 +80,9 @@ export default StyleSheet.create({
   normalText: {
     fontFamily: "Raleway_400Regular",
   },
+  mediumText: {
+    fontFamily: "Raleway_500Medium",
+  },
   bnbButton: {
     borderRadius: 10,
     padding: 5,

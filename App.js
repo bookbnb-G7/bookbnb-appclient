@@ -72,7 +72,10 @@ export default function App() {
   /**Lo refresheo cada 3300 para asegurarme de que se refreshea antes de expirar*/
   useTimer(3300, triggerRefresh);
   useEffect(() => {
+    console.log("useEffect");
+    console.log(refresh);
     if (refresh) {
+      console.log("refresh true");
       const user = firebase.auth.currentUser;
       if (user) {
         console.log("TOKEN: user esta logeado, token refresheado");
