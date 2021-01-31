@@ -28,6 +28,7 @@ import RoomReviews from "../components/RoomReviews";
 import RoomRating from "../components/RoomRating";
 import getAverage from "../helpers/getAverage";
 import RoomComments from "../components/RoomComments";
+import BnbAlert from "../components/BnbAlert";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -101,6 +102,7 @@ function RoomScreen({ route, navigation }) {
   const _handleRoomBooking = () => {
     let date_from = formatDate(route.params.searchForm.dateBegin);
     let date_to = formatDate(route.params.searchForm.dateEnd);
+    setIsLoading(true);
     httpPostTokenRequest(
       "POST",
       urls.URL_BOOKINGS,
@@ -112,9 +114,20 @@ function RoomScreen({ route, navigation }) {
       {
         "Content-Type": "application/json",
         "x-access-token": storedUser.auth_token,
+      }
+    ).then(
+      (response) => {
+        setIsLoading(false);
+        BnbAlert(
+          "Reserva",
+          "Solicitud de reserva realizada con exito",
+          "Entendido"
+        );
       },
-      _handleApiResponse,
-      _handleApiError
+      (error) => {
+        setIsLoading(false);
+        setError(error);
+      }
     );
   };
 
