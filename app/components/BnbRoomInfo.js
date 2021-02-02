@@ -11,7 +11,7 @@ import BnbError from "./BnbError";
 import BnbIconText from "./BnbIconText";
 import BnbImageSlider from "./BnbImageSlider";
 
-function BnbRoomInfo({ room, me_id, navigation }) {
+const BnbRoomInfo = ({ room, me_id, navigation }) => {
   const [_average_rating, setAverageRating] = useState(0);
   const [_photos_urls, setPhotosUrls] = useState();
   const [_error, setError] = useState();
@@ -100,7 +100,7 @@ function BnbRoomInfo({ room, me_id, navigation }) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   imageSlider: {
