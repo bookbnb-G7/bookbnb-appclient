@@ -37,6 +37,7 @@ function RoomRating({ is_owner, onRateRoom }) {
             maxCount={constants.maxRating}
           />
           <BnbButton title="Puntuar" onPress={_handleRateRoomButtonPress} />
+          <Separator />
         </View>
       )}
     </View>

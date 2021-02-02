@@ -14,6 +14,8 @@ import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import BnbError from "../components/BnbError";
 import Separator from "../components/Separator";
+import BnbRoomInfo from "../components/BnbRoomInfo";
+import { ScrollView } from "react-native-gesture-handler";
 
 function RoomBookingScreen({ route, navigation }) {
   const { booking_id } = route.params;
@@ -139,57 +141,63 @@ function RoomBookingScreen({ route, navigation }) {
   } else {
     return (
       <BnbMainView>
-        <BnbBodyView>
-          <Text style={bnbStyleSheet.headerTextBlack}>
-            Detalles de la reserva
-          </Text>
-          <Text style={bnbStyleSheet.subHeaderText}>Habitación</Text>
-          {_room && (
-            <View style={styles.roomContainer}>
-              <Text style={styles.bookingInfoText}>{_room.title}</Text>
-              <Text style={styles.bookingInfoText}>{_room.description}</Text>
-            </View>
-          )}
-          <Separator />
-          <Text style={bnbStyleSheet.subHeaderText}>Reserva</Text>
-          <Text style={styles.bookingInfoText}>
-            Desde: {_booking.date_from}
-          </Text>
-          <Text style={styles.bookingInfoText}>Hasta: {_booking.date_to}</Text>
-          {_booking && <ShowBookingStatus status={_booking.booking_status} />}
-          {_is_owner &&
-            _booking.booking_status === constants.BOOKING_STATUS_PENDING && (
-              <View>
-                <BnbButton
-                  buttonStyle={{
-                    ...bnbStyleSheet.bnbButton,
-                    backgroundColor: "green",
-                    borderColor: "green",
-                  }}
-                  style={bnbStyleSheet.bnbButtonText}
-                  title="Confirmar reserva"
-                  onPress={_handleAcceptBooking}
-                ></BnbButton>
+        <ScrollView>
+          <BnbBodyView>
+            <Text style={bnbStyleSheet.headerTextBlack}>
+              Detalles de la reserva
+            </Text>
+            {_room && storedUser && (
+              <BnbRoomInfo
+                room={_room}
+                me_id={storedUser.userData.id}
+                navigation={navigation}
+              />
+            )}
+            <Separator />
+            <Text style={bnbStyleSheet.headerTextBlack}>Reserva</Text>
+            <Text style={styles.bookingInfoText}>
+              Desde: {_booking.date_from}
+            </Text>
+            <Text style={styles.bookingInfoText}>
+              Hasta: {_booking.date_to}
+            </Text>
+            {_booking && <ShowBookingStatus status={_booking.booking_status} />}
+            {_is_owner &&
+              _booking.booking_status === constants.BOOKING_STATUS_PENDING && (
+                <View>
+                  <BnbButton
+                    buttonStyle={{
+                      ...bnbStyleSheet.bnbButton,
+                      backgroundColor: "green",
+                      borderColor: "green",
+                    }}
+                    style={bnbStyleSheet.bnbButtonText}
+                    title="Confirmar reserva"
+                    onPress={_handleAcceptBooking}
+                  ></BnbButton>
+                  <BnbButton
+                    buttonStyle={bnbStyleSheet.bnbButton}
+                    style={bnbStyleSheet.bnbButtonText}
+                    title="Rechazar reserva"
+                    onPress={_handleRejectBooking}
+                  ></BnbButton>
+                </View>
+              )}
+            {_booking.booking_status === constants.BOOKING_STATUS_ACCEPTED && (
+              <View style={styles.reviewUserContainer}>
+                <Text style={bnbStyleSheet.headerTextBlack}>
+                  Deja tu reseña
+                </Text>
                 <BnbButton
                   buttonStyle={bnbStyleSheet.bnbButton}
                   style={bnbStyleSheet.bnbButtonText}
-                  title="Rechazar reserva"
-                  onPress={_handleRejectBooking}
-                ></BnbButton>
+                  title="Crear reseña"
+                  onPress={_handleReviewUser}
+                />
               </View>
             )}
-          {_booking.booking_status === constants.BOOKING_STATUS_ACCEPTED && (
-            <View style={styles.reviewUserContainer}>
-              <Text style={bnbStyleSheet.headerTextBlack}>Deja tu reseña</Text>
-              <BnbButton
-                buttonStyle={bnbStyleSheet.bnbButton}
-                style={bnbStyleSheet.bnbButtonText}
-                title="Crear reseña"
-                onPress={_handleReviewUser}
-              />
-            </View>
-          )}
-        </BnbBodyView>
+          </BnbBodyView>
+        </ScrollView>
       </BnbMainView>
     );
   }

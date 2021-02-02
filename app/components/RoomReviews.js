@@ -14,7 +14,7 @@ import Separator from "./Separator";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 
 /**Se encarga del fetcheo y manejo de las reviews del RoomScreen */
-function RoomReviews({ room_id, is_owner, token }) {
+function RoomReviews({ room_id, is_owner, token, read_only }) {
   const [_room_reviews, setRoomReviews] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
@@ -90,11 +90,11 @@ function RoomReviews({ room_id, is_owner, token }) {
                 reviewer={item.reviewer}
                 date={item.date}
                 review={item.review}
-              ></RoomReview>
+              />
             </View>
           ))}
       </View>
-      {!is_owner && (
+      {!is_owner && !read_only && (
         <View style={styles.writeAReviewContainer}>
           <TextInput
             multiline
@@ -106,6 +106,7 @@ function RoomReviews({ room_id, is_owner, token }) {
           <BnbButton title="Publicar" onPress={_handlePostReview} />
         </View>
       )}
+      <Separator />
     </View>
   );
 }

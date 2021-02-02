@@ -56,11 +56,6 @@ function RoomScreen({ route, navigation }) {
     setIsLoading(false);
   };
 
-  const _handlePrintDebugDate = () => {
-    console.log(route.params.searchForm.dateBegin);
-    console.log(route.params.searchForm.dateEnd);
-  };
-
   const _handleRateRoomButtonPress = (quantity) => {
     if (quantity !== 0) {
       setIsLoading(true);
@@ -295,13 +290,12 @@ function RoomScreen({ route, navigation }) {
               room_id={room_id}
               is_owner={_is_owner}
               token={storedUser.auth_token}
+              read_only={true}
             />
-            <Separator />
             <RoomRating
               is_owner={_is_owner}
               onRateRoom={_handleRateRoomButtonPress}
             />
-            <Separator />
             <RoomComments
               room_id={room_id}
               me_id={storedUser.userData.id}
@@ -334,12 +328,6 @@ function RoomScreen({ route, navigation }) {
                 />
               </View>
             )}
-
-            <BnbButton
-              style={styles.center}
-              title="DEBUG date"
-              onPress={_handlePrintDebugDate}
-            />
             <Separator />
             {_is_owner && _room && (
               <BnbButton
