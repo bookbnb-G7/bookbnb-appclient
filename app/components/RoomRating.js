@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import constants from "../constant/constants";
-import urls from "../constant/urls";
-import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import Counter from "./Counter";
 import PropTypes from "prop-types";
-import BnbError from "./BnbError";
 import BnbButton from "./BnbButton";
+import Separator from "./Separator";
 
 function RoomRating({ is_owner, onRateRoom }) {
   const [_rating, setRating] = useState({

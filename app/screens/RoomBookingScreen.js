@@ -16,6 +16,8 @@ import BnbError from "../components/BnbError";
 import Separator from "../components/Separator";
 import BnbRoomInfo from "../components/BnbRoomInfo";
 import { ScrollView } from "react-native-gesture-handler";
+import RoomRating from "../components/RoomRating";
+import RoomReviews from "../components/RoomReviews";
 
 function RoomBookingScreen({ route, navigation }) {
   const { booking_id } = route.params;
@@ -30,6 +32,10 @@ function RoomBookingScreen({ route, navigation }) {
 
   const _handleApiError = (error) => {
     setError(error);
+    setIsLoading(false);
+  };
+
+  const _handleApiResponse = () => {
     setIsLoading(false);
   };
 
@@ -119,6 +125,28 @@ function RoomBookingScreen({ route, navigation }) {
     );
   };
 
+  const _handleRateRoomButtonPress = (quantity) => {
+    if (quantity !== 0) {
+      setIsLoading(true);
+      httpPostTokenRequest(
+        "POST",
+        urls.URL_ROOMS + "/" + _room.id + "/ratings",
+        {
+          rating: quantity,
+        },
+
+        {
+          "Content-Type": "application/json",
+          "x-access-token": storedUser.auth_token,
+        },
+        _handleApiResponse,
+        _handleApiError
+      );
+    } else {
+      alert("Puntaje no puede ser 0");
+    }
+  };
+
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
       setStoredUser(user);
@@ -174,26 +202,42 @@ function RoomBookingScreen({ route, navigation }) {
                     style={bnbStyleSheet.bnbButtonText}
                     title="Confirmar reserva"
                     onPress={_handleAcceptBooking}
-                  ></BnbButton>
+                  />
                   <BnbButton
                     buttonStyle={bnbStyleSheet.bnbButton}
                     style={bnbStyleSheet.bnbButtonText}
                     title="Rechazar reserva"
                     onPress={_handleRejectBooking}
-                  ></BnbButton>
+                  />
                 </View>
               )}
             {_booking.booking_status === constants.BOOKING_STATUS_ACCEPTED && (
-              <View style={styles.reviewUserContainer}>
-                <Text style={bnbStyleSheet.headerTextBlack}>
-                  Deja tu reseña
-                </Text>
-                <BnbButton
-                  buttonStyle={bnbStyleSheet.bnbButton}
-                  style={bnbStyleSheet.bnbButtonText}
-                  title="Crear reseña"
-                  onPress={_handleReviewUser}
-                />
+              <View>
+                <View style={styles.reviewUserContainer}>
+                  <Text style={bnbStyleSheet.headerTextBlack}>
+                    Deja tu reseña al {_is_owner ? "inquilino" : "anfitrión"}
+                  </Text>
+                  <BnbButton
+                    buttonStyle={bnbStyleSheet.bnbButton}
+                    style={bnbStyleSheet.bnbButtonText}
+                    title="Crear reseña"
+                    onPress={_handleReviewUser}
+                  />
+                </View>
+                <View>
+                  {_room && (
+                    <RoomReviews
+                      room_id={_room.id}
+                      is_owner={_is_owner}
+                      token={storedUser.auth_token}
+                      read_only={false}
+                    />
+                  )}
+                  <RoomRating
+                    is_owner={_is_owner}
+                    onRateRoom={_handleRateRoomButtonPress}
+                  />
+                </View>
               </View>
             )}
           </BnbBodyView>

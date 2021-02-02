@@ -56,28 +56,6 @@ function RoomScreen({ route, navigation }) {
     setIsLoading(false);
   };
 
-  const _handleRateRoomButtonPress = (quantity) => {
-    if (quantity !== 0) {
-      setIsLoading(true);
-      httpPostTokenRequest(
-        "POST",
-        urls.URL_ROOMS + "/" + room_id + "/ratings",
-        {
-          rating: quantity,
-        },
-
-        {
-          "Content-Type": "application/json",
-          "x-access-token": storedUser.auth_token,
-        },
-        _handleApiResponse,
-        _handleApiError
-      );
-    } else {
-      alert("Puntaje no puede ser 0");
-    }
-  };
-
   const _handleRoomDetailsButtonPress = () => {
     navigation.navigate("RoomDetails", { room_id: _room.id });
   };
@@ -291,10 +269,6 @@ function RoomScreen({ route, navigation }) {
               is_owner={_is_owner}
               token={storedUser.auth_token}
               read_only={true}
-            />
-            <RoomRating
-              is_owner={_is_owner}
-              onRateRoom={_handleRateRoomButtonPress}
             />
             <RoomComments
               room_id={room_id}
