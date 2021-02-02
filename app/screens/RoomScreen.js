@@ -29,6 +29,7 @@ import RoomRating from "../components/RoomRating";
 import getAverage from "../helpers/getAverage";
 import RoomComments from "../components/RoomComments";
 import BnbAlert from "../components/BnbAlert";
+import formatDate from "../helpers/formatDate";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -59,18 +60,6 @@ function RoomScreen({ route, navigation }) {
   const _handleRoomDetailsButtonPress = () => {
     navigation.navigate("RoomDetails", { room_id: _room.id });
   };
-
-  function formatDate(date) {
-    var d = new Date(date),
-      month = "" + (d.getMonth() + 1),
-      day = "" + d.getDate(),
-      year = d.getFullYear();
-
-    if (month.length < 2) month = "0" + month;
-    if (day.length < 2) day = "0" + day;
-
-    return [year, month, day].join("-");
-  }
 
   const _handleRoomBooking = () => {
     let date_from = formatDate(route.params.searchForm.dateBegin);

@@ -28,6 +28,7 @@ function RoomBookingScreen({ route, navigation }) {
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
 
+  const [_can_review, setCanReview] = useState();
   const [_is_owner, setIsOwner] = useState(false);
 
   const _handleApiError = (error) => {
@@ -160,6 +161,19 @@ function RoomBookingScreen({ route, navigation }) {
     }
   }, [_booking]);
 
+  /**Determino si la fecha hoy supera a la fecha de finalizacion de la estadia para habilitar
+   * el review
+   */
+  useEffect(() => {
+    if (_booking) {
+      const today = new Date();
+      const date_end = new Date(_booking.date_to);
+      console.log("today: " + today);
+      console.log("date_to: " + date_end);
+      setCanReview(today > date_end);
+    }
+  }, [_booking]);
+
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
   }
@@ -213,33 +227,48 @@ function RoomBookingScreen({ route, navigation }) {
               )}
             {_booking.booking_status === constants.BOOKING_STATUS_ACCEPTED && (
               <View>
-                <View style={styles.reviewUserContainer}>
-                  <Text style={bnbStyleSheet.headerTextBlack}>
-                    Deja tu reseña al {_is_owner ? "inquilino" : "anfitrión"}
-                  </Text>
-                  <BnbButton
-                    buttonStyle={bnbStyleSheet.bnbButton}
-                    style={bnbStyleSheet.bnbButtonText}
-                    title="Crear reseña"
-                    onPress={_handleReviewUser}
-                  />
-                </View>
-                <View>
-                  {_room && (
-                    <RoomReviews
-                      room_id={_room.id}
-                      is_owner={_is_owner}
-                      token={storedUser.auth_token}
-                      read_only={false}
-                    />
-                  )}
-                  <RoomRating
-                    is_owner={_is_owner}
-                    onRateRoom={_handleRateRoomButtonPress}
-                  />
-                </View>
+                <Separator />
+                <Text style={bnbStyleSheet.headerTextBlack}>
+                  Deja tu reseña al {_is_owner ? "inquilino" : "anfitrión"}
+                </Text>
               </View>
             )}
+            {_booking.booking_status === constants.BOOKING_STATUS_ACCEPTED &&
+              _can_review && (
+                <View>
+                  <View style={styles.reviewUserContainer}>
+                    <BnbButton
+                      buttonStyle={bnbStyleSheet.bnbButton}
+                      style={bnbStyleSheet.bnbButtonText}
+                      title="Crear reseña"
+                      onPress={_handleReviewUser}
+                    />
+                  </View>
+                  <View>
+                    {_room && (
+                      <RoomReviews
+                        room_id={_room.id}
+                        is_owner={_is_owner}
+                        token={storedUser.auth_token}
+                        read_only={false}
+                      />
+                    )}
+                    <RoomRating
+                      is_owner={_is_owner}
+                      onRateRoom={_handleRateRoomButtonPress}
+                    />
+                  </View>
+                </View>
+              )}
+            {_booking.booking_status === constants.BOOKING_STATUS_ACCEPTED &&
+              !_can_review && (
+                <View>
+                  <Text style={bnbStyleSheet.normalText}>
+                    Para poder dar una reseña debe finaliza el periodo de
+                    estadia
+                  </Text>
+                </View>
+              )}
           </BnbBodyView>
         </ScrollView>
       </BnbMainView>

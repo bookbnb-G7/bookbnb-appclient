@@ -81,7 +81,7 @@ function RoomReviews({ room_id, is_owner, token, read_only }) {
   return (
     <View>
       <Separator />
-      <Text style={bnbStyleSheet.headerTextBlack}>Reseñas</Text>
+      <Text style={bnbStyleSheet.headerTextBlack}>Reseñas habitación</Text>
       <View style={styles.roomReviewsContainer}>
         {_room_reviews &&
           _room_reviews.reviews.map((item, index) => (
