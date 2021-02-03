@@ -49,14 +49,13 @@ export default function App() {
   useTimer(3300, triggerRefresh);
   useEffect(() => {
     console.log("useEffect");
-    console.log(refresh);
     if (refresh) {
       console.log("refresh true");
-      const user = firebase.auth.currentUser;
-      if (user) {
+      const currentUser = firebase.auth.currentUser;
+      if (currentUser || user) {
         console.log("TOKEN: user esta logeado, token refresheado");
         /**En cada re renderizado de la app, si el user esta logeado refresheo el token */
-        user.getIdToken(true).then(async (token) => {
+        currentUser.getIdToken(true).then(async (token) => {
           const storedUser = await BnbSecureStore.read(
             constants.CACHE_USER_KEY
           );
@@ -69,7 +68,7 @@ export default function App() {
       }
       setRefresh(false);
     }
-  }, []);
+  }, [user]);
 
   if (!loaded) {
     return <BnbLoading text="Cargando fuentes..." />;
