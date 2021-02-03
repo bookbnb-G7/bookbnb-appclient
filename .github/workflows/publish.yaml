@@ -9,8 +9,8 @@ jobs:
     env:
       GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
       ANDROID_CLIENT_ID: ${{ secrets.ANDROID_CLIENT_ID }}
-      FACEBOOK_APP_ID: ${{ FACEBOOK_APP_ID }}
-      FACEBOOK_APP_NAME: ${{ FACEBOOK_APP_NAME }}
+      FACEBOOK_APP_ID: ${{ secrets.FACEBOOK_APP_ID }}
+      FACEBOOK_APP_NAME: ${{ secrets.FACEBOOK_APP_NAME }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,5 +23,6 @@ jobs:
           expo-packager: npm
           expo-username: ${{ secrets.EXPO_CLI_USERNAME }}
           expo-password: ${{ secrets.EXPO_CLI_PASSWORD }}
+      - run: sh ./scripts/reveal_secrets.sh
       - run: npm install
       - run: expo publish
