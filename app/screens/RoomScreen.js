@@ -29,6 +29,7 @@ import RoomRating from "../components/RoomRating";
 import getAverage from "../helpers/getAverage";
 import RoomComments from "../components/RoomComments";
 import BnbAlert from "../components/BnbAlert";
+import formatDate from "../helpers/formatDate";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -56,48 +57,9 @@ function RoomScreen({ route, navigation }) {
     setIsLoading(false);
   };
 
-  const _handlePrintDebugDate = () => {
-    console.log(route.params.searchForm.dateBegin);
-    console.log(route.params.searchForm.dateEnd);
-  };
-
-  const _handleRateRoomButtonPress = (quantity) => {
-    if (quantity !== 0) {
-      setIsLoading(true);
-      httpPostTokenRequest(
-        "POST",
-        urls.URL_ROOMS + "/" + room_id + "/ratings",
-        {
-          rating: quantity,
-        },
-
-        {
-          "Content-Type": "application/json",
-          "x-access-token": storedUser.auth_token,
-        },
-        _handleApiResponse,
-        _handleApiError
-      );
-    } else {
-      alert("Puntaje no puede ser 0");
-    }
-  };
-
   const _handleRoomDetailsButtonPress = () => {
     navigation.navigate("RoomDetails", { room_id: _room.id });
   };
-
-  function formatDate(date) {
-    var d = new Date(date),
-      month = "" + (d.getMonth() + 1),
-      day = "" + d.getDate(),
-      year = d.getFullYear();
-
-    if (month.length < 2) month = "0" + month;
-    if (day.length < 2) day = "0" + day;
-
-    return [year, month, day].join("-");
-  }
 
   const _handleRoomBooking = () => {
     let date_from = formatDate(route.params.searchForm.dateBegin);
@@ -295,13 +257,8 @@ function RoomScreen({ route, navigation }) {
               room_id={room_id}
               is_owner={_is_owner}
               token={storedUser.auth_token}
+              read_only={true}
             />
-            <Separator />
-            <RoomRating
-              is_owner={_is_owner}
-              onRateRoom={_handleRateRoomButtonPress}
-            />
-            <Separator />
             <RoomComments
               room_id={room_id}
               me_id={storedUser.userData.id}
@@ -334,12 +291,6 @@ function RoomScreen({ route, navigation }) {
                 />
               </View>
             )}
-
-            <BnbButton
-              style={styles.center}
-              title="DEBUG date"
-              onPress={_handlePrintDebugDate}
-            />
             <Separator />
             {_is_owner && _room && (
               <BnbButton

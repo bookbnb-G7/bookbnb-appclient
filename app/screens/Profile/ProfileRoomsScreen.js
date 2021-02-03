@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import BnbSecureStore from "../../classes/BnbSecureStore";
+import BnbError from "../../components/BnbError";
 import BnbLoading from "../../components/BnbLoading";
 import BnbMainView from "../../components/BnbMainView";
 import BnbRoomPreview from "../../components/BnbRoomPreview";
