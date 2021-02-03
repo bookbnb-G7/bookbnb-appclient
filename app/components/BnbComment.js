@@ -11,6 +11,7 @@ import constants from "../constant/constants";
 import styling from "../config/styling";
 import colors from "../config/colors";
 import Separator from "./Separator";
+import BnbUserPost from "./BnbUserPost";
 
 class BnbComment extends Component {
   constructor(props) {
@@ -73,27 +74,13 @@ class BnbComment extends Component {
     }
     return (
       <View style={styles.mainContainer}>
-        <View style={styles.header}>
-          <TouchableHighlight onPress={this.handleUsernameTap}>
-            <View style={styles.userContainer}>
-              <Image
-                style={styles.image}
-                source={
-                  this.props.image
-                    ? require("../assets/profile_icon.png")
-                    : { uri: this.props.image }
-                }
-              ></Image>
-              <Text style={styles.boldText}>
-                {this.props.comment.commentator}
-              </Text>
-            </View>
-          </TouchableHighlight>
-          <Text style={styles.boldText}>{this.props.comment.created_at}</Text>
-        </View>
-        <View style={styles.body}>
-          <Text style={styles.menuItemText}>{this.props.comment.comment}</Text>
-        </View>
+        <Separator />
+        <BnbUserPost
+          user_id={this.props.comment.commentator_id}
+          time={this.props.comment.created_at}
+          text={this.props.comment.comment}
+          onUsernameTap={this.handleUsernameTap}
+        />
         <View style={styles.actionBar}>
           {!this.props.comment.main_comment_id &&
             (this.props.comment.commentator_id === this.props.me_id ||
@@ -134,9 +121,6 @@ class BnbComment extends Component {
             </TouchableOpacity>
           </View>
         )}
-        {this.props.answers?.length > 0 && (
-          <Separator style={{ width: "100%" }} />
-        )}
         {this.props.answers &&
           this.props.answers.map((item, index) => (
             <View key={item.id} style={styles.replyContainer}>
@@ -155,23 +139,9 @@ class BnbComment extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {},
-  image: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: colors.graySoft,
-    marginRight: 10,
-  },
-  header: {},
-  body: {
-    margin: 10,
-  },
-  userContainer: {
-    flexDirection: "row",
-  },
   actionBar: {
     backgroundColor: colors.alpha08,
-    margin: 10,
+    marginLeft: 10,
     flexDirection: "row",
   },
   actionBarText: {
@@ -185,12 +155,6 @@ const styles = StyleSheet.create({
     marginVertical: styling.separator,
   },
   menuItem: {},
-  boldText: {
-    fontFamily: "Raleway_700Bold",
-  },
-  menuItemText: {
-    fontFamily: "Raleway_400Regular",
-  },
   replyContainer: {
     marginLeft: 40,
   },
@@ -199,7 +163,6 @@ const styles = StyleSheet.create({
 BnbComment.propTypes = {
   comment: PropTypes.object,
   styles: PropTypes.object,
-  image: PropTypes.string,
   onUsernameTap: PropTypes.func,
   onDeleteTap: PropTypes.func,
   onReply: PropTypes.func,

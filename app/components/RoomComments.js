@@ -89,7 +89,10 @@ function RoomComments({ room_id, me_id, is_owner, token, navigation }) {
     if (user_id == me_id) {
       navigation.navigate("ProfileStack", { screen: "Profile" });
     } else {
-      navigation.navigate("User", { user_id: user_id });
+      navigation.navigate("SearchRooms", {
+        screen: "User",
+        params: { user_id: user_id },
+      });
     }
   };
 
@@ -181,7 +184,6 @@ function RoomComments({ room_id, me_id, is_owner, token, navigation }) {
           <BnbButton title="Publicar" onPress={_handleAddParentComment} />
         </View>
       )}
-      <Separator />
     </View>
   );
 }

@@ -174,6 +174,7 @@ function RoomScreen({ route, navigation }) {
               token={storedUser.auth_token}
               navigation={navigation}
             />
+            <Separator />
             <Text style={bnbStyleSheet.headerTextBlack}>Disponibilidad</Text>
             <Calendar
               minDate={Date()}
