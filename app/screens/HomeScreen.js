@@ -124,7 +124,6 @@ const styles = StyleSheet.create({
   imageSlider: {
     flex: 1,
     alignItems: "center",
-    borderWidth: 1,
     paddingBottom: 30,
   },
   optionsContainer: {

@@ -40,30 +40,6 @@ export default function App() {
     Raleway_600SemiBold,
   });
 
-  /** 
-  useEffect(() => {
-    firebase.auth.onIdTokenChanged(function (user) {
-      if (user) {
-        ojo con el loop de refresheo de tokens, idToken refreshea por lo que activa onIdToken Changed
-        No se activa al expirar el token, ver si el token tiene un tiempo de expiracion 
-        console.log("Signin or token refresh");
-        user.getIdToken().then((id_token) => {
-          console.log("onIdTokenChanged: " + id_token + "\n");
-
-          BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
-            if (storedUser && id_token != storedUser.auth_token) {
-              console.log("Refresheando token");
-              Si tengo un user en el Storage y su token es distinto,
-              lo reemplazo por el mas nuevo
-              storedUser.auth_token = id_token;
-              BnbSecureStore.remember(constants.CACHE_USER_KEY, storedUser);
-            }
-          });
-        });
-      }
-    });
-  }, []);
-  */
   const [refresh, setRefresh] = useState(true);
   const triggerRefresh = () => {
     setRefresh(true);
@@ -72,7 +48,10 @@ export default function App() {
   /**Lo refresheo cada 3300 para asegurarme de que se refreshea antes de expirar*/
   useTimer(3300, triggerRefresh);
   useEffect(() => {
+    console.log("useEffect");
+    console.log(refresh);
     if (refresh) {
+      console.log("refresh true");
       const user = firebase.auth.currentUser;
       if (user) {
         console.log("TOKEN: user esta logeado, token refresheado");

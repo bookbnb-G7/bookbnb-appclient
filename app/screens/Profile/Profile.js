@@ -152,8 +152,8 @@ function Profile({ route, navigation }) {
                 iconColor={colors.golden}
                 iconSize={24}
                 text={`Host rating: ${
-                  _guestRatings?.ratings.length > 0
-                    ? getAverage(_ratings.ratings, "rating")
+                  _hostRatings?.ratings.length > 0
+                    ? getAverage(_hostRatings.ratings, "rating")
                     : "-"
                 }`}
                 textStyle={{ color: "black" }}
@@ -163,8 +163,8 @@ function Profile({ route, navigation }) {
                 iconColor={colors.golden}
                 iconSize={24}
                 text={`Guest rating: ${
-                  _hostRatings?.ratings.length > 0
-                    ? getAverage(_ratings.ratings, "rating")
+                  _guestRatings?.ratings.length > 0
+                    ? getAverage(_guestRatings.ratings, "rating")
                     : "-"
                 }`}
                 textStyle={{ color: "black" }}

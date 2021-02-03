@@ -12,13 +12,11 @@ import ProfileRoomsScreen from "./ProfileRoomsScreen";
 import ProfileWalletScreen from "./ProfileWalletScreen";
 import ImagesEditScreen from "../ImagesEditScreen";
 import { Text } from "react-native";
-import ReviewUserScreen from "../ReviewUserScreen";
 import ProfileReviewsScreen from "./ProfileReviewsScreen";
 import RoomScreen from "../RoomScreen";
-import ProfileChatsScreen from "./ProfileChatsScreen";
-import UserChatScreen from "./UserChatScreen";
 import RoomEditScreen from "../RoomEditScreen";
 import ProfileOwnerScreen from "./ProfileOwnerScreen";
+import UserReviewScreen from "../UserReviewScreen";
 
 const ProfileStack = createStackNavigator();
 
@@ -47,7 +45,6 @@ function ProfileStackScreen(props) {
           name="ProfileReviews"
           component={ProfileReviewsScreen}
         />
-        <ProfileStack.Screen name="ReviewUser" component={ReviewUserScreen} />
         <ProfileStack.Screen
           name="ProfileOwner"
           component={ProfileOwnerScreen}
@@ -69,6 +66,7 @@ function ProfileStackScreen(props) {
           component={ProfileBookingsScreen}
         />
         <ProfileStack.Screen name="RoomBooking" component={RoomBookingScreen} />
+        <ProfileStack.Screen name="UserReview" component={UserReviewScreen} />
         <ProfileStack.Screen
           name="ProfileWallet"
           component={ProfileWalletScreen}

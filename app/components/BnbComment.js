@@ -10,14 +10,14 @@ import { Component } from "react";
 import constants from "../constant/constants";
 import styling from "../config/styling";
 import colors from "../config/colors";
+import Separator from "./Separator";
 
 class BnbComment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      menu_visible: false,
       reply_visible: false,
-      comment: "",
+      comment_text: "",
     };
 
     this.handleUsernameTap = this.handleUsernameTap.bind(this);
@@ -28,7 +28,7 @@ class BnbComment extends Component {
 
   handleUsernameTap() {
     if (this.props.onUsernameTap) {
-      this.props.onUsernameTap(this.props.username);
+      this.props.onUsernameTap(this.props.comment.commentator_id);
     }
   }
 
@@ -39,7 +39,7 @@ class BnbComment extends Component {
       [
         {
           text: "Si",
-          onPress: () => this.props.onDeleteTap(this.props.id),
+          onPress: () => this.props.onDeleteTap(this.props.comment.id),
         },
         {
           text: "No",
@@ -48,7 +48,6 @@ class BnbComment extends Component {
       ],
       false
     );
-    this.setState({ menu_visible: false });
   }
 
   handleMakeReply() {
@@ -60,48 +59,60 @@ class BnbComment extends Component {
   handleSendReply() {
     if (this.props.onReply) {
       this.setState({ reply_visible: false });
-      this.props.onReply(this.state.comment, this.props.id);
-      this.setState({ comment: "" });
+      this.props.onReply(this.state.comment_text, this.props.comment.id);
+      this.setState({ comment_text: "" });
     }
   }
 
   render() {
+    if (
+      this.props.comment.main_comment_id > 0 &&
+      this.props.answers?.length === 0
+    ) {
+      return null;
+    }
     return (
-      <View>
+      <View style={styles.mainContainer}>
         <View style={styles.header}>
           <TouchableHighlight onPress={this.handleUsernameTap}>
-            <View style={styles.user}>
+            <View style={styles.userContainer}>
               <Image
                 style={styles.image}
                 source={
-                  this.props.image === ""
+                  this.props.image
                     ? require("../assets/profile_icon.png")
                     : { uri: this.props.image }
                 }
               ></Image>
-              <Text style={styles.username}>{this.props.username}</Text>
+              <Text style={styles.boldText}>
+                {this.props.comment.commentator}
+              </Text>
             </View>
           </TouchableHighlight>
+          <Text style={styles.boldText}>{this.props.comment.created_at}</Text>
         </View>
-        <Text style={styles.timeStamp}>{this.props.timeStamp}</Text>
         <View style={styles.body}>
-          <Text>{this.props.comment}</Text>
+          <Text style={styles.menuItemText}>{this.props.comment.comment}</Text>
         </View>
         <View style={styles.actionBar}>
-          {this.props.canEdit && (
+          {!this.props.comment.main_comment_id &&
+            (this.props.comment.commentator_id === this.props.me_id ||
+              this.props.is_room_owner) && (
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={this.handleMakeReply}
+              >
+                <Text style={styles.actionBarText}>Responder</Text>
+              </TouchableOpacity>
+            )}
+          {this.props.comment.commentator_id === this.props.me_id && (
             <TouchableOpacity
               style={styles.menuItem}
               onPress={this.handleDelete}
             >
-              <Text> DELETE </Text>
+              <Text style={styles.actionBarText}> Borrar</Text>
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={this.handleMakeReply}
-          >
-            <Text> Responder </Text>
-          </TouchableOpacity>
         </View>
         {this.state.reply_visible && (
           <View style={styles.replyContainer}>
@@ -111,44 +122,74 @@ class BnbComment extends Component {
                 multiline
                 numberOfLines={4}
                 maxLength={constants.maxTextLength}
-                onChangeText={(value) => this.setState({ comment: value })}
-                value={this.state.comment}
+                onChangeText={(value) => this.setState({ comment_text: value })}
+                value={this.state.comment_text}
               ></TextInput>
             </View>
             <TouchableOpacity
               style={styles.menuItem}
               onPress={this.handleSendReply}
             >
-              <Text> Publicar </Text>
+              <Text style={styles.actionBarText}> Publicar </Text>
             </TouchableOpacity>
           </View>
         )}
+        {this.props.answers?.length > 0 && (
+          <Separator style={{ width: "100%" }} />
+        )}
+        {this.props.answers &&
+          this.props.answers.map((item, index) => (
+            <View key={item.id} style={styles.replyContainer}>
+              <BnbComment
+                comment={item}
+                me_id={this.props.me_id}
+                onDeleteTap={this.props.onDeleteTap}
+                onUsernameTap={this.props.onUsernameTap}
+              />
+            </View>
+          ))}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {},
   image: {
     width: 30,
     height: 30,
     borderRadius: 15,
     backgroundColor: colors.graySoft,
+    marginRight: 10,
   },
-  user: {
+  header: {},
+  body: {
+    margin: 10,
+  },
+  userContainer: {
     flexDirection: "row",
   },
   actionBar: {
+    backgroundColor: colors.alpha08,
+    margin: 10,
     flexDirection: "row",
+  },
+  actionBarText: {
+    fontFamily: "Raleway_700Bold",
+    color: colors.redAirBNB,
   },
   textInput: {
     borderRadius: styling.smallCornerRadius,
-    backgroundColor: colors.graySoft,
     borderWidth: 1,
+    backgroundColor: colors.graySoft,
     marginVertical: styling.separator,
   },
-  menuItem: {
-    borderWidth: 1,
+  menuItem: {},
+  boldText: {
+    fontFamily: "Raleway_700Bold",
+  },
+  menuItemText: {
+    fontFamily: "Raleway_400Regular",
   },
   replyContainer: {
     marginLeft: 40,
@@ -156,11 +197,9 @@ const styles = StyleSheet.create({
 });
 
 BnbComment.propTypes = {
-  comment: PropTypes.string,
+  comment: PropTypes.object,
   styles: PropTypes.object,
-  canEdit: PropTypes.bool,
   image: PropTypes.string,
-  username: PropTypes.string,
   onUsernameTap: PropTypes.func,
   onDeleteTap: PropTypes.func,
   onReply: PropTypes.func,

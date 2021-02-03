@@ -10,7 +10,7 @@ import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import BnbAlert from "./BnbAlert";
 import BnbButton from "./BnbButton";
-import BnbComment2 from "./BnbComment2";
+import BnbComment from "./BnbComment";
 import BnbError from "./BnbError";
 import Separator from "./Separator";
 
@@ -154,10 +154,11 @@ function RoomComments({ room_id, me_id, is_owner, token, navigation }) {
       {_room_comments &&
         _room_comments.comments.map((item, index) => (
           <View key={item.comment.id}>
-            <BnbComment2
+            <BnbComment
               comment={item.comment}
               answers={item.answers}
               me_id={me_id}
+              is_room_owner={is_owner}
               onDeleteTap={_handleDeleteComment}
               onReply={_handleReplyComment}
               onUsernameTap={_handleUsernameTap}

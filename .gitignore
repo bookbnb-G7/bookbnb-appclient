@@ -16,3 +16,7 @@ yarn.lock
 .env
 google-services.json
 cosas_por_hacer.md
+public-key.gpg
+.gitsecret/keys/random_seed
+!*.secret
+appcliprivatekey.pgp

@@ -11,6 +11,7 @@ import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 import { ScrollView } from "react-native-gesture-handler";
+import bnbStyleSheet from "../../constant/bnbStyleSheet";
 
 /**Aca deberia aparecer una lista con todos los rooms del usuario y
  * que indique si estos tienen o no un booking esperando a ser aceptado/rechazado */
@@ -55,7 +56,7 @@ function ProfileBookingsScreen({ navigation }) {
       <BnbMainView>
         <View style={styles.centerContainer}>
           <ScrollView>
-            <Text style={styles.title}>
+            <Text style={bnbStyleSheet.headerTextBlack}>
               Tienes {_bookings.made.bookings.length} reservas hechas
             </Text>
             <View>
@@ -63,22 +64,23 @@ function ProfileBookingsScreen({ navigation }) {
                 <View key={item.id}>
                   <BnbBookingPreview
                     navigation={navigation}
-                    booking={item}
-                  ></BnbBookingPreview>
+                    booking_id={item.id}
+                  />
                 </View>
               ))}
             </View>
-            <Separator></Separator>
-            <Text style={styles.title}>
+            <Separator />
+            <Text style={bnbStyleSheet.headerTextBlack}>
               Tienes {_bookings.received.bookings.length} solicitudes de reserva
             </Text>
             <View>
-              {_bookings.made.bookings.map((item, index) => (
+              {_bookings.received.bookings.map((item, index) => (
                 <View key={item.id}>
                   <BnbBookingPreview
                     navigation={navigation}
-                    booking={item}
-                  ></BnbBookingPreview>
+                    booking_id={item.id}
+                  />
+                  <Separator />
                 </View>
               ))}
             </View>

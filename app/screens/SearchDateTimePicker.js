@@ -34,7 +34,7 @@ function SearchDateTimePicker({ route, navigation }) {
   const onChangeBegin = (event, selectedDate) => {
     const currentDate = selectedDate || dateBegin;
     setShowBegin(Platform.OS === "ios");
-    if (currentDate < dateEnd || !pickedBeginDate) {
+    if (currentDate <= dateEnd || !pickedBeginDate) {
       setDateBegin(currentDate);
       setPicked(true);
     } else {

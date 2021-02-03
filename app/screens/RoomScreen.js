@@ -28,6 +28,8 @@ import RoomReviews from "../components/RoomReviews";
 import RoomRating from "../components/RoomRating";
 import getAverage from "../helpers/getAverage";
 import RoomComments from "../components/RoomComments";
+import BnbAlert from "../components/BnbAlert";
+import formatDate from "../helpers/formatDate";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -55,49 +57,39 @@ function RoomScreen({ route, navigation }) {
     setIsLoading(false);
   };
 
-  const _handlePrintDebugDate = () => {
-    console.log(route.params.searchForm.dateBegin);
-    console.log(route.params.searchForm.dateEnd);
-  };
-
-  const _handleRateRoomButtonPress = (quantity) => {
-    if (quantity !== 0) {
-      setIsLoading(true);
-      httpPostTokenRequest(
-        "POST",
-        urls.URL_ROOMS + "/" + room_id + "/ratings",
-        {
-          rating: quantity,
-        },
-
-        {
-          "Content-Type": "application/json",
-          "x-access-token": storedUser.auth_token,
-        },
-        _handleApiResponse,
-        _handleApiError
-      );
-    } else {
-      alert("Puntaje no puede ser 0");
-    }
-  };
-
   const _handleRoomDetailsButtonPress = () => {
     navigation.navigate("RoomDetails", { room_id: _room.id });
   };
 
   const _handleRoomBooking = () => {
+    let date_from = formatDate(route.params.searchForm.dateBegin);
+    let date_to = formatDate(route.params.searchForm.dateEnd);
+    setIsLoading(true);
     httpPostTokenRequest(
       "POST",
-      urls.URL_ROOMS + "/" + room_id + "/bookings",
+      urls.URL_BOOKINGS,
       {
-        room_id: _room.id,
-        date_from: route.params.searchForm.dateBegin,
-        date_to: route.params.searchForm.dateEnd,
+        room_id: room_id,
+        date_from: date_from,
+        date_to: date_to,
       },
-      { "x-access-token": storedUser.auth_token },
-      _handleApiResponse,
-      _handleApiError
+      {
+        "Content-Type": "application/json",
+        "x-access-token": storedUser.auth_token,
+      }
+    ).then(
+      (response) => {
+        setIsLoading(false);
+        BnbAlert(
+          "Reserva",
+          "Solicitud de reserva realizada con exito",
+          "Entendido"
+        );
+      },
+      (error) => {
+        setIsLoading(false);
+        setError(error);
+      }
     );
   };
 
@@ -153,25 +145,9 @@ function RoomScreen({ route, navigation }) {
       });
   };
 
-  // Sin esto no se vuelve a hacer el fetch cuando se entra por segunda vez
-  // a esta pantalla, por mas que haya cambiado el room_id
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchIfRoomChanged = async () => {
-        const last_room_id = await BnbSecureStore.readUnsafe(
-          constants.CACHE_ROOM_KEY
-        );
-        if (last_room_id !== route.params?.room_id) {
-          await BnbSecureStore.remember(constants.CACHE_ROOM_KEY, room_id);
-          setIsLoading(true);
-          await fetchRoomData();
-        }
-      };
-      fetchIfRoomChanged();
-
-      return () => BnbSecureStore.clear(constants.CACHE_ROOM_KEY);
-    }, [route.params?.room_id])
-  );
+  useEffect(() => {
+    fetchRoomData();
+  }, [route.params?.room_id]);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
@@ -281,13 +257,8 @@ function RoomScreen({ route, navigation }) {
               room_id={room_id}
               is_owner={_is_owner}
               token={storedUser.auth_token}
+              read_only={true}
             />
-            <Separator />
-            <RoomRating
-              is_owner={_is_owner}
-              onRateRoom={_handleRateRoomButtonPress}
-            />
-            <Separator />
             <RoomComments
               room_id={room_id}
               me_id={storedUser.userData.id}
@@ -320,12 +291,6 @@ function RoomScreen({ route, navigation }) {
                 />
               </View>
             )}
-
-            <BnbButton
-              style={styles.center}
-              title="DEBUG date"
-              onPress={_handlePrintDebugDate}
-            />
             <Separator />
             {_is_owner && _room && (
               <BnbButton

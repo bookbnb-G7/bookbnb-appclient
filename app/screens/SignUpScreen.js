@@ -103,7 +103,7 @@ function SignUpScreen({ route, navigation }) {
   const ref_birthdate = useRef();
 
   if (_is_awaiting) {
-    return <BnbLoading />;
+    return <BnbLoading text="Registrando..." />;
   } else {
     return (
       <BnbMainView>
