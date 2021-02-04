@@ -12,6 +12,7 @@ import styling from "../config/styling";
 import colors from "../config/colors";
 import Separator from "./Separator";
 import BnbUserPost from "./BnbUserPost";
+import BnbMultilineTextInput from "./BnbMultilineTextInput";
 
 class BnbComment extends Component {
   constructor(props) {
@@ -103,16 +104,9 @@ class BnbComment extends Component {
         </View>
         {this.state.reply_visible && (
           <View style={styles.replyContainer}>
-            <View>
-              <TextInput
-                style={styles.textInput}
-                multiline
-                numberOfLines={4}
-                maxLength={constants.maxTextLength}
-                onChangeText={(value) => this.setState({ comment_text: value })}
-                value={this.state.comment_text}
-              />
-            </View>
+            <BnbMultilineTextInput
+              onChangeText={(value) => this.setState({ comment_text: value })}
+            />
             <TouchableOpacity
               style={styles.menuItem}
               onPress={this.handleSendReply}
@@ -147,12 +141,6 @@ const styles = StyleSheet.create({
   actionBarText: {
     fontFamily: "Raleway_700Bold",
     color: colors.redAirBNB,
-  },
-  textInput: {
-    borderRadius: styling.smallCornerRadius,
-    borderWidth: 1,
-    backgroundColor: colors.graySoft,
-    marginVertical: styling.separator,
   },
   menuItem: {},
   replyContainer: {
