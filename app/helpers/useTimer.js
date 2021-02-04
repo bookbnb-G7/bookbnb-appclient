@@ -8,10 +8,6 @@ function useTimer(seconds, callback) {
     // exit early when we reach 0
     if (!timeLeft) return;
 
-    if (timeLeft === seconds) {
-      callback();
-    }
-
     // save intervalId to clear the interval when the
     // component re-renders
     const intervalId = setInterval(() => {

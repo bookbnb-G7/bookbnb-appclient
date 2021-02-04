@@ -21,7 +21,6 @@ import { LogBox } from "react-native";
 import useTimer from "./app/helpers/useTimer";
 import BnbSecureStore from "./app/classes/BnbSecureStore";
 import constants from "./app/constant/constants";
-import ProfileChatsScreen from "./app/screens/Profile/ProfileChatsScreen";
 import ChatStack from "./app/screens/ChatStack";
 
 LogBox.ignoreLogs([
@@ -39,34 +38,20 @@ export default function App() {
     Raleway_600SemiBold,
   });
 
-  const [refresh, setRefresh] = useState(true);
-  const triggerRefresh = () => {
-    setRefresh(true);
+  const refreshToken = () => {
+    if (user) {
+      console.log("TOKEN refresheado");
+      user.getIdToken(true).then(async (token) => {
+        const storedUser = await BnbSecureStore.read(constants.CACHE_USER_KEY);
+        BnbSecureStore.rememberMe(token, storedUser.userData);
+      });
+    }
   };
   /**El idToken de firebase dura 1 hora => 3600 segundos */
   /**Lo refresheo cada 3300 para asegurarme de que se refreshea antes de expirar*/
-  useTimer(3300, triggerRefresh);
+  useTimer(3300, refreshToken);
   useEffect(() => {
-    console.log("useEffect");
-    if (refresh || user) {
-      console.log("refresh true");
-      const currentUser = firebase.auth.currentUser;
-      if (currentUser || user) {
-        console.log("TOKEN: user esta logeado, token refresheado");
-        /**En cada re renderizado de la app, si el user esta logeado refresheo el token */
-        currentUser.getIdToken(true).then(async (token) => {
-          const storedUser = await BnbSecureStore.read(
-            constants.CACHE_USER_KEY
-          );
-          const storeUser = {
-            userData: storedUser.userData,
-            auth_token: token,
-          };
-          BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser);
-        });
-      }
-      setRefresh(false);
-    }
+    refreshToken();
   }, [user]);
 
   if (!loaded) {
@@ -102,7 +87,6 @@ export default function App() {
               iconName = "chatbox";
             }
 
-            // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
         })}
