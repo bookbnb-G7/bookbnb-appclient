@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image, StatusBar } from "react-native";
 import colors from "../../config/colors";
 import fonts from "../../config/fonts";
@@ -21,6 +21,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import BnbError from "../../components/BnbError";
 import ProfileEdit from "./ProfileEdit";
 import BnbIconText from "../../components/BnbIconText";
+import { useFocusEffect } from "@react-navigation/native";
 
 /**Este es de solo lectura, generico y debe sevir para cualquier usuario */
 function Profile({ route, navigation }) {
@@ -71,12 +72,7 @@ function Profile({ route, navigation }) {
     setUser((previous) => ({ ...previous, [key]: value }));
   };
 
-  useEffect(() => {
-    /**Si no me pasaron el user id es porque soy el dueño, asi que obtengo el user_id del dueño */
-    /**La ventaja de no anidar los then es que puedo catchear los errores con un solo catch
-     * la desventaja es que si un then depende de uno superior no tengo forma de pasarle la respuesta
-     * de la promesa
-     */
+  const fetchUserData = () => {
     BnbSecureStore.read(constants.CACHE_USER_KEY)
       .then((user) => {
         let async_user_id = user_id;
@@ -118,7 +114,17 @@ function Profile({ route, navigation }) {
         setError(error);
         setIsLoading(false);
       });
-  }, [route.params?.user_id]);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribe = fetchUserData();
+
+      /**return function cleanup(){
+        setError(null)
+      }*/
+    }, [route.params?.user_id])
+  );
 
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;

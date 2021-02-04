@@ -7,18 +7,37 @@ import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbButton from "./BnbButton";
 import BnbError from "../components/BnbError";
-import RoomReview from "./RoomReview";
 import colors from "../config/colors";
 import constants from "../constant/constants";
 import Separator from "./Separator";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
+import BnbUserPost from "./BnbUserPost";
 
 /**Se encarga del fetcheo y manejo de las reviews del RoomScreen */
-function RoomReviews({ room_id, is_owner, token, read_only }) {
+function RoomReviews({
+  me_id,
+  room_id,
+  is_owner,
+  token,
+  read_only,
+  navigation,
+}) {
   const [_room_reviews, setRoomReviews] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
   const [_review_input, setReviewInput] = useState("");
+
+  /**Codigo copiado de RoomComments */
+  const _handleUsernameTap = (user_id) => {
+    if (user_id == me_id) {
+      navigation.navigate("ProfileStack", { screen: "Profile" });
+    } else {
+      navigation.navigate("SearchRooms", {
+        screen: "User",
+        params: { user_id: user_id },
+      });
+    }
+  };
 
   const _handlePostReview = () => {
     if (_review_input != "") {
@@ -86,10 +105,11 @@ function RoomReviews({ room_id, is_owner, token, read_only }) {
         {_room_reviews &&
           _room_reviews.reviews.map((item, index) => (
             <View key={item.id}>
-              <RoomReview
-                reviewer={item.reviewer}
-                date={item.date}
-                review={item.review}
+              <BnbUserPost
+                user_id={item.reviewer_id}
+                time={item.date}
+                text={item.review}
+                onUsernameTap={_handleUsernameTap}
               />
             </View>
           ))}

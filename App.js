@@ -32,7 +32,6 @@ const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [user, initializing] = useGetCurrentSignedInUser();
-  const [_is_refreshing, setIsRefreshing] = useState(false);
   const [loaded, error] = useFonts({
     Raleway_700Bold,
     Raleway_400Regular,
@@ -49,7 +48,7 @@ export default function App() {
   useTimer(3300, triggerRefresh);
   useEffect(() => {
     console.log("useEffect");
-    if (refresh) {
+    if (refresh || user) {
       console.log("refresh true");
       const currentUser = firebase.auth.currentUser;
       if (currentUser || user) {
@@ -74,9 +73,6 @@ export default function App() {
     return <BnbLoading text="Cargando fuentes..." />;
   }
 
-  if (_is_refreshing) {
-    return <BnbLoading text={"Refresheando sesión"} />;
-  }
   if (initializing) {
     return <BnbLoading />;
   }

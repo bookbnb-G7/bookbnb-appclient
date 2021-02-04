@@ -39,7 +39,7 @@ const BnbUserPost = ({ user_id, time, text, onUsernameTap }) => {
         <TouchableHighlight
           activeOpacity={0.2}
           underlayColor={colors.redAirBNBSoft}
-          onPress={onUsernameTap}
+          onPress={() => onUsernameTap(user_id)}
         >
           {_user && (
             <View style={styles.userContainer}>

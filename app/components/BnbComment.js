@@ -79,7 +79,7 @@ class BnbComment extends Component {
           user_id={this.props.comment.commentator_id}
           time={this.props.comment.created_at}
           text={this.props.comment.comment}
-          onUsernameTap={this.handleUsernameTap}
+          onUsernameTap={this.props.onUsernameTap}
         />
         <View style={styles.actionBar}>
           {!this.props.comment.main_comment_id &&
@@ -111,7 +111,7 @@ class BnbComment extends Component {
                 maxLength={constants.maxTextLength}
                 onChangeText={(value) => this.setState({ comment_text: value })}
                 value={this.state.comment_text}
-              ></TextInput>
+              />
             </View>
             <TouchableOpacity
               style={styles.menuItem}

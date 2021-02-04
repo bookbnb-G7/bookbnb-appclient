@@ -162,10 +162,12 @@ function RoomScreen({ route, navigation }) {
               />
             )}
             <RoomReviews
+              me_id={storedUser.userData.id}
               room_id={room_id}
               is_owner={_is_owner}
               token={storedUser.auth_token}
               read_only={true}
+              navigation={navigation}
             />
             <RoomComments
               room_id={room_id}
