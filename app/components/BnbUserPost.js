@@ -56,7 +56,7 @@ const BnbUserPost = ({ user_id, time, text, onUsernameTap }) => {
                   {_user.firstname} {_user.lastname}
                 </Text>
                 {time && (
-                  <Text style={styles.menuItemText}>Publicado: {time}</Text>
+                  <Text style={styles.menuItemText}>Publicado: {time.split("T")[0]}</Text>
                 )}
               </View>
             </View>

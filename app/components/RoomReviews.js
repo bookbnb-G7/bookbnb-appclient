@@ -98,9 +98,9 @@ function RoomReviews({
     return <Text>Cargando reviews...</Text>;
   }
   return (
-    <View>
-      <Separator />
-      <Text style={bnbStyleSheet.headerTextBlack}>Reseñas habitación</Text>
+    <View style={styles.roomReviewCompContainer}>
+      <Separator style={{width: "100%", marginVertical: 15}} />
+      <Text style={{ ...bnbStyleSheet.headerTextBlack, paddingLeft: 0}}>Reseñas habitación</Text>
       <View style={styles.roomReviewsContainer}>
         {_room_reviews &&
           _room_reviews.reviews.map((item, index) => (
@@ -126,14 +126,13 @@ function RoomReviews({
           <BnbButton title="Publicar" onPress={_handlePostReview} />
         </View>
       )}
-      <Separator />
+      <Separator style={{width: "100%", marginTop: 15}} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   roomReviewsContainer: {
-    marginLeft: 10,
   },
   writeAReviewContainer: {},
   textInput: {
@@ -141,6 +140,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.graySoft,
     borderWidth: 1,
     marginVertical: styling.separator,
+  },
+  roomReviewCompContainer: {
+    paddingHorizontal: 10
   },
 });
 

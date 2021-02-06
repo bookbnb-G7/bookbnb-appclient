@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React, {useEffect, useState} from "react";
+import {StyleSheet, View, Text} from "react-native";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbButton from "../components/BnbButton";
 import BnbImageSlider from "../components/BnbImageSlider";
@@ -21,7 +21,7 @@ import BnbBodyView from "../components/BnbBodyView";
 /**Deberia pasar un ide y hacer el fetch aca, pero dejaria de ser generico
  * dado que no es lo mismo el user que el room, creo
  */
-function ImagesEditScreen({ route, navigation }) {
+function ImagesEditScreen({route, navigation}) {
   const room_id = route.params.room_id;
   const isCreatingRoom = route?.params?.isCreatingRoom;
 
@@ -102,7 +102,7 @@ function ImagesEditScreen({ route, navigation }) {
     httpGetTokenRequest(
       "DELETE",
       urls.URL_ROOMS + "/" + room_id + "/photos/" + photo_firebase_id,
-      { "x-access-token": storedUser.auth_token },
+      {"x-access-token": storedUser.auth_token},
       _handleApiResponse,
       _handleApiError
     );
@@ -167,14 +167,14 @@ function ImagesEditScreen({ route, navigation }) {
               images={_photos_urls}
               width={200}
               onPress={_handleRemoveImage}
-            ></BnbImageSlider>
+            />
           </View>
-          <BnbButton title={"Agregar imagen"} onPress={_pickImage}></BnbButton>
+          <BnbButton title={"Agregar imagen"} onPress={_pickImage}/>
           {isCreatingRoom && (
             <BnbButton
               title={"No agregar imagen y terminar"}
               onPress={_handleApiResponse}
-            ></BnbButton>
+            />
           )}
         </BnbBodyView>
       </BnbMainView>

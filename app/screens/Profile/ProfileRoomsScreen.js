@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import React, {useEffect, useState} from "react";
+import {StyleSheet, Text, View} from "react-native";
+import {ScrollView} from "react-native-gesture-handler";
 import BnbSecureStore from "../../classes/BnbSecureStore";
 import BnbError from "../../components/BnbError";
 import BnbLoading from "../../components/BnbLoading";
@@ -12,9 +12,9 @@ import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 
-function ProfileRoomsScreen({ navigation }) {
+function ProfileRoomsScreen({navigation}) {
   const [storedUser, setStoredUser] = useState();
-  const [_rooms, setRooms] = useState({ amount: 0, rooms: [] });
+  const [_rooms, setRooms] = useState({amount: 0, rooms: []});
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState("");
 
@@ -34,7 +34,7 @@ function ProfileRoomsScreen({ navigation }) {
       httpGetTokenRequest(
         "GET",
         urls.URL_ME + "/rooms",
-        { "x-access-token": user.auth_token },
+        {"x-access-token": user.auth_token},
         _handleApiResponse,
         _handleApiError
       );
@@ -61,11 +61,11 @@ function ProfileRoomsScreen({ navigation }) {
         </Text>
         <ScrollView>
           {_rooms.rooms.map((item, index) => (
-            <View key={item.id}>
+            <View key={item.id} style={styles.roomPreviewContainer}>
               <BnbRoomPreview
                 navigation={navigation}
                 room={item}
-              ></BnbRoomPreview>
+              />
             </View>
           ))}
         </ScrollView>
@@ -81,6 +81,9 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: fonts.big,
   },
+  roomPreviewContainer: {
+    width: "100%",
+  }
 });
 
 export default ProfileRoomsScreen;

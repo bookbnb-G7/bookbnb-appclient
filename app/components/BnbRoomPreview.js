@@ -84,7 +84,7 @@ const BnbRoomPreview = (props) => {
       <View style={styles.mainContainer}>
         <TouchableOpacity onPress={_handleImagePress}>
           <View style={styles.imageSlider}>
-            <BnbImageSlider images={_photos_urls} width={250}></BnbImageSlider>
+            <BnbImageSlider images={_photos_urls} width={250}/>
           </View>
           <View style={styles.roomDescriptionContainer}>
             <BnbFormBubbleInfo
@@ -112,11 +112,10 @@ const BnbRoomPreview = (props) => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    //flex: 1,
     justifyContent: "center",
     marginVertical: styling.separator,
     borderRadius: 20,
-    paddingHorizontal: 10,
+    overflow: "hidden",
 
     shadowColor: "#000",
     shadowOffset: {
@@ -133,14 +132,15 @@ const styles = StyleSheet.create({
     //borderWidth: 1,
   },
   roomImage: {
-    width: "100%",
-    height: 200,
+    //width: "100%",
+    //height: 200,
     borderRadius: styling.mediumCornerRadius,
   },
   roomDescriptionContainer: {
     //flex: 1,
     //borderWidth: 1,
     marginVertical: styling.separator,
+    marginHorizontal: 10,
   },
   roomTitleText: {
     fontSize: fonts.big,

@@ -11,7 +11,7 @@ const BnbIconText = (props) => (
       <Image source={{ uri: props.logo }} style={styles.icon}></Image>
     )}
     {props?.iconName && (
-      <Ionicons name={props.iconName} style={styles.ionIcon} size={50} />
+      <Ionicons name={props.iconName} style={styles.ionIcon} size={props.iconSize || 50} />
     )}
     <Text style={{ ...styles.text, ...props.style }}>{props.children}</Text>
   </View>

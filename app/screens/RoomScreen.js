@@ -153,7 +153,7 @@ function RoomScreen({ route, navigation }) {
     return (
       <BnbMainView>
         <ScrollView>
-          <BnbBodyView>
+          <BnbBodyView style={styles.bodyView}>
             {_room && storedUser && (
               <BnbRoomInfo
                 room={_room}
@@ -176,23 +176,25 @@ function RoomScreen({ route, navigation }) {
               token={storedUser.auth_token}
               navigation={navigation}
             />
-            <Separator />
+            <Separator style={{width: "90%", marginTop: 15}} />
             <Text style={bnbStyleSheet.headerTextBlack}>Disponibilidad</Text>
-            <Calendar
-              minDate={Date()}
-              markedDates={_bookings}
-              markingType={"period"}
-              enableSwipeMonths={true}
-              style={{
-                borderWidth: 1,
-                borderColor: "#d9e1e8",
-                borderRadius: 10,
-              }}
-              theme={{
-                todayTextColor: colors.redAirBNBSoft,
-                arrowColor: colors.redAirBNBSoft,
-              }}
-            />
+            <View style={styles.calendarContainer}>
+              <Calendar
+                minDate={Date()}
+                markedDates={_bookings}
+                markingType={"period"}
+                enableSwipeMonths={true}
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#d9e1e8",
+                  borderRadius: 10,
+                }}
+                theme={{
+                  todayTextColor: colors.redAirBNBSoft,
+                  arrowColor: colors.redAirBNBSoft,
+                }}
+              />
+            </View>
             {!_is_owner && (
               <View>
                 <BnbButton
@@ -221,6 +223,12 @@ const styles = StyleSheet.create({
   center: {
     alignSelf: "center",
   },
+  bodyView: {
+    paddingTop: 0,
+  },
+  calendarContainer: {
+    paddingHorizontal: 10,
+  }
 });
 
 export default RoomScreen;
