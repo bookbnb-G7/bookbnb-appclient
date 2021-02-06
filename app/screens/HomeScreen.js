@@ -66,7 +66,7 @@ function HomeScreen({ navigation }) {
       }
 
       if (Platform.OS === "android") {
-        Notifications.setNotificationChannelAsync("default", {
+        await Notifications.setNotificationChannelAsync("default", {
           name: "default",
           importance: Notifications.AndroidImportance.MAX,
           vibrationPattern: [0, 250, 250, 250],
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {},
   window: {
-    marginTop: 15,
+    marginTop: 0,
   },
 });
 

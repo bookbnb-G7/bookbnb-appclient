@@ -84,9 +84,10 @@ const BnbRoomPreview = (props) => {
       <View style={styles.mainContainer}>
         <TouchableOpacity onPress={_handleImagePress}>
           <View style={styles.imageSlider}>
-            <BnbImageSlider images={_photos_urls} width={250}/>
+            <BnbImageSlider images={_photos_urls}/>
           </View>
           <View style={styles.roomDescriptionContainer}>
+            <Text style={styles.roomTitleText}>{props.room.title}</Text>
             <BnbFormBubbleInfo
               iconName="star"
               iconColor={colors.golden}
@@ -99,7 +100,7 @@ const BnbRoomPreview = (props) => {
               textStyle={styles.ratingText}
               style={styles.ratingContainer}
             />
-            <Text style={styles.roomTitleText}>{props.room.type}</Text>
+            <Text style={styles.roomTypeText}>{props.room.type}</Text>
             <Text style={styles.roomPriceText}>
               Precio por dia: ${props.room.price_per_day}
             </Text>
@@ -143,7 +144,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   roomTitleText: {
-    fontSize: fonts.big,
+    fontFamily: "Raleway_700Bold",
+    fontSize: 22,
   },
   roomPriceText: {
     fontWeight: "bold",
@@ -157,6 +159,9 @@ const styles = StyleSheet.create({
     marginVertical: 0,
     paddingHorizontal: 0,
   },
+  roomTypeText: {
+    fontSize: fonts.big,
+  }
 });
 
 export default BnbRoomPreview;

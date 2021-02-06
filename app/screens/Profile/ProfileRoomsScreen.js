@@ -59,7 +59,7 @@ function ProfileRoomsScreen({navigation}) {
           Tienes {_rooms.amount}{" "}
           {_rooms.amount === 1 ? "habitacion" : "habitaciones"}
         </Text>
-        <ScrollView>
+        <ScrollView style={styles.roomScrollView}>
           {_rooms.rooms.map((item, index) => (
             <View key={item.id} style={styles.roomPreviewContainer}>
               <BnbRoomPreview
@@ -82,7 +82,11 @@ const styles = StyleSheet.create({
     fontSize: fonts.big,
   },
   roomPreviewContainer: {
-    width: "100%",
+    width: "90%",
+  },
+  roomScrollView: {
+    paddingHorizontal: 20,
+    marginBottom: 30,
   }
 });
 

@@ -144,7 +144,6 @@ const styles = StyleSheet.create({
   },
   bodyView: {
     width: "100%",
-    paddingHorizontal: 0,
     paddingVertical: 0,
     borderTopStartRadius: 10,
     borderTopEndRadius: 10,
