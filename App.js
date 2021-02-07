@@ -38,8 +38,9 @@ export default function App() {
     Raleway_600SemiBold,
   });
 
-  const refreshToken = () => {
-    if (user) {
+  const refreshToken = async () => {
+    const stoUser = await BnbSecureStore.readUnsafe(constants.CACHE_USER_KEY)
+    if (user && stoUser) {
       console.log("TOKEN refresheado");
       user.getIdToken(true).then(async (token) => {
         const storedUser = await BnbSecureStore.read(constants.CACHE_USER_KEY);
