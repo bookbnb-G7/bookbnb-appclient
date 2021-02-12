@@ -8,7 +8,7 @@ import Ionicons from "@expo/vector-icons/MaterialCommunityIcons";
 
 
 const BnbFloatingTextInput = (props) => (
-  <View style={styles.viewContainer}>
+  <View style={{...styles.viewContainer, ...props.viewStyle}}>
     <FloatingLabelInput
       label={props.name}
       isPassword={props.isPassword ? props.isPassword : false}

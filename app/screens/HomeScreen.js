@@ -20,9 +20,15 @@ function HomeScreen({ navigation }) {
   const [storedUser, setStoredUser] = useState();
 
   useEffect(() => {
-    BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
-      setStoredUser(response);
-    });
+    const get_user_credentials = async () => {
+      const user = await BnbSecureStore.readUnsafe(constants.CACHE_USER_KEY);
+      if (user) {
+        BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
+          setStoredUser(response);
+        });
+      }
+    }
+    get_user_credentials();
   }, []);
 
   useEffect(() => {
@@ -48,19 +54,20 @@ function HomeScreen({ navigation }) {
          * y no estar guardado para el momento que haces el .read =>
          * Unhandled Promise reject user.auth_token is null
          */
-        const user = await BnbSecureStore.read(constants.CACHE_USER_KEY);
-
-        await httpPostTokenRequest(
-          "POST",
-          urls.URL_NOTIFICATION_TOKEN,
-          {
-            push_token: token,
-          },
-          {
-            "Content-Type": "application/json",
-            "x-access-token": user.auth_token,
-          }
-        );
+        const user = await BnbSecureStore.readUnsafe(constants.CACHE_USER_KEY);
+        if (user) {
+          await httpPostTokenRequest(
+            "POST",
+            urls.URL_NOTIFICATION_TOKEN,
+            {
+              push_token: token,
+            },
+            {
+              "Content-Type": "application/json",
+              "x-access-token": user.auth_token,
+            }
+          );
+        }
       } else {
         alert("Must use physical device for Push Notifications");
       }
@@ -89,26 +96,28 @@ function HomeScreen({ navigation }) {
   return (
     <BnbMainView style={styles.mainContainer}>
       <BnbBodyView style={styles.bodyContainer}>
-        <ScrollView>
-          <View style={styles.imageSlider}>
-            <BnbImageSlider
-              images={[require("../assets/Bookbnb_logo.png")]}
-              width={200}
-            />
-          </View>
-          <BnbWindow navigation={navigation} style={styles.window} />
-          <View style={styles.optionsContainer}>
-            <View>
-              <BnbButton
-                title="DEBUG Cerrar sesion"
-                onPress={_handleLogOutButton}
+        <ScrollView contentContainerStyle={{flex: 1}}>
+          <View style={styles.homeContentContainer}>
+            <View style={styles.imageSlider}>
+              <BnbImageSlider
+                images={[require("../assets/Bookbnb_logo.png")]}
+                width={200}
               />
-              <BnbButton
-                title="DEBUG Room/Profile by id"
-                onPress={() => {
-                  navigation.navigate("DebugGoToRoomProfile");
-                }}
-              />
+            </View>
+            <BnbWindow navigation={navigation} style={styles.window} />
+            <View style={styles.optionsContainer}>
+              <View>
+                <BnbButton
+                  title="DEBUG Cerrar sesion"
+                  onPress={_handleLogOutButton}
+                />
+                <BnbButton
+                  title="DEBUG Room/Profile by id"
+                  onPress={() => {
+                    navigation.navigate("DebugGoToRoomProfile");
+                  }}
+                />
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -136,6 +145,10 @@ const styles = StyleSheet.create({
   window: {
     marginTop: 0,
   },
+  homeContentContainer: {
+    justifyContent: "space-around",
+    flex: 1,
+  }
 });
 
 export default HomeScreen;

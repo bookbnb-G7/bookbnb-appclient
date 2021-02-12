@@ -44,7 +44,7 @@ export default function App() {
       console.log("TOKEN refresheado");
       user.getIdToken(true).then(async (token) => {
         const storedUser = await BnbSecureStore.read(constants.CACHE_USER_KEY);
-        BnbSecureStore.rememberMe(token, storedUser.userData);
+        await BnbSecureStore.rememberMe(token, storedUser.userData);
       });
     }
   };
