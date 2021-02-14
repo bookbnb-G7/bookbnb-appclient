@@ -168,8 +168,6 @@ function RoomBookingScreen({ route, navigation }) {
     if (_booking) {
       const today = new Date();
       const date_end = new Date(_booking.date_to);
-      console.log("today: " + today);
-      console.log("date_to: " + date_end);
       setCanReview(today > date_end);
     }
   }, [_booking]);
@@ -248,10 +246,12 @@ function RoomBookingScreen({ route, navigation }) {
                   <View>
                     {_room && (
                       <RoomReviews
+                        me_id={storedUser.userData.id}
                         room_id={_room.id}
                         is_owner={_is_owner}
                         token={storedUser.auth_token}
                         read_only={false}
+                        navigation={navigation}
                       />
                     )}
                     <RoomRating

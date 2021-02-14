@@ -6,6 +6,7 @@ import colors from "../config/colors";
 import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbError from "./BnbError";
+import BnbUserLogo from "./BnbUserLogo";
 
 const BnbUserPost = ({ user_id, time, text, onUsernameTap }) => {
   const [_user, setUser] = useState();
@@ -43,20 +44,15 @@ const BnbUserPost = ({ user_id, time, text, onUsernameTap }) => {
         >
           {_user && (
             <View style={styles.userContainer}>
-              <Image
-                style={styles.image}
-                source={
-                  _user.photo === "null"
-                    ? require("../assets/profile_icon.png")
-                    : { uri: _user.photo }
-                }
-              />
+              <BnbUserLogo user_id={user_id}></BnbUserLogo>
               <View style={styles.rightUserContainer}>
                 <Text style={styles.boldText}>
                   {_user.firstname} {_user.lastname}
                 </Text>
                 {time && (
-                  <Text style={styles.menuItemText}>Publicado: {time.split("T")[0]}</Text>
+                  <Text style={styles.menuItemText}>
+                    Publicado: {time.split("T")[0]}
+                  </Text>
                 )}
               </View>
             </View>

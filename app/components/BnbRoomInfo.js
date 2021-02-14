@@ -28,7 +28,10 @@ const BnbRoomInfo = ({ room, me_id, auth_token, navigation }) => {
     if (_roomOwner.id === me_id) {
       navigation.navigate("ProfileStack", { screen: "Profile" });
     } else {
-      navigation.navigate("User", { user_id: _roomOwner.id });
+      navigation.navigate("SearchRooms", {
+        screen: "User",
+        params: { user_id: _roomOwner.id },
+      });
     }
   };
 

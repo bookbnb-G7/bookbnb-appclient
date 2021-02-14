@@ -108,7 +108,7 @@ function Profile({ route, navigation }) {
       })
       .then((guestRatings) => {
         setGuestRatings(guestRatings);
-        setError(undefined);
+        setError(null);
       })
       .catch((error) => {
         setError(error);
