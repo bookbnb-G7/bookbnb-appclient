@@ -11,9 +11,13 @@ const BnbIconText = (props) => (
       <Image source={{ uri: props.logo }} style={styles.icon}></Image>
     )}
     {props?.iconName && (
-      <Ionicons name={props.iconName} style={styles.ionIcon} size={props.iconSize || 50} />
+      <Ionicons
+        name={props.iconName}
+        style={{ ...styles.ionIcon, ...props.iconStyle }}
+        size={props.iconSize || 50}
+      />
     )}
-    <Text style={{ ...styles.text, ...props.style }}>{props.children}</Text>
+    <Text style={{ ...styles.text, ...props.textStyle }}>{props.children}</Text>
   </View>
 );
 
@@ -30,8 +34,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.graySoft,
   },
   ionIcon: {
-    paddingLeft: 10,
-    paddingRight: 10,
+    //paddingLeft: 10,
+    //paddingRight: 10,
   },
   text: {
     paddingHorizontal: 10,

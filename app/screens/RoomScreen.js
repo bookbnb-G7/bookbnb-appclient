@@ -158,6 +158,7 @@ function RoomScreen({ route, navigation }) {
               <BnbRoomInfo
                 room={_room}
                 me_id={storedUser.userData.id}
+                auth_token={storedUser.auth_token}
                 navigation={navigation}
               />
             )}
@@ -176,7 +177,7 @@ function RoomScreen({ route, navigation }) {
               token={storedUser.auth_token}
               navigation={navigation}
             />
-            <Separator style={{width: "90%", marginTop: 15}} />
+            <Separator style={{ width: "90%", marginTop: 15 }} />
             <Text style={bnbStyleSheet.headerTextBlack}>Disponibilidad</Text>
             <View style={styles.calendarContainer}>
               <Calendar
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
   },
   calendarContainer: {
     paddingHorizontal: 10,
-  }
+  },
 });
 
 export default RoomScreen;

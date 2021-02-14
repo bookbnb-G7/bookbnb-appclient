@@ -192,6 +192,7 @@ function RoomBookingScreen({ route, navigation }) {
               <BnbRoomInfo
                 room={_room}
                 me_id={storedUser.userData.id}
+                auth_token={storedUser.auth_token}
                 navigation={navigation}
               />
             )}

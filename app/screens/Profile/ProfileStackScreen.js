@@ -17,6 +17,7 @@ import RoomScreen from "../RoomScreen";
 import RoomEditScreen from "../RoomEditScreen";
 import ProfileOwnerScreen from "./ProfileOwnerScreen";
 import UserReviewScreen from "../UserReviewScreen";
+import ProfileFavoritesScreen from "./ProfileFavoritesScreen";
 
 const ProfileStack = createStackNavigator();
 
@@ -70,6 +71,10 @@ function ProfileStackScreen(props) {
         <ProfileStack.Screen
           name="ProfileWallet"
           component={ProfileWalletScreen}
+        />
+        <ProfileStack.Screen
+          name="ProfileFavorites"
+          component={ProfileFavoritesScreen}
         />
         <ProfileStack.Screen name="ImagePick" component={ImagePickScreen} />
       </ProfileStack.Navigator>

@@ -24,6 +24,7 @@ function ProfileWalletScreen(props) {
     setWallet(wallet);
     console.log(wallet.address);
     setIsLoading(false);
+    setError(null);
   };
 
   const _handleApiError = (error) => {

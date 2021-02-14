@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
-import {StyleSheet, Text, View, Image} from "react-native";
-import {TouchableOpacity} from "react-native-gesture-handler";
-import {Rating} from "react-native-elements";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View, Image } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Rating } from "react-native-elements";
 import styling from "../config/styling";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import urls from "../constant/urls";
@@ -13,10 +13,12 @@ import BnbIconText from "./BnbIconText";
 import BnbImageSlider from "./BnbImageSlider";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import colors from "../config/colors";
-import {Divider} from "react-native-elements";
+import { Divider } from "react-native-elements";
 import Separator from "./Separator";
+import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
+import BnbImage from "./BnbImage";
 
-const BnbRoomInfo = ({room, me_id, navigation}) => {
+const BnbRoomInfo = ({ room, me_id, auth_token, navigation }) => {
   const [_average_rating, setAverageRating] = useState(0);
   const [_photos_urls, setPhotosUrls] = useState();
   const [_error, setError] = useState();
@@ -24,10 +26,25 @@ const BnbRoomInfo = ({room, me_id, navigation}) => {
 
   const _handleRoomOwnerPress = () => {
     if (_roomOwner.id === me_id) {
-      navigation.navigate("ProfileStack", {screen: "Profile"});
+      navigation.navigate("ProfileStack", { screen: "Profile" });
     } else {
-      navigation.navigate("User", {user_id: _roomOwner.id});
+      navigation.navigate("User", { user_id: _roomOwner.id });
     }
+  };
+
+  const _handleAddToFavorites = () => {
+    console.log("add to favorites");
+    /**httpPostTokenRequest(
+      "POST",
+      urls.URL_ME + "/favorites",
+      { room_id: room.id },
+      { "x-access-token": auth_token }
+    ).then(
+      (response) => {},
+      (error) => {
+        setError(error);
+      }
+    );*/
   };
 
   useEffect(() => {
@@ -78,44 +95,62 @@ const BnbRoomInfo = ({room, me_id, navigation}) => {
   return (
     <View>
       <View style={styles.imageSlider}>
-        {_photos_urls && <BnbImageSlider images={_photos_urls}/>}
+        {_photos_urls && <BnbImageSlider images={_photos_urls} />}
       </View>
       <View style={styles.roomInfoContainer}>
         <Text style={styles.roomTitleText}>{room.title}</Text>
         {_roomOwner && (
           <View style={styles.typeOwnerContainer}>
             <View style={styles.typeContainer}>
-              <Text numberOfLines={1} style={styles.typeText}>{room.type} en {room.location.split(",")[0]}</Text>
+              <Text numberOfLines={1} style={styles.typeText}>
+                {room.type} en {room.location.split(",")[0]}
+              </Text>
               <View style={styles.inlineTextButton}>
                 <Text style={styles.hostedByText}>Hosteado por </Text>
                 <TouchableOpacity onPress={_handleRoomOwnerPress}>
-                  <Text style={styles.clickableText}>{_roomOwner.firstname}</Text>
+                  <Text style={styles.clickableText}>
+                    {_roomOwner.firstname}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
-            <TouchableOpacity onPress={_handleRoomOwnerPress}>
-              <Image source={{uri: _roomOwner.photo}} style={styles.profilePic}/>
-            </TouchableOpacity>
+            <BnbImage
+              onPress={_handleRoomOwnerPress}
+              uri={_roomOwner.photo}
+              imageStyle={styles.profilePic}
+            />
           </View>
         )}
-        <Separator style={{width: "100%", marginVertical: 10}}/>
+        {_roomOwner && _roomOwner.id !== me_id && (
+          <TouchableOpacity onPress={_handleAddToFavorites}>
+            <BnbIconText
+              iconName="star"
+              style={styles.addToFavoritesContainer}
+              textStyle={styles.addToFavoritesText}
+              iconStyle={styles.addToFavoritesIcon}
+              iconSize={30}
+            >
+              Agregar a favoritos
+            </BnbIconText>
+          </TouchableOpacity>
+        )}
+        <Separator style={{ width: "100%", marginVertical: 10 }} />
         <View style={styles.priceNGuestsContainer}>
           <View style={styles.iconText}>
-            <Ionicons name="logo-usd" style={styles.iconStyle} size={15}/>
+            <Ionicons name="logo-usd" style={styles.iconStyle} size={15} />
             <Text style={styles.priceText}>{room.price_per_day} </Text>
             <Text style={styles.priceNGuests}>por noche</Text>
           </View>
           <View style={styles.iconText}>
-            <Ionicons name="people" style={styles.iconStyle} size={16}/>
-            <Text style={styles.priceNGuests}>{room.capacity} persona{room.capacity > 1 ? "s" : ""}</Text>
+            <Ionicons name="people" style={styles.iconStyle} size={16} />
+            <Text style={styles.priceNGuests}>
+              {room.capacity} persona{room.capacity > 1 ? "s" : ""}
+            </Text>
           </View>
         </View>
         <View styles={styles.ratingContainer}>
           <Text style={styles.priceNGuests}>
-            {isNaN(_average_rating)
-              ? "Sin puntaje"
-              : `${_average_rating}/5`
-            }
+            {isNaN(_average_rating) ? "Sin puntaje" : `${_average_rating}/5`}
           </Text>
           <Rating
             imageSize={20}
@@ -127,7 +162,7 @@ const BnbRoomInfo = ({room, me_id, navigation}) => {
             type="star"
           />
         </View>
-        <Separator style={{width: "100%", marginBottom: 15, marginTop: 20}}/>
+        <Separator style={{ width: "100%", marginTop: 20 }} />
         <View>
           <Text style={styles.description}>{room.description}</Text>
         </View>
@@ -142,14 +177,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   roomInfoContainer: {
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
   roomTitleText: {
     fontFamily: "Raleway_700Bold",
     fontSize: 32,
     color: "#46484e",
     paddingTop: 15,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   profilePic: {
     width: 60,
@@ -158,11 +193,11 @@ const styles = StyleSheet.create({
   },
   typeOwnerContainer: {
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   typeContainer: {
     justifyContent: "center",
-    width: "75%"
+    width: "75%",
   },
   typeText: {
     fontFamily: "Raleway_600SemiBold",
@@ -203,6 +238,19 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingRight: 5,
   },
+  addToFavoritesContainer: {
+    alignSelf: "center",
+    alignItems: "center",
+    height: 30,
+  },
+  addToFavoritesText: {
+    fontFamily: "Raleway_500Medium",
+    fontSize: 15,
+    color: "yellow",
+  },
+  addToFavoritesIcon: {
+    color: "yellow",
+  },
   priceText: {
     fontFamily: "Raleway_600SemiBold",
     fontSize: 17,
@@ -214,9 +262,8 @@ const styles = StyleSheet.create({
   description: {
     fontFamily: "Raleway_500Medium",
     fontSize: 15,
-    color: "#5f5f5f"
-  }
-
+    color: "#5f5f5f",
+  },
 });
 
 export default BnbRoomInfo;
