@@ -32,10 +32,18 @@ const BnbRoomPreview = (props) => {
 
   const _handleImagePress = () => {
     /**Si tengo  un searchForm es porque estoy buscando un room*/
+    /**Si no soy el dueño es porque lo tengo en favoritos */
     if (props?.searchForm) {
       props.navigation.navigate("Room", {
         room_id: props.room.id,
         searchForm: props.searchForm,
+      });
+    } else if (props?.me_id && props.me_id !== props.room.owner_uuid) {
+      props.navigation.navigate("SearchRooms", {
+        screen: "Room",
+        params: {
+          room_id: props.room.id,
+        },
       });
     } else {
       props.navigation.navigate("Room", {
@@ -84,7 +92,7 @@ const BnbRoomPreview = (props) => {
       <View style={styles.mainContainer}>
         <TouchableOpacity onPress={_handleImagePress}>
           <View style={styles.imageSlider}>
-            <BnbImageSlider images={_photos_urls}/>
+            <BnbImageSlider images={_photos_urls} />
           </View>
           <View style={styles.roomDescriptionContainer}>
             <Text style={styles.roomTitleText}>{props.room.title}</Text>
@@ -161,7 +169,7 @@ const styles = StyleSheet.create({
   },
   roomTypeText: {
     fontSize: fonts.big,
-  }
+  },
 });
 
 export default BnbRoomPreview;

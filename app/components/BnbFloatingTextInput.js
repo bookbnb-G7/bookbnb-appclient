@@ -1,23 +1,22 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { FloatingLabelInput } from 'react-native-floating-label-input';
+import { FloatingLabelInput } from "react-native-floating-label-input";
 import styling from "../config/styling";
 import fonts from "../config/fonts";
-import {TextInput} from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import Ionicons from "@expo/vector-icons/MaterialCommunityIcons";
 
-
 const BnbFloatingTextInput = (props) => (
-  <View style={{...styles.viewContainer, ...props.viewStyle}}>
+  <View style={{ ...styles.viewContainer, ...props.viewStyle }}>
     <FloatingLabelInput
       label={props.name}
       isPassword={props.isPassword ? props.isPassword : false}
-      editable={props.editable ? props.editable : true}
-      customShowPasswordComponent={<Ionicons name="eye" size={22}/>}
-      customHidePasswordComponent={<Ionicons name="eye-off" size={22}/>}
-      inputStyles={{...styles.input, ...props.inputStyle}}
-      labelStyles={{...styles.label, ...props.labelStyle}}
-      containerStyles={{...styles.container, ...props.containerStyle}}
+      editable={props.editable === undefined || props.editable}
+      customShowPasswordComponent={<Ionicons name="eye" size={22} />}
+      customHidePasswordComponent={<Ionicons name="eye-off" size={22} />}
+      inputStyles={{ ...styles.input, ...props.inputStyle }}
+      labelStyles={{ ...styles.label, ...props.labelStyle }}
+      containerStyles={{ ...styles.container, ...props.containerStyle }}
       value={props.object[props.id].toString()}
       onChangeText={(text) => props.onChange(props.id, text)}
       onSubmit={props.onSubmit}
@@ -39,7 +38,7 @@ const BnbFloatingTextInput = (props) => (
       }}
     />
   </View>
-)
+);
 
 const styles = StyleSheet.create({
   input: {
@@ -55,13 +54,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 10,
     paddingVertical: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 40,
     minHeight: 50,
   },
   viewContainer: {
     marginVertical: 6,
-  }
+  },
 });
 
 export default BnbFloatingTextInput;

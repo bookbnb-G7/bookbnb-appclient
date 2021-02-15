@@ -26,16 +26,15 @@ function SignUpScreen({ route, navigation }) {
     birthdate: "",
     photo: "",
   });
-  /**TODO: crear un formulario para completar estos campos, photo??? */
 
   const [_sign_in_error, setSignInError] = useState("");
   const [_is_awaiting, setIsAwaiting] = useState(false);
 
-  const [countryCode, setCountryCode] = useState('AR');
+  const [countryCode, setCountryCode] = useState("AR");
 
   const onSelect = (country) => {
     setCountryCode(country.cca2);
-  }
+  };
 
   const _handleTextChange = (key, value) => {
     setUser((prevState) => ({
@@ -167,7 +166,7 @@ function SignUpScreen({ route, navigation }) {
               onChange={_handleTextChange}
               inputRef={ref_phone}
               keyboardType="numeric"
-              viewStyle={{marginBottom: 0}}
+              viewStyle={{ marginBottom: 0 }}
             />
             <Text style={styles.countryInputLabel}>Pais</Text>
             <CountryPicker
@@ -262,7 +261,7 @@ const styles = StyleSheet.create({
     top: 8,
     backgroundColor: "white",
     zIndex: 2,
-  }
+  },
 });
 
 export default SignUpScreen;

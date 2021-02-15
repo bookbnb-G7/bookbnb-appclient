@@ -36,18 +36,19 @@ const BnbRoomInfo = ({ room, me_id, auth_token, navigation }) => {
   };
 
   const _handleAddToFavorites = () => {
-    console.log("add to favorites");
-    /**httpPostTokenRequest(
+    httpPostTokenRequest(
       "POST",
-      urls.URL_ME + "/favorites",
+      urls.URL_ME + "/favorite_rooms",
       { room_id: room.id },
-      { "x-access-token": auth_token }
+      { "x-access-token": auth_token, "Content-Type": "application/json" }
     ).then(
-      (response) => {},
+      (response) => {
+        console.log("Añadido a favoritos");
+      },
       (error) => {
         setError(error);
       }
-    );*/
+    );
   };
 
   useEffect(() => {

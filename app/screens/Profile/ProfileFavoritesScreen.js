@@ -13,7 +13,7 @@ import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import BnbButton from "../../components/BnbButton";
 
 function ProfileFavoritesScreen({ navigation }) {
-  const [_favorites_rooms, setFavoritesRooms] = useState();
+  const [_favorite_rooms, setFavoritesRooms] = useState();
   const [storedUser, setStoredUser] = useState();
   const [_error, setError] = useState();
 
@@ -24,16 +24,18 @@ function ProfileFavoritesScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-    /**httpGetTokenRequest("GET", urls.URL_ME + "/favorites", {
-      "x-access-token": storedUser.auth_token,
-    }).then(
-      (favorites) => {
-        setFavoritesRooms(favorites);
-      },
-      (error) => {
-        setError(error);
-      }
-    );*/
+    if (storedUser) {
+      httpGetTokenRequest("GET", urls.URL_ME + "/favorite_rooms", {
+        "x-access-token": storedUser.auth_token,
+      }).then(
+        (favorites) => {
+          setFavoritesRooms(favorites);
+        },
+        (error) => {
+          setError(error);
+        }
+      );
+    }
   }, [storedUser]);
 
   if (_error) {
@@ -47,10 +49,15 @@ function ProfileFavoritesScreen({ navigation }) {
           Tus Habitaciones Favoritas
         </Text>
         <ScrollView>
-          {_favorites_rooms &&
-            _favorites_rooms.rooms.map((item, index) => (
+          {_favorite_rooms &&
+            storedUser &&
+            _favorite_rooms.rooms.map((item, index) => (
               <View key={index}>
-                <BnbRoomPreview room={item} navigation={navigation} />
+                <BnbRoomPreview
+                  room={item}
+                  me_id={storedUser.userData.id}
+                  navigation={navigation}
+                />
                 <BnbButton iconName="star" title={"Quitar de favoritos"} />
               </View>
             ))}
