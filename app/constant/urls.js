@@ -4,4 +4,5 @@ export default {
   URL_ME: "https://bookbnb-appserver.herokuapp.com/me",
   URL_BOOKINGS: "https://bookbnb-appserver.herokuapp.com/bookings",
   URL_NOTIFICATION_TOKEN: "https://bookbnb-appserver.herokuapp.com/me/token",
+  URL_RECOMMENDATIONS: "https://bookbnb-appserver.herokuapp.com/recomendations",
 };

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ImageBackground } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, StyleSheet, ImageBackground, Text } from "react-native";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import BnbButton from "../components/BnbButton";
@@ -15,9 +15,15 @@ import colors from "../config/colors";
 import BnbWindow from "../components/BnbWindow";
 import BnbBodyView from "../components/BnbBodyView";
 import { ScrollView } from "react-native-gesture-handler";
+import Separator from "../components/Separator";
+import { useFocusEffect } from "@react-navigation/native";
+import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
+import BnbRoomPreview from "../components/BnbRoomPreview";
+import bnbStyleSheet from "../constant/bnbStyleSheet";
 
 function HomeScreen({ navigation }) {
   const [storedUser, setStoredUser] = useState();
+  const [_recommendedRooms, setRecommendedRooms] = useState();
 
   useEffect(() => {
     const get_user_credentials = async () => {
@@ -27,7 +33,7 @@ function HomeScreen({ navigation }) {
           setStoredUser(response);
         });
       }
-    }
+    };
     get_user_credentials();
   }, []);
 
@@ -93,10 +99,25 @@ function HomeScreen({ navigation }) {
       .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY));
   };
 
+  const fetchRecommendations = async () => {
+    httpGetTokenRequest("GET", urls.URL_RECOMMENDATIONS, {}).then(
+      (recommendedRooms) => {
+        setRecommendedRooms(recommendedRooms);
+      },
+      (error) => {}
+    );
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchRecommendations();
+    }, [])
+  );
+
   return (
     <BnbMainView style={styles.mainContainer}>
       <BnbBodyView style={styles.bodyContainer}>
-        <ScrollView contentContainerStyle={{flex: 1}}>
+        <ScrollView>
           <View style={styles.homeContentContainer}>
             <View style={styles.imageSlider}>
               <BnbImageSlider
@@ -120,6 +141,23 @@ function HomeScreen({ navigation }) {
               </View>
             </View>
           </View>
+          <Separator />
+          {_recommendedRooms && storedUser && (
+            <View style={styles.roomRecommendationsContainer}>
+              <Text style={bnbStyleSheet.headerText}>
+                Publicaciones que te pueden interesar
+              </Text>
+              {_recommendedRooms.rooms.map((item, index) => (
+                <View key={index} style={styles.roomPreviewContainer}>
+                  <BnbRoomPreview
+                    room={item}
+                    me_id={storedUser.userData.id}
+                    navigation={navigation}
+                  />
+                </View>
+              ))}
+            </View>
+          )}
         </ScrollView>
       </BnbBodyView>
     </BnbMainView>
@@ -148,7 +186,17 @@ const styles = StyleSheet.create({
   homeContentContainer: {
     justifyContent: "space-around",
     flex: 1,
-  }
+  },
+  roomPreviewContainer: {
+    alignSelf: "center",
+    width: "90%",
+  },
+  roomRecommendationsContainer: {
+    width: "100%",
+    alignSelf: "center",
+    backgroundColor: colors.redAirBNBSoft,
+    borderRadius: 20,
+  },
 });
 
 export default HomeScreen;

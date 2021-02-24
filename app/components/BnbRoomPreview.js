@@ -18,11 +18,6 @@ const BnbRoomPreview = (props) => {
   const [_error, setError] = useState();
   const [_is_loaded, setIsLoaded] = useState(false);
 
-  const [_photos, setPhotos] = useState({
-    amount: 0,
-    room_id: 0,
-    room_photos: [],
-  });
   const [_photos_urls, setPhotosUrl] = useState([]);
 
   const _handleApiError = (error) => {
@@ -32,7 +27,7 @@ const BnbRoomPreview = (props) => {
 
   const _handleImagePress = () => {
     /**Si tengo  un searchForm es porque estoy buscando un room*/
-    /**Si no soy el dueño es porque lo tengo en favoritos */
+    /**Si no soy el dueño es porque lo tengo en favoritos o es una recomendacion */
     if (props?.searchForm) {
       props.navigation.navigate("Room", {
         room_id: props.room.id,
@@ -72,12 +67,11 @@ const BnbRoomPreview = (props) => {
       })
       .then((photos) => {
         if (photos) {
-          setPhotos(photos);
           setPhotosUrl(getUrlFromPhotos(photos.room_photos));
           setIsLoaded(true);
         }
       });
-  }, []);
+  }, [props.room.id]);
 
   if (!_is_loaded) {
     return <Text text="Cargando habitacion..." />;
@@ -125,7 +119,8 @@ const styles = StyleSheet.create({
     marginVertical: styling.separator,
     borderRadius: 20,
     overflow: "hidden",
-
+    borderWidth: 1,
+    borderColor: "black",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -133,7 +128,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
-    elevation: 2,
+    elevation: 5,
+    backgroundColor: "white",
   },
   imageSlider: {
     justifyContent: "center",
