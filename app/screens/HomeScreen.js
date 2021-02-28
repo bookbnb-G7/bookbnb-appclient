@@ -149,11 +149,13 @@ function HomeScreen({ navigation }) {
               </Text>
               {_recommendedRooms.rooms.map((item, index) => (
                 <View key={index} style={styles.roomPreviewContainer}>
-                  <BnbRoomPreview
-                    room={item}
-                    me_id={storedUser.userData.id}
-                    navigation={navigation}
-                  />
+                  {item.owner_uuid != storedUser.userData.id && (
+                    <BnbRoomPreview
+                      room={item}
+                      me_id={storedUser.userData.id}
+                      navigation={navigation}
+                    />
+                  )}
                 </View>
               ))}
             </View>

@@ -12,6 +12,8 @@ import colors from "../config/colors";
 
 import getAverage from "../helpers/getAverage";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
+import BnbUserLogo from "./BnbUserLogo";
+import bnbStyleSheet from "../constant/bnbStyleSheet";
 
 const BnbRoomPreview = (props) => {
   const [_ratings, setRatings] = useState({});
@@ -90,22 +92,27 @@ const BnbRoomPreview = (props) => {
           </View>
           <View style={styles.roomDescriptionContainer}>
             <Text style={styles.roomTitleText}>{props.room.title}</Text>
-            <BnbFormBubbleInfo
-              iconName="star"
-              iconColor={colors.golden}
-              iconSize={24}
-              text={
-                _ratings.ratings.length > 0
-                  ? getAverage(_ratings.ratings, "rating")
-                  : "-"
-              }
-              textStyle={styles.ratingText}
-              style={styles.ratingContainer}
-            />
-            <Text style={styles.roomTypeText}>{props.room.type}</Text>
-            <Text style={styles.roomPriceText}>
-              Precio por dia: ${props.room.price_per_day}
-            </Text>
+
+            <View style={styles.profileAndRoomDetalisContainer}>
+              <View style={styles.roomInfoContainer}>
+                <Text style={bnbStyleSheet.normalText}>{props.room.type}</Text>
+                <Text style={bnbStyleSheet.normalText}>
+                  Precio por dia: ${props.room.price_per_day}
+                </Text>
+              </View>
+              <BnbFormBubbleInfo
+                iconName="star"
+                iconColor={colors.golden}
+                iconSize={24}
+                text={
+                  _ratings.ratings.length > 0
+                    ? getAverage(_ratings.ratings, "rating")
+                    : "-"
+                }
+                textStyle={styles.ratingText}
+                style={styles.ratingContainer}
+              />
+            </View>
           </View>
         </TouchableOpacity>
       </View>
@@ -117,7 +124,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     justifyContent: "center",
     marginVertical: styling.separator,
-    borderRadius: 20,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "black",
@@ -134,16 +140,8 @@ const styles = StyleSheet.create({
   imageSlider: {
     justifyContent: "center",
     alignItems: "center",
-    //borderWidth: 1,
-  },
-  roomImage: {
-    //width: "100%",
-    //height: 200,
-    borderRadius: styling.mediumCornerRadius,
   },
   roomDescriptionContainer: {
-    //flex: 1,
-    //borderWidth: 1,
     marginVertical: styling.separator,
     marginHorizontal: 10,
   },
@@ -162,9 +160,17 @@ const styles = StyleSheet.create({
   ratingContainer: {
     marginVertical: 0,
     paddingHorizontal: 0,
+    flex: 1,
   },
   roomTypeText: {
     fontSize: fonts.big,
+  },
+  profileAndRoomDetalisContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  roomInfoContainer: {
+    flex: 3,
   },
 });
 
