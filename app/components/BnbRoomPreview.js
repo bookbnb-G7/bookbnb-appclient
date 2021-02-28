@@ -92,7 +92,6 @@ const BnbRoomPreview = (props) => {
           </View>
           <View style={styles.roomDescriptionContainer}>
             <Text style={styles.roomTitleText}>{props.room.title}</Text>
-
             <View style={styles.profileAndRoomDetalisContainer}>
               <View style={styles.roomInfoContainer}>
                 <Text style={bnbStyleSheet.normalText}>{props.room.type}</Text>
@@ -135,7 +134,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
     elevation: 5,
-    backgroundColor: "white",
+    backgroundColor: "#F0F0F0",
   },
   imageSlider: {
     justifyContent: "center",

@@ -1,20 +1,22 @@
-import React, {useEffect, useState} from "react";
-import {StyleSheet, Text, View} from "react-native";
-import {ScrollView} from "react-native-gesture-handler";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import BnbSecureStore from "../../classes/BnbSecureStore";
+import BnbBodyView from "../../components/BnbBodyView";
 import BnbError from "../../components/BnbError";
 import BnbLoading from "../../components/BnbLoading";
 import BnbMainView from "../../components/BnbMainView";
 import BnbRoomPreview from "../../components/BnbRoomPreview";
 import colors from "../../config/colors";
 import fonts from "../../config/fonts";
+import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 
-function ProfileRoomsScreen({navigation}) {
+function ProfileRoomsScreen({ navigation }) {
   const [storedUser, setStoredUser] = useState();
-  const [_rooms, setRooms] = useState({amount: 0, rooms: []});
+  const [_rooms, setRooms] = useState({ amount: 0, rooms: [] });
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState("");
 
@@ -34,7 +36,7 @@ function ProfileRoomsScreen({navigation}) {
       httpGetTokenRequest(
         "GET",
         urls.URL_ME + "/rooms",
-        {"x-access-token": user.auth_token},
+        { "x-access-token": user.auth_token },
         _handleApiResponse,
         _handleApiError
       );
@@ -53,41 +55,51 @@ function ProfileRoomsScreen({navigation}) {
   }
 
   return (
-    <BnbMainView>
-      <View style={styles.centerContainer}>
-        <Text style={styles.titleText}>
-          Tienes {_rooms.amount}{" "}
-          {_rooms.amount === 1 ? "habitacion" : "habitaciones"}
-        </Text>
-        <ScrollView style={styles.roomScrollView}>
-          {_rooms.rooms.map((item, index) => (
-            <View key={item.id} style={styles.roomPreviewContainer}>
-              <BnbRoomPreview
-                navigation={navigation}
-                room={item}
-              />
-            </View>
-          ))}
+    <BnbMainView style={styles.mainContainer}>
+      <Text style={bnbStyleSheet.headerText}>Tus publicaciones</Text>
+      <BnbBodyView>
+        <ScrollView>
+          <Text style={{ ...bnbStyleSheet.subHeaderText }}>
+            Tienes {_rooms.amount}{" "}
+            {_rooms.amount === 1 ? "habitacion" : "habitaciones"}
+          </Text>
+          <View style={styles.roomsContainer}>
+            {_rooms.rooms.map((item, index) => (
+              <View key={item.id} style={styles.roomPreviewContainer}>
+                <BnbRoomPreview
+                  navigation={navigation}
+                  room={item}
+                  me_id={storedUser.userData.id}
+                />
+              </View>
+            ))}
+          </View>
         </ScrollView>
-      </View>
+      </BnbBodyView>
     </BnbMainView>
   );
 }
 
 const styles = StyleSheet.create({
-  centerContainer: {
+  mainContainer: {
+    backgroundColor: colors.redAirBNB,
+    paddingHorizontal: 5,
     alignItems: "center",
   },
-  titleText: {
-    fontSize: fonts.big,
+  subHeaderWhite: {
+    alignSelf: "center",
+    color: "white",
   },
   roomPreviewContainer: {
+    alignSelf: "center",
     width: "90%",
   },
-  roomScrollView: {
-    paddingHorizontal: 20,
-    marginBottom: 30,
-  }
+  roomsContainer: {
+    width: "100%",
+    alignSelf: "center",
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+  },
 });
 
 export default ProfileRoomsScreen;
