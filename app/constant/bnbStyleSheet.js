@@ -84,4 +84,7 @@ export default StyleSheet.create({
   bnbButtonText: {
     color: colors.white,
   },
+  separator: {
+    marginVertical: styling.separator,
+  },
 });
