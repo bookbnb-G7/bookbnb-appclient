@@ -8,7 +8,9 @@ import urls from "../constant/urls";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbButton from "./BnbButton";
+import BnbError from "./BnbError";
 import BnbImageSlider from "./BnbImageSlider";
+import BnbLoadingText from "./BnbLoadingText";
 
 const BnbBookingPreview = ({ navigation, booking_id }) => {
   const [_booking, setBooking] = useState();
@@ -37,8 +39,6 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
     );
   };
 
-  const _handleComponentPress = () => {};
-
   useEffect(() => {
     httpGetTokenRequest("GET", urls.URL_BOOKINGS + "/" + booking_id, {})
       .then((booking) => {
@@ -60,10 +60,10 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
   }, []);
 
   if (_is_loading) {
-    return <Text>Cargando...</Text>;
+    return <BnbLoadingText>Cargando reserva...</BnbLoadingText>;
   }
   if (_error) {
-    return <Text>{_error.message}</Text>;
+    return <BnbError>Error al cargar la reserva</BnbError>;
   }
   return (
     <View style={styles.mainContainer}>

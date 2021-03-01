@@ -14,6 +14,8 @@ import getAverage from "../helpers/getAverage";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import BnbUserLogo from "./BnbUserLogo";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
+import BnbLoadingText from "./BnbLoadingText";
+import BnbError from "./BnbError";
 
 const BnbRoomPreview = (props) => {
   const [_ratings, setRatings] = useState({});
@@ -76,11 +78,11 @@ const BnbRoomPreview = (props) => {
   }, [props.room.id]);
 
   if (!_is_loaded) {
-    return <Text text="Cargando habitacion..." />;
+    return <BnbLoadingText>Cargando habitacion...</BnbLoadingText>;
   } else if (_error) {
     return (
       <View>
-        <Text>{_error.message}</Text>
+        <BnbError>Error al cargar la habitación</BnbError>
       </View>
     );
   } else {

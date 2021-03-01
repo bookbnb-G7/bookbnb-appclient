@@ -72,7 +72,13 @@ function ProfileEdit({ me, onTextChange }) {
       _handleApiError
     ).then((response) => {
       if (response) {
-        firebase.auth.signOut();
+        BnbSecureStore.clear(constants.CACHE_USER_KEY).then(() => {
+          firebase.auth
+            .signOut()
+            .then(() =>
+              navigation.navigate("HomeStack", { isLoggedIn: false })
+            );
+        });
         /**TODO: Borrarlo de firebase */
       }
     });

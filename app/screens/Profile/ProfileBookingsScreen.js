@@ -48,7 +48,6 @@ function ProfileBookingsScreen({ navigation }) {
     return <Text> {_error.message} </Text>;
   }
 
-  /**OJO: no deberia poder intentar modificar las reservas hechas, solo las recibidas */
   if (_is_loading) {
     return <BnbLoading text="Cargando reservas"></BnbLoading>;
   } else {

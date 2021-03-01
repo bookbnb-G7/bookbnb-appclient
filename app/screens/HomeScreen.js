@@ -99,10 +99,12 @@ function HomeScreen({ navigation }) {
       .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY));
   };
 
-  const fetchRecommendations = async () => {
+  const fetchRecommendations = async (is_focused) => {
     httpGetTokenRequest("GET", urls.URL_RECOMMENDATIONS, {}).then(
       (recommendedRooms) => {
-        setRecommendedRooms(recommendedRooms);
+        if (is_focused) {
+          setRecommendedRooms(recommendedRooms);
+        }
       },
       (error) => {}
     );
@@ -110,7 +112,11 @@ function HomeScreen({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      fetchRecommendations();
+      let is_focused = true;
+      fetchRecommendations(is_focused);
+      return () => {
+        is_focused = false;
+      };
     }, [])
   );
 
