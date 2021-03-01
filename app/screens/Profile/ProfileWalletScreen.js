@@ -13,6 +13,7 @@ import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 import Clipboard from "expo-clipboard";
+import Separator from "../../components/Separator";
 
 function ProfileWalletScreen(props) {
   const [_wallet, setWallet] = useState();
@@ -24,7 +25,6 @@ function ProfileWalletScreen(props) {
     setWallet(wallet);
     console.log(wallet.address);
     setIsLoading(false);
-    setError(null);
   };
 
   const _handleApiError = (error) => {
@@ -53,7 +53,11 @@ function ProfileWalletScreen(props) {
   }, []);
 
   if (_error) {
-    return <BnbError>{_error.message}</BnbError>;
+    return (
+      <BnbError>
+        Hubo un error al cargar la billetera, error: {_error.message}
+      </BnbError>
+    );
   }
   if (_is_loading) {
     return <BnbLoading text="Cargando billetera..."></BnbLoading>;
@@ -63,16 +67,35 @@ function ProfileWalletScreen(props) {
       <BnbBodyView>
         <View style={styles.walletBalanceContainer}>
           <Text style={bnbStyleSheet.headerTextBlack}>Balance</Text>
-          <Text style={bnbStyleSheet.normalText}>
-            Ethereum: {_wallet.balance}
-          </Text>
+          <BnbIconText
+            iconName="ethereum"
+            style={{ height: 55, alignSelf: "center" }}
+            textStyle={bnbStyleSheet.normalText}
+          >
+            {_wallet.balance}
+          </BnbIconText>
         </View>
+        <Separator />
         <View style={styles.walletInfoContainer}>
           <Text style={bnbStyleSheet.headerTextBlack}>Detalles</Text>
-          <Text style={bnbStyleSheet.subHeaderText}>Address</Text>
+          <Text
+            style={{
+              ...bnbStyleSheet.subHeaderText,
+              ...bnbStyleSheet.separator,
+            }}
+          >
+            Address
+          </Text>
           <Text>{_wallet.address}</Text>
           <BnbButton title="Copiar" onPress={_copyToClipboard}></BnbButton>
-          <Text style={bnbStyleSheet.subHeaderText}>Mnemonic</Text>
+          <Text
+            style={{
+              ...bnbStyleSheet.subHeaderText,
+              ...bnbStyleSheet.separator,
+            }}
+          >
+            Mnemonic
+          </Text>
           {_show_mnemonic && <Text>{_wallet.mnemonic}</Text>}
           <BnbButton
             onPress={_toggleShowMnemonic}
