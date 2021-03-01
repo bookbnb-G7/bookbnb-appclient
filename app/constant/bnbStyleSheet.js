@@ -76,6 +76,9 @@ export default StyleSheet.create({
   mediumText: {
     fontFamily: "Raleway_500Medium",
   },
+  semiBoldText: {
+    fontFamily: "Raleway_600SemiBold",
+  },
   bnbButton: {
     borderRadius: 10,
     padding: 5,

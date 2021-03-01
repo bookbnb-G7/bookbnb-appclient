@@ -177,7 +177,7 @@ function RoomBookingScreen({ route, navigation }) {
   }
 
   if (_is_loading) {
-    return <BnbLoading></BnbLoading>;
+    return <BnbLoading text="Cargando reserva..."></BnbLoading>;
   } else {
     return (
       <BnbMainView>

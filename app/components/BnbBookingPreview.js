@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
+import bnbStyleSheet from "../constant/bnbStyleSheet";
 import constants from "../constant/constants";
 import urls from "../constant/urls";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
@@ -26,12 +27,31 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
     const showButton =
       status === constants.BOOKING_STATUS_PENDING ||
       status === constants.BOOKING_STATUS_ACCEPTED;
+
     return (
       <View>
-        <Text style={styles.bookingInfoText}>Estado de reserva: </Text>
-        {status === 1 && <Text style={styles.orangeText}>Pendiente</Text>}
-        {status === 2 && <Text style={styles.greenText}>Aceptado</Text>}
-        {status === 3 && <Text style={styles.redText}>Rechazado</Text>}
+        <View style={styles.bookingStatusContainer}>
+          <Text style={bnbStyleSheet.normalText}>Estado de reserva: </Text>
+          {status === 1 && (
+            <Text
+              style={{ ...bnbStyleSheet.normalText, ...{ color: "orange" } }}
+            >
+              Pendiente
+            </Text>
+          )}
+          {status === 2 && (
+            <Text
+              style={{ ...bnbStyleSheet.normalText, ...{ color: "green" } }}
+            >
+              Aceptado
+            </Text>
+          )}
+          {status === 3 && (
+            <Text style={{ ...bnbStyleSheet.normalText, ...{ color: "red" } }}>
+              Rechazado
+            </Text>
+          )}
+        </View>
         {showButton && (
           <BnbButton title="Ver reserva" onPress={_handleGoToBookingDetails} />
         )}
@@ -63,7 +83,7 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
     return <BnbLoadingText>Cargando reserva...</BnbLoadingText>;
   }
   if (_error) {
-    return <BnbError>Error al cargar la reserva</BnbError>;
+    return <BnbError>Error al cargar la reserva: {_error.message}</BnbError>;
   }
   return (
     <View style={styles.mainContainer}>
@@ -71,8 +91,14 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
         <BnbImageSlider images={_photos_urls} />
       </View>
       <View style={styles.roomDescriptionContainer}>
-        <Text style={styles.bookingInfoText}>Desde: {_booking.date_from}</Text>
-        <Text style={styles.bookingInfoText}>Hasta: {_booking.date_to}</Text>
+        <View style={styles.bookingDatesContainer}>
+          <Text style={bnbStyleSheet.mediumText}>
+            Desde: {_booking.date_from}
+          </Text>
+          <Text style={bnbStyleSheet.mediumText}>
+            Hasta: {_booking.date_to}
+          </Text>
+        </View>
         {_booking && <ShowBookingStatus status={_booking.booking_status} />}
       </View>
     </View>
@@ -81,23 +107,13 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    //flex: 1,
     justifyContent: "center",
     marginVertical: styling.separator,
   },
   roomImageContainer: {
-    justifyContent: "center",
     alignItems: "center",
-    //borderWidth: 1,
-  },
-  roomImage: {
-    width: "100%",
-    height: 200,
-    borderRadius: styling.mediumCornerRadius,
   },
   roomDescriptionContainer: {
-    //flex: 1,
-    //borderWidth: 1,
     marginVertical: styling.separator,
   },
   roomReviewScore: {},
@@ -107,17 +123,13 @@ const styles = StyleSheet.create({
   bookingInfoText: {
     fontSize: fonts.big,
   },
-  redText: {
-    fontSize: fonts.big,
-    color: "red",
+  bookingDatesContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
-  orangeText: {
-    fontSize: fonts.big,
-    color: "orange",
-  },
-  greenText: {
-    fontSize: fonts.big,
-    color: "green",
+  bookingStatusContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
   },
 });
 
