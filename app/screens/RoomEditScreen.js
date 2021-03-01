@@ -101,30 +101,35 @@ function RoomEditScreen({ route, navigation }) {
   };
 
   useEffect(() => {
-    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {})
-      .then((room) => {
-        setRoom(room);
-        setRoomPatch(room);
-        return httpGetTokenRequest(
-          "GET",
-          urls.URL_ROOMS + "/" + room_id + "/photos",
-          {}
-        );
-      })
-      .then((photos) => {
-        setPhotosUrl(getUrlFromPhotos(photos.room_photos));
-        return BnbSecureStore.read(constants.CACHE_USER_KEY);
-      })
-      .then((user) => {
-        setStoredUser(user);
-        setIsLoading(false);
-        setError(null);
-      })
-      .catch((error) => {
-        setError(error);
-        setIsLoading(false);
-      });
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
+      setStoredUser(user);
+    });
   }, []);
+
+  useEffect(() => {
+    if (storedUser) {
+      httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {
+        "x-access-token": storedUser.auth_token,
+      })
+        .then((room) => {
+          setRoom(room);
+          setRoomPatch(room);
+          return httpGetTokenRequest(
+            "GET",
+            urls.URL_ROOMS + "/" + room_id + "/photos",
+            {}
+          );
+        })
+        .then((photos) => {
+          setPhotosUrl(getUrlFromPhotos(photos.room_photos));
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setIsLoading(false);
+        });
+    }
+  }, [storedUser]);
 
   const ref_price_per_day = useRef();
 

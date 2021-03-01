@@ -69,7 +69,9 @@ function RoomScreen({ route, navigation }) {
   };
 
   const fetchRoomData = async () => {
-    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {})
+    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {
+      "x-access-token": storedUser.auth_token,
+    })
       .then((room) => {
         setRoom(room);
       })
@@ -80,8 +82,10 @@ function RoomScreen({ route, navigation }) {
 
   /**Fetcheo los datos del room cada vez que el parametro cambia */
   useEffect(() => {
-    fetchRoomData();
-  }, [route.params?.room_id]);
+    if (storedUser) {
+      fetchRoomData();
+    }
+  }, [route.params?.room_id, storedUser]);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
