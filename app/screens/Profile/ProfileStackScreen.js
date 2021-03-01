@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Profile from "./Profile";
 import RoomCreateScreen from "../RoomCreateScreen";
@@ -18,16 +18,42 @@ import RoomEditScreen from "../RoomEditScreen";
 import ProfileOwnerScreen from "./ProfileOwnerScreen";
 import UserReviewScreen from "../UserReviewScreen";
 import ProfileFavoritesScreen from "./ProfileFavoritesScreen";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
 const ProfileStack = createStackNavigator();
 
-function ProfileStackScreen(props) {
+function ProfileStackScreen({ navigation }) {
   const [storedUser, setStoredUser] = useState();
+  let is_focused = null;
+
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
       setStoredUser(response);
     });
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("tabPress", (e) => {
+      e.preventDefault();
+      if (is_focused) {
+        navigation.navigate("ProfileStack", { screen: "Profile" });
+      } else {
+        navigation.navigate("ProfileStack");
+        /**Dependiendo del index hago uno o otra */
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  useFocusEffect(
+    useCallback(() => {
+      is_focused = true;
+      return () => {
+        is_focused = false;
+      };
+    }, [navigation])
+  );
 
   if (!storedUser) {
     return <Text>Cargando...</Text>;

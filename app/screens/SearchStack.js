@@ -1,5 +1,6 @@
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Text } from "react-native";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
@@ -14,14 +15,50 @@ import SearchResultRooms from "./SearchResultRooms";
 
 const SearchStackNav = createStackNavigator();
 
-function SearchStack(props) {
+function SearchStack({ navigation }) {
   const [storedUser, setStoredUser] = useState();
+  let is_focused = false;
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((response) => {
       setStoredUser(response);
     });
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("tabPress", (e) => {
+      e.preventDefault();
+      if (is_focused) {
+        navigation.navigate("SearchRooms", { screen: "SearchInput" });
+      } else {
+        navigation.navigate("SearchRooms");
+      }
+    });
+
+    return unsubscribe;
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      is_focused = true;
+      return () => {
+        is_focused = false;
+      };
+    }, [navigation])
+  );
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("tabPress", (e) => {
+      e.preventDefault();
+      if (is_focused) {
+        navigation.navigate("SearchRooms", { screen: "SearchInput" });
+      } else {
+        navigation.navigate("SearchRooms");
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   if (!storedUser) {
     return <Text>Cargando...</Text>;

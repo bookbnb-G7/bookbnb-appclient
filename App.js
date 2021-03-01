@@ -39,7 +39,7 @@ export default function App() {
   });
 
   const refreshToken = async () => {
-    const stoUser = await BnbSecureStore.readUnsafe(constants.CACHE_USER_KEY)
+    const stoUser = await BnbSecureStore.readUnsafe(constants.CACHE_USER_KEY);
     if (user && stoUser) {
       console.log("TOKEN refresheado");
       user.getIdToken(true).then(async (token) => {
