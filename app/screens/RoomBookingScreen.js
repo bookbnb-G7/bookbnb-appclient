@@ -115,7 +115,9 @@ function RoomBookingScreen({ route, navigation }) {
   };
 
   const fetchRoomData = async (room_id) => {
-    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id).then(
+    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {
+      "x-access-token": storedUser.auth_token,
+    }).then(
       (room) => {
         setRoom(room);
       },
@@ -156,10 +158,10 @@ function RoomBookingScreen({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    if (_booking) {
+    if (_booking && storedUser) {
       fetchRoomData(_booking.room_id);
     }
-  }, [_booking]);
+  }, [_booking, storedUser]);
 
   /**Determino si la fecha hoy supera a la fecha de finalizacion de la estadia para habilitar
    * el review
