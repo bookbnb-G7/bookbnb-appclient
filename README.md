@@ -64,7 +64,7 @@ Para ingresar, BookBnb tiene las mismas tres opciones que el paso *Registrarse*.
 * Continuar con Google
 * Continuar con Facebook
 
-Una vez seleccionada una de estas opciones y completado los pasos, ingresará a la aplicación y podrá empezar a utilizar todas sus funciones. Ver paso *Introducción a BookBnb*
+Una vez seleccionada una de estas opciones y completado los pasos, ingresará a la aplicación y podrá empezar a utilizar todas sus funciones. Ver sección *Introducción a BookBnb*
 
 #### Email y contraseña
 
@@ -95,7 +95,7 @@ Es la pantalla de inicio, la primera en verse una vez se haya ingresado a la apl
 
 La pantalla de inicio aparecen dos componentes principales, los botones de acceso directo y la barra inferior.
 
-#### Barra de navegación inferior
+### Barra de navegación inferior
 
 Esta barra es el principal componente utilizado para la navegación y estará presente en todas las pantallas de la aplicación, permitiendo al usuario navegar de una pantalla a otra y al volver seguir donde había dejado.
 
@@ -110,7 +110,7 @@ En orden de aparición de izquierda a derecha
 * Chat
 * Perfil
 
-##### Inicio
+#### Inicio
 
 La pantalla principal antes mencionada, al inicio de cada sesión siempre será la priemra pantalla en ser presentada al usuario.
 
@@ -118,7 +118,11 @@ En el centro tiene 4 botones en una ventana con accesos directos a las funciones
 
 <HomeScreen.js remarcado con cuadrado rojo el BnbWindow>
 
-##### Buscar
+Ademas tiene una sección con habitaciones recomendadas al usuario
+
+<HomeScreen.js en recomendaciones>
+
+#### Buscar
 
 Pantalla para la busqueda de habitaciones para hospedarse, principal función de la aplicación
 
@@ -154,7 +158,7 @@ Para ver la publicación en detalle solo debe presionar la publicación.
 
 > Para ver mas en detalle como funcionan las publicaciones, ver la sección *Habitaciones y Reservas*.
 
-##### Chat
+#### Chat
 
 <ProfileChatScreen>
   
@@ -170,7 +174,7 @@ En el momento que envia el primer mensaje, se añadira la nueva conversación a 
 
 <UserChatScreen>
 
-##### Perfil
+#### Perfil
 
 <Profile me>
 
@@ -181,7 +185,7 @@ Para el manejo de las habitaciones y reservas ver sección *Habitaciones y Reser
 En esta pantalla también tiene la opción de eliminar permanentemente su cuenta
 
 
-#### Habitaciones y reservas
+### Habitaciones y reservas
 
 En esta sección se dan indicaciones sobre como crear, mantener las publicaciones y manejar las reservas siendo el dueño y el como reservar una habitación como inquilino.
 
@@ -189,7 +193,7 @@ En esta sección se dan indicaciones sobre como crear, mantener las publicacione
 
 En el Perfil hay un boton *Habitaciones y Reservas* que envía al usuario a una pantalla con opciones para el manejo de las Habitaciones y la Billetera.
 
-##### Habitaciones
+#### Habitaciones
 
 Hay cuatro opciones
 
@@ -200,14 +204,61 @@ Hay cuatro opciones
 
 <ProfileRoomsptionsScreen>
 
+##### Crear habitación
+
+Permite crear una nueva publicación de un alojamiento
+
+<RoomCreateScreen>
+
+Debe completar el formulario y por ultimo tiene la opción de agregar una foto de la habitación.
+Una vez finalizada la creación de la publicación los usuarios podrán encontrarla mediante el buscador y empezar a realizar reservas, comentarios y podran ver su perfil para iniciar conversaciones.
+
+##### Mis reservas
+
+<ProfileBookingsScreen>
+
+Dos listados, uno con las reservas que han realizado de mis habitaciones y otra con las reservas que el usuario a solicitado.
+Podrá consultar el estado ya sea Pendiente, Aceptado o Rechazado. También tiene la opción de ver los detalles de las reservas presionando el boton *Ver reserva*.
+
+<RoomBookingScreen>
+
+En el caso de ser el dueño del alojamiento, tiene la opción de Aceptar o Rechazar aquellas reservas que esten en estado Pendiente.
+
+En el caso de ser un inquilino puede ver el estado y si esta fue Aceptada y ha pasado el tiempo de estadía, tiene la opción de hacer una reseña tanto de la habitación como del dueño.
+El anfitrión puede hacer con el inquilino. Las reseñas son tanto cuantitativas (estrellas) como cualitativas (reseñas escritas) y serán visibles para los usuarios que consulten los perfiles y en el caso de ser una habitación se podrá ver la reseña y puntuación (rating) en la publicación de esta.
 
 
+##### Mis habitaciones
 
+Un listado con todas las publicaciones creadas por el usuario
 
+<ProfileRoomsScreen>
 
+Presionando cualquiera de las publicaciones permite ver los alojamientos con detalle, de la misma manera que haría un usuario que esta buscando una habitación
 
+<RoomScreen.js>
 
+En esta pantalla el dueño puede ver la publicacion como si fuera un inquilino pero con los adicionales de poder contestar a los comentarios que se hacen en la publicación y el de editar la habitación (agregar fotos, cambiar precio, eliminarla)
 
+##### Favoritos
+
+Pantalla con una lista de todas las publicaciones que el usuario ha marcado como favorito
+
+<ProfileFavoritesScreen>
+
+Funciona como un acceso directo a la publicación sin tener que realizar otra busqueda.
+
+Para agregar una publicación a favoritos se debe primero ingresar a una publicación y una vez dentro hay un boton *Agregar a favoritos* debajo de la imagen.
+
+#### Billetera
+
+La unica forma de pago utilizada por la aplicación es la criptomoneda Ethereum.
+
+Al crear una cuenta nueva, la aplicación automaticamente crea una Wallet al usuario para el uso de criptomonedas.
+
+Esta pantalla indica el balance del usuario junto con el address para la transferencia de Ethereum.
+
+<ProfileWalletScreen>
 
 
  
