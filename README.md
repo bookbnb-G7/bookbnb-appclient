@@ -2,6 +2,7 @@
 
 Esta guía es para aprender como utilizar la aplicación Bookbnb, dedicada la oferta de alojamientos a individuos.
 
+
 ### Bienvenido
 
 <Foto del WelcomeScreen>
@@ -12,6 +13,7 @@ La primera pantalla se le presentará con dos opciones
 * Registrarse
 
 A continuación detallamos los pasos a seguir para cada uno
+
 
 ### Registrarse
 
@@ -29,6 +31,7 @@ Para registrarse, BookBnb tiene tres opciones.
 * Continuar con Google
 * Continuar con Facebook
 
+
 #### Email y contraseña
 
 <SignUpScreen>
@@ -42,6 +45,7 @@ Una vez completados todos los campos, apreta el boton *Aceptar* y ya habrá crea
 La apliación lo hará ingresar inmediatamente despues de haber registrado su cuenta y ya podrá empezar a utilizar sus funciones.
 
 Continua en *Introduccion a BookBnb*
+
 
 #### Google o Facebook
 
@@ -66,6 +70,7 @@ Para ingresar, BookBnb tiene las mismas tres opciones que el paso *Registrarse*.
 
 Una vez seleccionada una de estas opciones y completado los pasos, ingresará a la aplicación y podrá empezar a utilizar todas sus funciones. Ver sección *Introducción a BookBnb*
 
+
 #### Email y contraseña
 
 <UserLoginScreen.js>
@@ -74,9 +79,11 @@ Simplemente debe proporcionar el E-mail y la contraseña de una cuenta que se ha
 
 > Si se ha registrado utilizando Google o Facebook debe utilizar las otras dos opciones segun corresponda. Ver paso *Continuar con Google* o *Continuar con Facebook*
 
+
 #### Continuar con Google 
 
 Deberá ingresar e-mail y contraseña de su cuenta de google
+
 
 #### Continuar con Facebook
 
@@ -95,6 +102,7 @@ Es la pantalla de inicio, la primera en verse una vez se haya ingresado a la apl
 
 La pantalla de inicio aparecen dos componentes principales, los botones de acceso directo y la barra inferior.
 
+
 ### Barra de navegación inferior
 
 Esta barra es el principal componente utilizado para la navegación y estará presente en todas las pantallas de la aplicación, permitiendo al usuario navegar de una pantalla a otra y al volver seguir donde había dejado.
@@ -110,6 +118,7 @@ En orden de aparición de izquierda a derecha
 * Chat
 * Perfil
 
+
 #### Inicio
 
 La pantalla principal antes mencionada, al inicio de cada sesión siempre será la priemra pantalla en ser presentada al usuario.
@@ -121,6 +130,7 @@ En el centro tiene 4 botones en una ventana con accesos directos a las funciones
 Ademas tiene una sección con habitaciones recomendadas al usuario
 
 <HomeScreen.js en recomendaciones>
+
 
 #### Buscar
 
@@ -158,6 +168,7 @@ Para ver la publicación en detalle solo debe presionar la publicación.
 
 > Para ver mas en detalle como funcionan las publicaciones, ver la sección *Habitaciones y Reservas*.
 
+
 #### Chat
 
 <ProfileChatScreen>
@@ -173,6 +184,7 @@ Solamente se presentaran aquellas conversaciones en curso con otros usuarios, si
 En el momento que envia el primer mensaje, se añadira la nueva conversación a la lista de la pantalla *Chat*
 
 <UserChatScreen>
+
 
 #### Perfil
 
@@ -193,6 +205,7 @@ En esta sección se dan indicaciones sobre como crear, mantener las publicacione
 
 En el Perfil hay un boton *Habitaciones y Reservas* que envía al usuario a una pantalla con opciones para el manejo de las Habitaciones y la Billetera.
 
+
 #### Habitaciones
 
 Hay cuatro opciones
@@ -204,6 +217,7 @@ Hay cuatro opciones
 
 <ProfileRoomsptionsScreen>
 
+
 ##### Crear habitación
 
 Permite crear una nueva publicación de un alojamiento
@@ -212,6 +226,7 @@ Permite crear una nueva publicación de un alojamiento
 
 Debe completar el formulario y por ultimo tiene la opción de agregar una foto de la habitación.
 Una vez finalizada la creación de la publicación los usuarios podrán encontrarla mediante el buscador y empezar a realizar reservas, comentarios y podran ver su perfil para iniciar conversaciones.
+
 
 ##### Mis reservas
 
@@ -240,6 +255,7 @@ Presionando cualquiera de las publicaciones permite ver los alojamientos con det
 
 En esta pantalla el dueño puede ver la publicacion como si fuera un inquilino pero con los adicionales de poder contestar a los comentarios que se hacen en la publicación y el de editar la habitación (agregar fotos, cambiar precio, eliminarla)
 
+
 ##### Favoritos
 
 Pantalla con una lista de todas las publicaciones que el usuario ha marcado como favorito
@@ -250,6 +266,7 @@ Funciona como un acceso directo a la publicación sin tener que realizar otra bu
 
 Para agregar una publicación a favoritos se debe primero ingresar a una publicación y una vez dentro hay un boton *Agregar a favoritos* debajo de la imagen.
 
+
 #### Billetera
 
 La unica forma de pago utilizada por la aplicación es la criptomoneda Ethereum.
@@ -259,6 +276,11 @@ Al crear una cuenta nueva, la aplicación automaticamente crea una Wallet al usu
 Esta pantalla indica el balance del usuario junto con el address para la transferencia de Ethereum.
 
 <ProfileWalletScreen>
+
+Lista de operaciones que poseen un coste:
+
+* Realizar una reserva
+* Crear una publicación
 
 
  
