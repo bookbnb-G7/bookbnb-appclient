@@ -99,7 +99,7 @@ const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
         <BnbImageSlider images={_photos_urls} />
       </View>
       {_room && <RoomPreview room={_room}></RoomPreview>}
-      <View style={styles.roomDescriptionContainer}>
+      <View>
         <View style={styles.bookingDatesContainer}>
           <Text style={bnbStyleSheet.mediumText}>
             Desde: {_booking.date_from}
@@ -117,16 +117,6 @@ const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
 const styles = StyleSheet.create({
   roomImageContainer: {
     alignItems: "center",
-  },
-  roomDescriptionContainer: {
-    marginVertical: styling.separator,
-  },
-  roomReviewScore: {},
-  roomTitleText: {
-    fontSize: fonts.big,
-  },
-  bookingInfoText: {
-    fontSize: fonts.big,
   },
   bookingDatesContainer: {
     flexDirection: "row",

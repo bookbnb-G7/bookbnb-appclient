@@ -86,13 +86,18 @@ function RoomBookingScreen({ route, navigation }) {
 
   const ShowBookingStatus = ({ status }) => {
     return (
-      <View>
-        <Text style={styles.bookingInfoText}>Estado de reserva:</Text>
+      <View style={styles.bookingStatusContainer}>
+        <Text style={bnbStyleSheet.mediumText}>Estado de reserva:</Text>
         {status === constants.BOOKING_STATUS_PENDING && (
-          <Text style={styles.orangeText}>Pendiente</Text>
+          <Text style={{ ...bnbStyleSheet.normalText, ...{ color: "orange" } }}>
+            Pendiente
+          </Text>
         )}
         {status === constants.BOOKING_STATUS_ACCEPTED && (
-          <Text style={styles.greenText}>Aceptado</Text>
+          <Text style={{ ...bnbStyleSheet.normalText, ...{ color: "green" } }}>
+            {" "}
+            Aceptado
+          </Text>
         )}
       </View>
     );
@@ -197,14 +202,19 @@ function RoomBookingScreen({ route, navigation }) {
               />
             )}
             <Separator />
-            <Text style={bnbStyleSheet.headerTextBlack}>Reserva</Text>
-            <Text style={styles.bookingInfoText}>
-              Desde: {_booking.date_from}
-            </Text>
-            <Text style={styles.bookingInfoText}>
-              Hasta: {_booking.date_to}
-            </Text>
-            {_booking && <ShowBookingStatus status={_booking.booking_status} />}
+            <View>
+              <View style={styles.bookingDatesContainer}>
+                <Text style={bnbStyleSheet.mediumText}>
+                  Desde: {_booking.date_from}
+                </Text>
+                <Text style={bnbStyleSheet.mediumText}>
+                  Hasta: {_booking.date_to}
+                </Text>
+              </View>
+              {_booking && (
+                <ShowBookingStatus status={_booking.booking_status} />
+              )}
+            </View>
             {_is_owner &&
               _booking.booking_status === constants.BOOKING_STATUS_PENDING && (
                 <View>
@@ -280,25 +290,13 @@ function RoomBookingScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  roomImage: {
-    width: "100%",
-    height: 200,
-    borderRadius: styling.mediumCornerRadius,
+  bookingDatesContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
-  bookingInfoText: {
-    fontSize: fonts.big,
-  },
-  redText: {
-    fontSize: fonts.big,
-    color: "red",
-  },
-  orangeText: {
-    fontSize: fonts.big,
-    color: "orange",
-  },
-  greenText: {
-    fontSize: fonts.big,
-    color: "green",
+  bookingStatusContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
   },
 });
 
