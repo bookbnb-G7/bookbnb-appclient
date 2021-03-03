@@ -68,7 +68,6 @@ function ProfileBookingsScreen({ navigation }) {
               {storedUser &&
                 _bookings.made.bookings.map((item, index) => (
                   <View key={item.id}>
-                    <Text>{item.room_id}</Text>
                     <BnbBookingPreview
                       navigation={navigation}
                       booking_id={item.id}

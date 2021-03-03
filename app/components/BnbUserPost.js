@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { TouchableHighlight } from "react-native-gesture-handler";
-import { error } from "react-native-gifted-chat/lib/utils";
 import colors from "../config/colors";
 import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
@@ -14,6 +13,7 @@ const BnbUserPost = ({ user_id, time, text, onUsernameTap }) => {
   const [_error, setError] = useState();
 
   useEffect(() => {
+    console.log("******BnbUserPost*****");
     httpGetTokenRequest("GET", urls.URL_USERS + "/" + user_id, {}).then(
       (user) => {
         setUser(user);

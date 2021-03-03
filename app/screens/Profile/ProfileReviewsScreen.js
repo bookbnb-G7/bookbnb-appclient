@@ -8,6 +8,8 @@ import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import colors from "../../config/colors";
+import Separator from "../../components/Separator";
+import BnbUserPost from "../../components/BnbUserPost";
 
 function ProfileReviewsScreen({ route, navigation }) {
   const user_id = route.params.user_id;
@@ -15,13 +17,14 @@ function ProfileReviewsScreen({ route, navigation }) {
   const [_guestReviews, setGuestReviews] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
-
+  console.log("######################ProfileReviewScreen#############");
   const _handleApiError = (error) => {
     setError(error);
     setIsLoading(false);
   };
 
   useEffect(() => {
+    console.log("*********");
     httpGetTokenRequest(
       "GET",
       urls.URL_USERS + "/" + user_id + "/guest_reviews",
@@ -45,16 +48,11 @@ function ProfileReviewsScreen({ route, navigation }) {
       });
   }, []);
 
-  const UserReview = ({ item }) => {
-    return (
-      <View style={styles.reviewContainer}>
-        <Text style={bnbStyleSheet.mediumText}>{item.reviewer}</Text>
-        <Text style={{ ...bnbStyleSheet.normalText, ...styles.reviewText }}>
-          {item.review}
-        </Text>
-      </View>
-    );
-  };
+  const _handleUsernameTap = () => {};
+
+  /**Si defino un componente a parte renderiza dos veces y no se porque
+   * para el BnbUserPost
+   */
 
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
@@ -68,7 +66,7 @@ function ProfileReviewsScreen({ route, navigation }) {
     <BnbMainView>
       <BnbBodyView>
         <Text style={bnbStyleSheet.headerTextBlack}>
-          Reviews como anfitrión
+          Reseñas como anfitrión
         </Text>
         {_hostReviews.reviews.length === 0 && (
           <Text style={bnbStyleSheet.normalText}>
@@ -76,10 +74,17 @@ function ProfileReviewsScreen({ route, navigation }) {
           </Text>
         )}
         {_hostReviews.reviews.map((item, index) => (
-          <UserReview item={item} key={item.id} />
+          <View key={item.id}>
+            <BnbUserPost
+              user_id={item.reviewer_id}
+              text={item.review}
+              onUsernameTap={_handleUsernameTap}
+            />
+            {_hostReviews.reviews.length > 1 && <Separator />}
+          </View>
         ))}
         <Text style={bnbStyleSheet.headerTextBlack}>
-          Reviews como inquilino
+          Reseñas como inquilino
         </Text>
         {_guestReviews.reviews.length === 0 && (
           <Text style={bnbStyleSheet.normalText}>
@@ -87,7 +92,14 @@ function ProfileReviewsScreen({ route, navigation }) {
           </Text>
         )}
         {_guestReviews.reviews.map((item, index) => (
-          <UserReview item={item} key={item.id} />
+          <View key={item.id}>
+            <BnbUserPost
+              user_id={item.reviewer_id}
+              text={item.review}
+              onUsernameTap={_handleUsernameTap}
+            />
+            {_guestReviews.reviews.length > 1 && <Separator />}
+          </View>
         ))}
       </BnbBodyView>
     </BnbMainView>
@@ -99,9 +111,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   reviewContainer: {
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: colors.redAirBNBSoft,
     marginLeft: 15,
     paddingLeft: 5,
     marginBottom: 15,
