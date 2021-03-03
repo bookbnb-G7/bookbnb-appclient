@@ -90,4 +90,20 @@ export default StyleSheet.create({
   separator: {
     marginVertical: styling.separator,
   },
+  roomPreviewContainer: {
+    justifyContent: "center",
+    marginVertical: styling.separator,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "black",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 5,
+    backgroundColor: "#F0F0F0",
+  },
 });

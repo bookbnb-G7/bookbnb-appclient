@@ -30,7 +30,7 @@ function RoomPreview({ room, ratings }) {
             iconSize={24}
             text={
               ratings.ratings.length > 0
-                ? getAverage(_ratings.ratings, "rating")
+                ? getAverage(ratings.ratings, "rating")
                 : "-"
             }
             textStyle={styles.ratingText}

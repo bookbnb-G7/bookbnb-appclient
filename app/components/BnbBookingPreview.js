@@ -94,7 +94,7 @@ const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
     return <BnbError>Error al cargar la reserva: {_error.message}</BnbError>;
   }
   return (
-    <View style={styles.mainContainer}>
+    <View style={bnbStyleSheet.roomPreviewContainer}>
       <View style={styles.roomImageContainer}>
         <BnbImageSlider images={_photos_urls} />
       </View>
@@ -115,10 +115,6 @@ const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
 };
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    justifyContent: "center",
-    marginVertical: styling.separator,
-  },
   roomImageContainer: {
     alignItems: "center",
   },

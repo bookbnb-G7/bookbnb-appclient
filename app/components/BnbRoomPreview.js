@@ -1,25 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
 import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
-import BnbLoading from "../components/BnbLoading";
 import BnbImageSlider from "./BnbImageSlider";
-import BnbFormBubbleInfo from "../components/BnbFormBubbleInfo";
 import colors from "../config/colors";
 
-import getAverage from "../helpers/getAverage";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
-import BnbUserLogo from "./BnbUserLogo";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import BnbLoadingText from "./BnbLoadingText";
 import BnbError from "./BnbError";
 import RoomPreview from "./RoomPreview";
 
 const BnbRoomPreview = (props) => {
-  const [_ratings, setRatings] = useState({});
+  const [_ratings, setRatings] = useState(null);
   const [_error, setError] = useState();
   const [_is_loaded, setIsLoaded] = useState(false);
 
@@ -88,12 +84,12 @@ const BnbRoomPreview = (props) => {
     );
   } else {
     return (
-      <View style={styles.mainContainer}>
+      <View style={bnbStyleSheet.roomPreviewContainer}>
         <TouchableOpacity onPress={_handleImagePress}>
           <View style={styles.imageSlider}>
             <BnbImageSlider images={_photos_urls} />
           </View>
-          <RoomPreview room={props.room} ratings={_ratings} />
+          {_ratings && <RoomPreview room={props.room} ratings={_ratings} />}
         </TouchableOpacity>
       </View>
     );
@@ -101,22 +97,6 @@ const BnbRoomPreview = (props) => {
 };
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    justifyContent: "center",
-    marginVertical: styling.separator,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "black",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 5,
-    backgroundColor: "#F0F0F0",
-  },
   imageSlider: {
     justifyContent: "center",
     alignItems: "center",
