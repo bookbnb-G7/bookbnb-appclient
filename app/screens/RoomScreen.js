@@ -164,6 +164,7 @@ function RoomScreen({ route, navigation }) {
                 me_id={storedUser.userData.id}
                 auth_token={storedUser.auth_token}
                 navigation={navigation}
+                onChange={fetchRoomData}
               />
             )}
             <RoomReviews

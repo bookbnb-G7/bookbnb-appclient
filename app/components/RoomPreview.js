@@ -6,17 +6,32 @@ import bnbStyleSheet from "../constant/bnbStyleSheet";
 import urls from "../constant/urls";
 import getAverage from "../helpers/getAverage";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
+import BnbError from "./BnbError";
+import BnbLoadingText from "./BnbLoadingText";
 
 function RoomPreview({ room_id, token }) {
   const [_room, setRoom] = useState(null);
+  const [_error, setError] = useState(null);
+  const [_is_loading, setIsLoading] = useState(null);
 
   useEffect(() => {
     httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {
       "x-access-token": token,
     }).then((room) => {
-      setRoom(room), (error) => {};
+      setRoom(room),
+        (error) => {
+          setError(error);
+        };
     });
   }, [room_id]);
+
+  if (_is_loading) {
+    return <BnbLoadingText>Cargando...</BnbLoadingText>;
+  }
+
+  if (_error) {
+    return <BnbError>{_error.message}</BnbError>;
+  }
 
   return (
     <View style={styles.roomDescriptionContainer}>

@@ -18,7 +18,7 @@ import Separator from "./Separator";
 import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
 import BnbImage from "./BnbImage";
 
-const BnbRoomInfo = ({ room, me_id, auth_token, navigation }) => {
+const BnbRoomInfo = ({ room, me_id, auth_token, navigation, onChange }) => {
   const [_average_rating, setAverageRating] = useState(0);
   const [_photos_urls, setPhotosUrls] = useState();
   const [_error, setError] = useState();
@@ -43,11 +43,52 @@ const BnbRoomInfo = ({ room, me_id, auth_token, navigation }) => {
       { "x-access-token": auth_token, "Content-Type": "application/json" }
     ).then(
       (response) => {
-        console.log("Añadido a favoritos");
+        onChange();
+        console.log("favorito");
       },
       (error) => {
         setError(error);
       }
+    );
+  };
+
+  const _handleRemoveFromFavorites = () => {
+    httpGetTokenRequest("DELETE", urls.URL_ME + "/favorite_rooms/" + room.id, {
+      "x-access-token": auth_token,
+    }).then(
+      (response) => {
+        onChange();
+        console.log("delete favorito");
+      },
+      (error) => {}
+    );
+  };
+
+  const FavoriteButton = ({ is_favorite }) => {
+    return (
+      <TouchableOpacity
+        onPress={
+          is_favorite ? _handleRemoveFromFavorites : _handleAddToFavorites
+        }
+      >
+        <BnbIconText
+          iconName="star"
+          style={styles.addToFavoritesContainer}
+          textStyle={
+            is_favorite
+              ? styles.removeFromFavoritesText
+              : styles.addToFavoritesText
+          }
+          iconStyle={
+            is_favorite
+              ? styles.removeFromFavoritesIcon
+              : styles.addToFavoritesIcon
+          }
+          iconSize={30}
+        >
+          {is_favorite ? "Favorito" : "Agregar a favoritos"}
+        </BnbIconText>
+      </TouchableOpacity>
     );
   };
 
@@ -126,17 +167,7 @@ const BnbRoomInfo = ({ room, me_id, auth_token, navigation }) => {
           </View>
         )}
         {_roomOwner && _roomOwner.id !== me_id && (
-          <TouchableOpacity onPress={_handleAddToFavorites}>
-            <BnbIconText
-              iconName="star"
-              style={styles.addToFavoritesContainer}
-              textStyle={styles.addToFavoritesText}
-              iconStyle={styles.addToFavoritesIcon}
-              iconSize={30}
-            >
-              Agregar a favoritos
-            </BnbIconText>
-          </TouchableOpacity>
+          <FavoriteButton is_favorite={room.favorite} />
         )}
         <Separator style={{ width: "100%", marginVertical: 10 }} />
         <View style={styles.priceNGuestsContainer}>
@@ -247,10 +278,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 30,
   },
+  removeFromFavoritesText: {
+    fontFamily: "Raleway_500Medium",
+    fontSize: 15,
+    color: "red",
+  },
   addToFavoritesText: {
     fontFamily: "Raleway_500Medium",
     fontSize: 15,
     color: "yellow",
+  },
+  removeFromFavoritesIcon: {
+    color: colors.redAirBNB,
   },
   addToFavoritesIcon: {
     color: "yellow",

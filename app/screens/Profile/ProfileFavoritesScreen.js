@@ -49,6 +49,11 @@ function ProfileFavoritesScreen({ navigation }) {
           Tus Habitaciones Favoritas
         </Text>
         <ScrollView>
+          {_favorite_rooms && _favorite_rooms.rooms.length === 0 && (
+            <Text style={bnbStyleSheet.normalText}>
+              Todavia no ha agregado ninguna publicación a su lista de favoritos
+            </Text>
+          )}
           {_favorite_rooms &&
             storedUser &&
             _favorite_rooms.rooms.map((item, index) => (
@@ -58,7 +63,6 @@ function ProfileFavoritesScreen({ navigation }) {
                   me_id={storedUser.userData.id}
                   navigation={navigation}
                 />
-                <BnbButton iconName="star" title={"Quitar de favoritos"} />
               </View>
             ))}
         </ScrollView>

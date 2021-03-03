@@ -29,9 +29,6 @@ class BnbImageSlider extends Component {
           onCurrentImagePressed={(index) => {
             this.props.onPress ? this.props.onPress(index) : {};
           }}
-          currentImageEmitter={(index) =>
-            console.log(`Current pos is: ${index}`)
-          }
           parentWidth={this.props?.width}
           sliderBoxHeight={this.props?.height}
         ></SliderBox>
