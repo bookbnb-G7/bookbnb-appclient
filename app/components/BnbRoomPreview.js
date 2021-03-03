@@ -16,6 +16,7 @@ import BnbUserLogo from "./BnbUserLogo";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import BnbLoadingText from "./BnbLoadingText";
 import BnbError from "./BnbError";
+import RoomPreview from "./RoomPreview";
 
 const BnbRoomPreview = (props) => {
   const [_ratings, setRatings] = useState({});
@@ -92,29 +93,7 @@ const BnbRoomPreview = (props) => {
           <View style={styles.imageSlider}>
             <BnbImageSlider images={_photos_urls} />
           </View>
-          <View style={styles.roomDescriptionContainer}>
-            <Text style={styles.roomTitleText}>{props.room.title}</Text>
-            <View style={styles.profileAndRoomDetalisContainer}>
-              <View style={styles.roomInfoContainer}>
-                <Text style={bnbStyleSheet.normalText}>{props.room.type}</Text>
-                <Text style={bnbStyleSheet.normalText}>
-                  Precio por dia: ${props.room.price_per_day}
-                </Text>
-              </View>
-              <BnbFormBubbleInfo
-                iconName="star"
-                iconColor={colors.golden}
-                iconSize={24}
-                text={
-                  _ratings.ratings.length > 0
-                    ? getAverage(_ratings.ratings, "rating")
-                    : "-"
-                }
-                textStyle={styles.ratingText}
-                style={styles.ratingContainer}
-              />
-            </View>
-          </View>
+          <RoomPreview room={props.room} ratings={_ratings} />
         </TouchableOpacity>
       </View>
     );

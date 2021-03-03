@@ -65,14 +65,18 @@ function ProfileBookingsScreen({ navigation }) {
               Tienes {_bookings.made.bookings.length} reservas hechas
             </Text>
             <View>
-              {_bookings.made.bookings.map((item, index) => (
-                <View key={item.id}>
-                  <BnbBookingPreview
-                    navigation={navigation}
-                    booking_id={item.id}
-                  />
-                </View>
-              ))}
+              {storedUser &&
+                _bookings.made.bookings.map((item, index) => (
+                  <View key={item.id}>
+                    <Text>{item.room_id}</Text>
+                    <BnbBookingPreview
+                      navigation={navigation}
+                      booking_id={item.id}
+                      room_id={item.room_id}
+                      auth_token={storedUser.auth_token}
+                    />
+                  </View>
+                ))}
             </View>
             <Separator />
             <Text style={bnbStyleSheet.headerTextBlack}>
@@ -84,6 +88,8 @@ function ProfileBookingsScreen({ navigation }) {
                   <BnbBookingPreview
                     navigation={navigation}
                     booking_id={item.id}
+                    room_id={item.room_id}
+                    auth_token={storedUser.auth_token}
                   />
                   <Separator />
                 </View>

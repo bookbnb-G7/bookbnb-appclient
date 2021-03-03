@@ -12,10 +12,12 @@ import BnbButton from "./BnbButton";
 import BnbError from "./BnbError";
 import BnbImageSlider from "./BnbImageSlider";
 import BnbLoadingText from "./BnbLoadingText";
+import RoomPreview from "./RoomPreview";
 
-const BnbBookingPreview = ({ navigation, booking_id }) => {
+const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
   const [_booking, setBooking] = useState();
   const [_photos_urls, setPhotos] = useState([]);
+  const [_room, setRoom] = useState(null);
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
 
@@ -71,6 +73,12 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
       })
       .then((photos) => {
         setPhotos(getUrlFromPhotos(photos.room_photos));
+        return httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {
+          "x-access-token": auth_token,
+        });
+      })
+      .then((room) => {
+        setRoom(room);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -90,6 +98,7 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
       <View style={styles.roomImageContainer}>
         <BnbImageSlider images={_photos_urls} />
       </View>
+      {_room && <RoomPreview room={_room}></RoomPreview>}
       <View style={styles.roomDescriptionContainer}>
         <View style={styles.bookingDatesContainer}>
           <Text style={bnbStyleSheet.mediumText}>
