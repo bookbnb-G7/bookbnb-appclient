@@ -1,6 +1,6 @@
 ## Guia de usuario
 
-Esta guía es para aprender como utilizar la aplicación Bookbnb, dedicada la oferta de alojamientos a individuos.
+Esta guía es para aprender como utilizar la aplicación Bookbnb, dedicada a la oferta de alojamientos a individuos.
 
 
 ### Bienvenido
@@ -49,7 +49,7 @@ Continua en *Introduccion a BookBnb*
 
 #### Google o Facebook
 
-Las otras dos permiten utilizar una cuenta existente ya sea de Google o de Facebook. Solo se le pedira un permiso para poder acceder a su cuenta de Google o Facebook y completar unos pocos campos con su información personal.
+Las otras dos permiten utilizar una cuenta existente ya sea de Google o de Facebook. Solo se le pedirá un permiso para poder acceder a su cuenta de Google o Facebook y completar unos pocos campos con su información personal.
 
 ![facebook_auth](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/facebook_auth.png)
   
@@ -92,13 +92,13 @@ Deberá ingresar e-mail y contraseña de su cuenta de facebook.
 
 ### Introducción a BookBnb
 
-En esta sección se da una explicación detallada de todas las funcionalidades que otorga BookBnb a sus usuarios
+En esta sección se da una breve explicación sobre las funcionalidades mas relevantes que otorga BookBnb a sus usuarios
 
 ![HomeScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/home_screen.png)
 
-Es la pantalla de inicio, la primera en verse una vez se haya ingresado a la aplicación (habiendo logeado o completado el registro). La sesión se mantiene aún si ha cerrado la aplicación, esto implica que al volver a abrir BookBnb no se le volvera a solicitar un ingreso (login o registro) y se encontrará con esta pantalla de nuevo.
+Pantalla de inicio, la primera en verse una vez se haya ingresado a la aplicación (habiendo logeado o completado el registro). La sesión se mantiene aún si ha cerrado la aplicación, esto implica que al volver a abrir BookBnb no se le volvera a solicitar un ingreso (login o registro) y se encontrará con esta pantalla de nuevo.
 
-La pantalla de inicio aparecen dos componentes principales, los botones de acceso directo y la barra inferior.
+Hay dos componentes principales, los botones de acceso directo y la barra de navegación inferior.
 
 
 ### Barra de navegación inferior
