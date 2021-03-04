@@ -160,8 +160,7 @@ Por ultimo, la pantalla de filtros opcionales nos da la opcion de filtrar por ra
   
 Al finalizar con este ultimo paso la aplicación mostrara un listado de todas las habitaciones que cumplan con los parámetros indicados.
 
-![HomeScreenTabNav]
-<SearchResultScreen>
+![SearchResultsScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/search_results.png)
 
 Para ver la publicación en detalle solo debe presionar la publicación.
 
@@ -170,7 +169,7 @@ Para ver la publicación en detalle solo debe presionar la publicación.
 
 #### Chat
 
-<ProfileChatScreen>
+![SearchResultsScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_chat.png)
   
 Pantalla con una lista de las conversaciones privadas en tiempo real que puede tener con distintos usuarios.
 
@@ -178,16 +177,16 @@ Solamente se presentaran aquellas conversaciones en curso con otros usuarios, si
 
 > Los usuarios estan presentes en la sección Comentarios de una habitación y tambien como dueño de las publicaciones. Apretando cualquiera de los iconos de usuario le enviará directamente a su perfil.
 
-<Profile de un user señalando el boton Mensaje>
+![UserProfileMsg](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/user_profile_msg.png)
 
 En el momento que envia el primer mensaje, se añadira la nueva conversación a la lista de la pantalla *Chat*
 
-<UserChatScreen>
+![UserChatScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/user_chat.png)
 
 
 #### Perfil
 
-<Profile me>
+![ProfileMe](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_me.png)
 
 Pantalla con sus datos personales, en esta pantalla puede ver las reseñas que ha recibido tanto como iniquilino y como anfitrión; manejar las habitaciones y reservas y editar sus datos de perfil.
 
@@ -200,7 +199,7 @@ En esta pantalla también tiene la opción de eliminar permanentemente su cuenta
 
 En esta sección se dan indicaciones sobre como crear, mantener las publicaciones y manejar las reservas siendo el dueño y el como reservar una habitación como inquilino.
 
-<Profile me señalando el boton Habitaciones y Reservas>
+![ProfileMeRooms](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_me_rooms.png)
 
 En el Perfil hay un boton *Habitaciones y Reservas* que envía al usuario a una pantalla con opciones para el manejo de las Habitaciones y la Billetera.
 
@@ -214,14 +213,14 @@ Hay cuatro opciones
 * Mis habitaciones
 * Favoritos
 
-<ProfileRoomsptionsScreen>
+![ProfileRoomsOptions](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_rooms_options.png)
 
 
 ##### Crear habitación
 
 Permite crear una nueva publicación de un alojamiento
 
-<RoomCreateScreen>
+![RoomCreateScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/room_create.png)
 
 Debe completar el formulario y por ultimo tiene la opción de agregar una foto de la habitación.
 Una vez finalizada la creación de la publicación los usuarios podrán encontrarla mediante el buscador y empezar a realizar reservas, comentarios y podran ver su perfil para iniciar conversaciones.
@@ -229,12 +228,12 @@ Una vez finalizada la creación de la publicación los usuarios podrán encontra
 
 ##### Mis reservas
 
-<ProfileBookingsScreen>
+![ProfileBookingsScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_bookings.png)
 
 Dos listados, uno con las reservas que han realizado de mis habitaciones y otra con las reservas que el usuario a solicitado.
 Podrá consultar el estado ya sea Pendiente, Aceptado o Rechazado. También tiene la opción de ver los detalles de las reservas presionando el boton *Ver reserva*.
 
-<RoomBookingScreen>
+![RoomBookingScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/room_booking.png)
 
 En el caso de ser el dueño del alojamiento, tiene la opción de Aceptar o Rechazar aquellas reservas que esten en estado Pendiente.
 
@@ -246,11 +245,11 @@ El anfitrión puede hacer con el inquilino. Las reseñas son tanto cuantitativas
 
 Un listado con todas las publicaciones creadas por el usuario
 
-<ProfileRoomsScreen>
+![ProfileRoomsScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_rooms.png)
 
-Presionando cualquiera de las publicaciones permite ver los alojamientos con detalle, de la misma manera que haría un usuario que esta buscando una habitación
+Presionar una publicación permite ver los detalles, de la misma manera que haría un usuario que esta buscando una habitación. De esta manera puede verificar los datos de sus publicaciones.
 
-<RoomScreen.js>
+![RoomScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/room_screen.png)
 
 En esta pantalla el dueño puede ver la publicacion como si fuera un inquilino pero con los adicionales de poder contestar a los comentarios que se hacen en la publicación y el de editar la habitación (agregar fotos, cambiar precio, eliminarla)
 
@@ -259,7 +258,7 @@ En esta pantalla el dueño puede ver la publicacion como si fuera un inquilino p
 
 Pantalla con una lista de todas las publicaciones que el usuario ha marcado como favorito
 
-<ProfileFavoritesScreen>
+![ProfileFavoritesScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_favorites.png)
 
 Funciona como un acceso directo a la publicación sin tener que realizar otra busqueda.
 
@@ -274,13 +273,14 @@ Al crear una cuenta nueva, la aplicación automaticamente crea una Wallet al usu
 
 Esta pantalla indica el balance del usuario junto con el address para la transferencia de Ethereum.
 
-<ProfileWalletScreen>
+![ProfileWallet](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_wallet.png)
 
 Lista de operaciones que poseen un coste:
 
 * Realizar una reserva
 * Crear una publicación
 
+La aplicación le pedira una confirmación cada vez que vaya a realizar alguna de estas operaciones, el monto será descontado directamente de su billetera.
 
  
 
