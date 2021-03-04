@@ -6,7 +6,6 @@ Esta guía es para aprender como utilizar la aplicación Bookbnb, dedicada la of
 ### Bienvenido
 
 ![WelcomeScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/welcome_screen.png)
-<Foto del WelcomeScreen>
 
 La primera pantalla se le presentará con dos opciones
 
@@ -24,7 +23,7 @@ Si es la primera vez que usa esta aplicación debe registrarse.
 
 > En el caso de que ya tenga una cuenta, puede salter este paso.
 
-<Foto del RegisterSelectScreen>
+![RegisterSelect](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/register_select_screen.png)
 
 Para registrarse, BookBnb tiene tres opciones.
 
@@ -35,7 +34,7 @@ Para registrarse, BookBnb tiene tres opciones.
 
 #### Email y contraseña
 
-<SignUpScreen>
+![SignUpScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/signup_screen.png)
 
 La primera opción es para crear una cuenta nueva de Bookbnb que solo le servira para esta aplicación y en la cual deberá completar un formulario con sus datos personales.
 
