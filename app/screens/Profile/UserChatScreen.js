@@ -8,6 +8,7 @@ import { GiftedChat } from "react-native-gifted-chat";
 import { Text } from "react-native";
 import BnbError from "../../components/BnbError";
 import httpPostTokenRequest from "../../helpers/httpPostTokenRequest";
+import bnbStyleSheet from "../../constant/bnbStyleSheet";
 
 function UserChatScreen({ route, navigation }) {
   const other_uuid = route.params.other_uuid;
@@ -96,13 +97,9 @@ function UserChatScreen({ route, navigation }) {
 
   return (
     <BnbMainView>
-      <Text>
-        Tu {storedUser.userData.email} id:
-        {storedUser.userData.id}
-      </Text>
       {_otherUser && (
-        <Text>
-          Chateando con {_otherUser.email} other_uuid: {other_uuid}
+        <Text style={bnbStyleSheet.normalText}>
+          Chateando con {_otherUser.firstname} {_otherUser.lastname}
         </Text>
       )}
       <GiftedChat

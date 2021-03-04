@@ -99,21 +99,17 @@ function HomeScreen({ navigation }) {
       .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY));
   };
 
-  const fetchRecommendations = async (is_focused) => {
-    httpGetTokenRequest("GET", urls.URL_RECOMMENDATIONS, {}).then(
-      (recommendedRooms) => {
-        if (is_focused) {
-          setRecommendedRooms(recommendedRooms);
-        }
-      },
-      (error) => {}
-    );
-  };
-
   useFocusEffect(
     useCallback(() => {
       let is_focused = true;
-      fetchRecommendations(is_focused);
+      httpGetTokenRequest("GET", urls.URL_RECOMMENDATIONS, {}).then(
+        (recommendedRooms) => {
+          if (is_focused) {
+            setRecommendedRooms(recommendedRooms);
+          }
+        },
+        (error) => {}
+      );
       return () => {
         is_focused = false;
       };

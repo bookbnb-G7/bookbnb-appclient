@@ -118,11 +118,7 @@ function Profile({ route, navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      const unsubscribe = fetchUserData();
-
-      /**return function cleanup(){
-        setError(null)
-      }*/
+      fetchUserData();
     }, [route.params?.user_id])
   );
 
@@ -202,7 +198,11 @@ function Profile({ route, navigation }) {
             </View>
           )}
           {_show_info && user && (
-            <ProfileEdit me={user} onTextChange={_handleTextChange} />
+            <ProfileEdit
+              me={user}
+              navigation={navigation}
+              onTextChange={_handleTextChange}
+            />
           )}
         </ScrollView>
       </BnbBodyView>
