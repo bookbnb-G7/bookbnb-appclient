@@ -51,16 +51,14 @@ Continua en *Introduccion a BookBnb*
 
 Las otras dos permiten utilizar una cuenta existente ya sea de Google o de Facebook. Solo se le pedira un permiso para poder acceder a su cuenta de Google o Facebook y completar unos pocos campos con su información personal.
 
-<Foto de permiso Facebook>
+![facebook_auth](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/facebook_auth.png)
   
-<Foto de permiso Google>
-
 
 ### Ingresar (Login)
 
 > En el caso de haber realizado el paso *Registrarse*, puede saltear este paso.
 
-<Foto LoginSelect>
+![LoginSelectScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/login_select.png)
 
 Para ingresar, BookBnb tiene las mismas tres opciones que el paso *Registrarse*.
 
@@ -73,7 +71,7 @@ Una vez seleccionada una de estas opciones y completado los pasos, ingresará a 
 
 #### Email y contraseña
 
-<UserLoginScreen.js>
+![UserLoginScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/user_login.png)
 
 Simplemente debe proporcionar el E-mail y la contraseña de una cuenta que se haya registrado con la opción *Email y contraseña* del paso *Registrarse*.
 
@@ -96,7 +94,7 @@ Deberá ingresar e-mail y contraseña de su cuenta de facebook.
 
 En esta sección se da una explicación detallada de todas las funcionalidades que otorga BookBnb a sus usuarios
 
-<HomeScreen.js>
+![HomeScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/home_screen.png)
 
 Es la pantalla de inicio, la primera en verse una vez se haya ingresado a la aplicación (habiendo logeado o completado el registro). La sesión se mantiene aún si ha cerrado la aplicación, esto implica que al volver a abrir BookBnb no se le volvera a solicitar un ingreso (login o registro) y se encontrará con esta pantalla de nuevo.
 
@@ -107,7 +105,7 @@ La pantalla de inicio aparecen dos componentes principales, los botones de acces
 
 Esta barra es el principal componente utilizado para la navegación y estará presente en todas las pantallas de la aplicación, permitiendo al usuario navegar de una pantalla a otra y al volver seguir donde había dejado.
 
-<HomeScreen.js remarcado con cuadrado rojo el TabNavigator>
+![HomeScreenTabNav](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/home_screen_tab_nav.png)
 
 La barra inferior tiene 4 botones, el presionar cada uno lo lleva directamente a una nueva pantalla donde se le presentarán las distintas opciones para usar la aplicación.
 
@@ -125,11 +123,11 @@ La pantalla principal antes mencionada, al inicio de cada sesión siempre será 
 
 En el centro tiene 4 botones en una ventana con accesos directos a las funciones mas utilizadas
 
-<HomeScreen.js remarcado con cuadrado rojo el BnbWindow>
+![HomeScreenWindow](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/home_screen_window.png)
 
 Ademas tiene una sección con habitaciones recomendadas al usuario
 
-<HomeScreen.js en recomendaciones>
+![HomeScreenRecommendations](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/home_screen_recommend.png)
 
 
 #### Buscar
@@ -142,26 +140,27 @@ A continuación se da un pequeño ejemplo de su uso:
 
 Presionando el boton de *Buscar* en la barra inferior o en el menu de la pantalla de inicio, irá a la pantalla de busqueda.
 
-<HomeScreen.js remarcando con rojo los dos botones buscar>
+![HomeScreenSearch](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/home_screen_search.png)
 
 La primera pantalla solicita que se indique la localidad en la que se quiere buscar. Para esto BookBnb tiene un sistema de autocompletar en el que irá desplegando una lsita de posibles coincidencias de localidades con lo que el usuario esta ingresando.
 
-<SearchInputScreen>
+![SearchInputScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/search_input.png)
 
 Seleccionada la localidad, pasará a la siguiente pantalla donde se le solicita indicar el tiempo de estadía. Deberá indicar dia de inicio y de fin.
 
-<SearchDateTimePicker>
+![SearchDateTimePicker](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/search_datetime_picker.png)
 
 La siguiente pantalla nos solicitará ingresar la cantidad de Adultos y Niños a hospedarse
 
-<SearchCountersScreen>
+![SearchCountersScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/search_counter.png)
 
 Por ultimo, la pantalla de filtros opcionales nos da la opcion de filtrar por rangode precios o categoría. En el caso de no querer aplicar ningún filtro apretar el boton *Siguiente*
 
-<OptionalFiltersScreen>
+![SearchOptionalFilters](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/search_optionals_filters.png)
   
 Al finalizar con este ultimo paso la aplicación mostrara un listado de todas las habitaciones que cumplan con los parámetros indicados.
 
+![HomeScreenTabNav]
 <SearchResultScreen>
 
 Para ver la publicación en detalle solo debe presionar la publicación.
