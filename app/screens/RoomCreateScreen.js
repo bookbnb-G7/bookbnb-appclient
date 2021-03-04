@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, Keyboard } from "react-native";
+import { StyleSheet, Text, View, Keyboard, Alert } from "react-native";
 import { Overlay } from "react-native-elements";
 import DropDownPicker from "react-native-dropdown-picker";
 import BnbAlert from "../components/BnbAlert";
@@ -84,14 +84,13 @@ function RoomCreateScreen({ navigation }) {
     setIsAwaiting(false);
   };
 
-  const _handleNextButtonPress = () => {
+  const _handleConfirmCreateRoom = () => {
     if (
       isANumber(_room.price_per_day.toString()) &&
       _room.price_per_day > 0 &&
       _room.latitude !== "" &&
       _room.longitude !== ""
     ) {
-      console.log(JSON.stringify(_room));
       setIsAwaiting(true);
       httpPostTokenRequest(
         "POST",
@@ -107,6 +106,13 @@ function RoomCreateScreen({ navigation }) {
     } else {
       alert("Debe completar todos los campos para poder continuar");
     }
+  };
+
+  const _handleNextButtonPress = () => {
+    Alert.alert("Crear Publicación", "Crear esta publicación tiene un costo", [
+      { text: "Cancelar", style: "cancel" },
+      { text: "Confirmar", onPress: _handleConfirmCreateRoom },
+    ]);
   };
 
   const _handleButtonGroupPress = (index) => {
