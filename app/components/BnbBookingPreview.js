@@ -34,21 +34,21 @@ const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
       <View>
         <View style={styles.bookingStatusContainer}>
           <Text style={bnbStyleSheet.normalText}>Estado de reserva: </Text>
-          {status === 1 && (
+          {status === constants.BOOKING_STATUS_PENDING && (
             <Text
               style={{ ...bnbStyleSheet.normalText, ...{ color: "orange" } }}
             >
               Pendiente
             </Text>
           )}
-          {status === 2 && (
+          {status === constants.BOOKING_STATUS_ACCEPTED && (
             <Text
               style={{ ...bnbStyleSheet.normalText, ...{ color: "green" } }}
             >
               Aceptado
             </Text>
           )}
-          {status === 3 && (
+          {status === constants.BOOKING_STATUS_REJECTED && (
             <Text style={{ ...bnbStyleSheet.normalText, ...{ color: "red" } }}>
               Rechazado
             </Text>

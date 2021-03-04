@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import BnbSecureStore from "../../classes/BnbSecureStore";
@@ -14,6 +14,7 @@ import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 import Clipboard from "expo-clipboard";
 import Separator from "../../components/Separator";
+import { useFocusEffect } from "@react-navigation/native";
 
 function ProfileWalletScreen(props) {
   const [_wallet, setWallet] = useState();
@@ -40,17 +41,19 @@ function ProfileWalletScreen(props) {
     Clipboard.setString(_wallet.address);
   };
 
-  useEffect(() => {
-    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
-      httpGetTokenRequest(
-        "GET",
-        urls.URL_ME + "/wallet",
-        { "x-access-token": user.auth_token },
-        _handleApiResponse,
-        _handleApiError
-      );
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
+        httpGetTokenRequest(
+          "GET",
+          urls.URL_ME + "/wallet",
+          { "x-access-token": user.auth_token },
+          _handleApiResponse,
+          _handleApiError
+        );
+      });
+    }, [])
+  );
 
   if (_error) {
     return (
