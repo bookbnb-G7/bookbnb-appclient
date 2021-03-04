@@ -19,15 +19,21 @@ function ProfileRoomsOptionsScreen({ navigation }) {
     navigation.navigate("ProfileRooms");
   };
 
+  const _handleMyFavoritesButton = () => {
+    navigation.navigate("ProfileFavorites");
+  };
+
   const ROOMS_OPTIONS = [
     { id: 0, title: "Crear habitacion" },
     { id: 1, title: "Mis reservas" },
     { id: 2, title: "Mis habitaciones" },
+    { id: 3, title: "Favoritos" },
   ];
   const HANDLERS = [
     _handleCreateRoomButtonPress,
     _handleBookingRequests,
     _handleMyRoomsButton,
+    _handleMyFavoritesButton,
   ];
 
   return (

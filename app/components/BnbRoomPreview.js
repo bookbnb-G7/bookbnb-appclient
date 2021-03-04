@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
 import urls from "../constant/urls";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
-import BnbLoading from "../components/BnbLoading";
 import BnbImageSlider from "./BnbImageSlider";
-import BnbFormBubbleInfo from "../components/BnbFormBubbleInfo";
 import colors from "../config/colors";
 
-import getAverage from "../helpers/getAverage";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
+import bnbStyleSheet from "../constant/bnbStyleSheet";
+import BnbLoadingText from "./BnbLoadingText";
+import BnbError from "./BnbError";
+import RoomPreview from "./RoomPreview";
 
 const BnbRoomPreview = (props) => {
-  const [_ratings, setRatings] = useState({});
+  const [_ratings, setRatings] = useState(null);
   const [_error, setError] = useState();
   const [_is_loaded, setIsLoaded] = useState(false);
 
-  const [_photos, setPhotos] = useState({
-    amount: 0,
-    room_id: 0,
-    room_photos: [],
-  });
   const [_photos_urls, setPhotosUrl] = useState([]);
 
   const _handleApiError = (error) => {
@@ -32,10 +28,18 @@ const BnbRoomPreview = (props) => {
 
   const _handleImagePress = () => {
     /**Si tengo  un searchForm es porque estoy buscando un room*/
+    /**Si no soy el dueño es porque lo tengo en favoritos o es una recomendacion */
     if (props?.searchForm) {
       props.navigation.navigate("Room", {
         room_id: props.room.id,
         searchForm: props.searchForm,
+      });
+    } else if (props?.me_id && props.me_id !== props.room.owner_uuid) {
+      props.navigation.navigate("SearchRooms", {
+        screen: "Room",
+        params: {
+          room_id: props.room.id,
+        },
       });
     } else {
       props.navigation.navigate("Room", {
@@ -64,46 +68,28 @@ const BnbRoomPreview = (props) => {
       })
       .then((photos) => {
         if (photos) {
-          setPhotos(photos);
           setPhotosUrl(getUrlFromPhotos(photos.room_photos));
           setIsLoaded(true);
         }
       });
-  }, []);
+  }, [props.room.id]);
 
   if (!_is_loaded) {
-    return <Text text="Cargando habitacion..." />;
+    return <BnbLoadingText>Cargando habitacion...</BnbLoadingText>;
   } else if (_error) {
     return (
       <View>
-        <Text>{_error.message}</Text>
+        <BnbError>Error al cargar la habitación</BnbError>
       </View>
     );
   } else {
     return (
-      <View style={styles.mainContainer}>
+      <View style={bnbStyleSheet.roomPreviewContainer}>
         <TouchableOpacity onPress={_handleImagePress}>
           <View style={styles.imageSlider}>
-            <BnbImageSlider images={_photos_urls} width={250}></BnbImageSlider>
+            <BnbImageSlider images={_photos_urls} />
           </View>
-          <View style={styles.roomDescriptionContainer}>
-            <BnbFormBubbleInfo
-              iconName="star"
-              iconColor={colors.golden}
-              iconSize={24}
-              text={
-                _ratings.ratings.length > 0
-                  ? getAverage(_ratings.ratings, "rating")
-                  : "-"
-              }
-              textStyle={styles.ratingText}
-              style={styles.ratingContainer}
-            />
-            <Text style={styles.roomTitleText}>{props.room.type}</Text>
-            <Text style={styles.roomPriceText}>
-              Precio por dia: ${props.room.price_per_day}
-            </Text>
-          </View>
+          {_ratings && <RoomPreview room={props.room} ratings={_ratings} />}
         </TouchableOpacity>
       </View>
     );
@@ -111,39 +97,17 @@ const BnbRoomPreview = (props) => {
 };
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    //flex: 1,
-    justifyContent: "center",
-    marginVertical: styling.separator,
-    borderRadius: 20,
-    paddingHorizontal: 10,
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 2,
-  },
   imageSlider: {
     justifyContent: "center",
     alignItems: "center",
-    //borderWidth: 1,
-  },
-  roomImage: {
-    width: "100%",
-    height: 200,
-    borderRadius: styling.mediumCornerRadius,
   },
   roomDescriptionContainer: {
-    //flex: 1,
-    //borderWidth: 1,
     marginVertical: styling.separator,
+    marginHorizontal: 10,
   },
   roomTitleText: {
-    fontSize: fonts.big,
+    fontFamily: "Raleway_700Bold",
+    fontSize: 22,
   },
   roomPriceText: {
     fontWeight: "bold",
@@ -156,6 +120,17 @@ const styles = StyleSheet.create({
   ratingContainer: {
     marginVertical: 0,
     paddingHorizontal: 0,
+    flex: 1,
+  },
+  roomTypeText: {
+    fontSize: fonts.big,
+  },
+  profileAndRoomDetalisContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  roomInfoContainer: {
+    flex: 3,
   },
 });
 

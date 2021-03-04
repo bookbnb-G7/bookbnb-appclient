@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 import BnbSecureStore from "../../classes/BnbSecureStore";
@@ -6,6 +7,9 @@ import BnbBodyView from "../../components/BnbBodyView";
 import BnbError from "../../components/BnbError";
 import BnbIconText from "../../components/BnbIconText";
 import BnbMainView from "../../components/BnbMainView";
+import BnbUserLogo from "../../components/BnbUserLogo";
+import colors from "../../config/colors";
+import styling from "../../config/styling";
 import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import constants from "../../constant/constants";
 import urls from "../../constant/urls";
@@ -14,41 +18,31 @@ import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 function ProfileChatsScreen({ navigation }) {
   const [_chats, setChats] = useState();
   const [_error, setError] = useState();
-  const [_chats_photos, setChatsPhotos] = useState([]);
 
   const _handleUserChatTap = (other_uuid) => {
     navigation.navigate("UserChat", { other_uuid: other_uuid });
   };
 
-  useEffect(() => {
+  const fetchChatsData = () => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
       httpGetTokenRequest("GET", urls.URL_ME + "/chats", {
         "x-access-token": user.auth_token,
       }).then(
         (chats) => {
           setChats(chats);
-          /**si obtengo los chats, busco los usuarios para fetchear las imagenes */
-          /**chats.chats.forEach((chat) => {
-            httpGetTokenRequest(
-              "GET",
-              urls.URL_USERS + "/" + chat.other_uuid,
-              {}
-            ).then(
-              (user) => {
-                setChatsPhotos(_chats_photos.push([user.photo]));
-              },
-              (error) => {
-                setChatsPhotos(_chats_photos.push(""));
-              }
-            );
-          });*/
         },
         (error) => {
           setError(error);
         }
       );
     });
-  }, []);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchChatsData();
+    }, [])
+  );
 
   const renderItem = ({ chat }) => {
     console.log("CHAT:" + chat);
@@ -82,9 +76,15 @@ function ProfileChatsScreen({ navigation }) {
                     _handleUserChatTap(item.other_uuid);
                   }}
                 >
-                  <BnbIconText iconName="ios-person">
-                    {item.other_user}
-                  </BnbIconText>
+                  <View style={styles.userPhotoContainer}>
+                    <BnbUserLogo
+                      user_id={item.other_uuid}
+                      imageStyle={styles.icon}
+                    ></BnbUserLogo>
+                    <Text style={bnbStyleSheet.mediumText}>
+                      {item.other_user}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               </View>
             ))}
@@ -94,6 +94,19 @@ function ProfileChatsScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  userPhotoContainer: {
+    marginVertical: styling.separator,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: 10,
+  },
+  icon: {
+    width: 50,
+    height: 50,
+    borderRadius: styling.smallCornerRadius,
+    backgroundColor: colors.graySoft,
+  },
+});
 
 export default ProfileChatsScreen;

@@ -86,13 +86,18 @@ function RoomBookingScreen({ route, navigation }) {
 
   const ShowBookingStatus = ({ status }) => {
     return (
-      <View>
-        <Text style={styles.bookingInfoText}>Estado de reserva:</Text>
+      <View style={styles.bookingStatusContainer}>
+        <Text style={bnbStyleSheet.mediumText}>Estado de reserva:</Text>
         {status === constants.BOOKING_STATUS_PENDING && (
-          <Text style={styles.orangeText}>Pendiente</Text>
+          <Text style={{ ...bnbStyleSheet.normalText, ...{ color: "orange" } }}>
+            Pendiente
+          </Text>
         )}
         {status === constants.BOOKING_STATUS_ACCEPTED && (
-          <Text style={styles.greenText}>Aceptado</Text>
+          <Text style={{ ...bnbStyleSheet.normalText, ...{ color: "green" } }}>
+            {" "}
+            Aceptado
+          </Text>
         )}
       </View>
     );
@@ -115,7 +120,9 @@ function RoomBookingScreen({ route, navigation }) {
   };
 
   const fetchRoomData = async (room_id) => {
-    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id).then(
+    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {
+      "x-access-token": storedUser.auth_token,
+    }).then(
       (room) => {
         setRoom(room);
       },
@@ -156,10 +163,10 @@ function RoomBookingScreen({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    if (_booking) {
+    if (_booking && storedUser) {
       fetchRoomData(_booking.room_id);
     }
-  }, [_booking]);
+  }, [_booking, storedUser]);
 
   /**Determino si la fecha hoy supera a la fecha de finalizacion de la estadia para habilitar
    * el review
@@ -168,8 +175,6 @@ function RoomBookingScreen({ route, navigation }) {
     if (_booking) {
       const today = new Date();
       const date_end = new Date(_booking.date_to);
-      console.log("today: " + today);
-      console.log("date_to: " + date_end);
       setCanReview(today > date_end);
     }
   }, [_booking]);
@@ -179,7 +184,7 @@ function RoomBookingScreen({ route, navigation }) {
   }
 
   if (_is_loading) {
-    return <BnbLoading></BnbLoading>;
+    return <BnbLoading text="Cargando reserva..."></BnbLoading>;
   } else {
     return (
       <BnbMainView>
@@ -192,18 +197,24 @@ function RoomBookingScreen({ route, navigation }) {
               <BnbRoomInfo
                 room={_room}
                 me_id={storedUser.userData.id}
+                auth_token={storedUser.auth_token}
                 navigation={navigation}
               />
             )}
             <Separator />
-            <Text style={bnbStyleSheet.headerTextBlack}>Reserva</Text>
-            <Text style={styles.bookingInfoText}>
-              Desde: {_booking.date_from}
-            </Text>
-            <Text style={styles.bookingInfoText}>
-              Hasta: {_booking.date_to}
-            </Text>
-            {_booking && <ShowBookingStatus status={_booking.booking_status} />}
+            <View>
+              <View style={styles.bookingDatesContainer}>
+                <Text style={bnbStyleSheet.mediumText}>
+                  Desde: {_booking.date_from}
+                </Text>
+                <Text style={bnbStyleSheet.mediumText}>
+                  Hasta: {_booking.date_to}
+                </Text>
+              </View>
+              {_booking && (
+                <ShowBookingStatus status={_booking.booking_status} />
+              )}
+            </View>
             {_is_owner &&
               _booking.booking_status === constants.BOOKING_STATUS_PENDING && (
                 <View>
@@ -247,10 +258,12 @@ function RoomBookingScreen({ route, navigation }) {
                   <View>
                     {_room && (
                       <RoomReviews
+                        me_id={storedUser.userData.id}
                         room_id={_room.id}
                         is_owner={_is_owner}
                         token={storedUser.auth_token}
                         read_only={false}
+                        navigation={navigation}
                       />
                     )}
                     <RoomRating
@@ -277,25 +290,13 @@ function RoomBookingScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  roomImage: {
-    width: "100%",
-    height: 200,
-    borderRadius: styling.mediumCornerRadius,
+  bookingDatesContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
-  bookingInfoText: {
-    fontSize: fonts.big,
-  },
-  redText: {
-    fontSize: fonts.big,
-    color: "red",
-  },
-  orangeText: {
-    fontSize: fonts.big,
-    color: "orange",
-  },
-  greenText: {
-    fontSize: fonts.big,
-    color: "green",
+  bookingStatusContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
   },
 });
 

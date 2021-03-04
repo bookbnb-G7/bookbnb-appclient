@@ -16,6 +16,9 @@ const styles = StyleSheet.create({
   errorContainer: {
     flex: 1,
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: colors.error,
+    borderRadius: 5,
   },
   errorText: {
     color: colors.error,

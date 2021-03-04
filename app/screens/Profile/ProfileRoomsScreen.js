@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import BnbSecureStore from "../../classes/BnbSecureStore";
+import BnbBodyView from "../../components/BnbBodyView";
 import BnbError from "../../components/BnbError";
 import BnbLoading from "../../components/BnbLoading";
 import BnbMainView from "../../components/BnbMainView";
 import BnbRoomPreview from "../../components/BnbRoomPreview";
 import colors from "../../config/colors";
 import fonts from "../../config/fonts";
+import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import constants from "../../constant/constants";
 import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
@@ -53,33 +55,50 @@ function ProfileRoomsScreen({ navigation }) {
   }
 
   return (
-    <BnbMainView>
-      <View style={styles.centerContainer}>
-        <Text style={styles.titleText}>
-          Tienes {_rooms.amount}{" "}
-          {_rooms.amount === 1 ? "habitacion" : "habitaciones"}
-        </Text>
+    <BnbMainView style={styles.mainContainer}>
+      <Text style={bnbStyleSheet.headerText}>Tus publicaciones</Text>
+      <BnbBodyView>
         <ScrollView>
-          {_rooms.rooms.map((item, index) => (
-            <View key={item.id}>
-              <BnbRoomPreview
-                navigation={navigation}
-                room={item}
-              ></BnbRoomPreview>
-            </View>
-          ))}
+          <Text style={{ ...bnbStyleSheet.subHeaderText }}>
+            Tienes {_rooms.amount}{" "}
+            {_rooms.amount === 1 ? "habitacion" : "habitaciones"}
+          </Text>
+          <View style={styles.roomsContainer}>
+            {_rooms.rooms.map((item, index) => (
+              <View key={item.id} style={styles.roomPreviewContainer}>
+                <BnbRoomPreview
+                  navigation={navigation}
+                  room={item}
+                  me_id={storedUser.userData.id}
+                />
+              </View>
+            ))}
+          </View>
         </ScrollView>
-      </View>
+      </BnbBodyView>
     </BnbMainView>
   );
 }
 
 const styles = StyleSheet.create({
-  centerContainer: {
+  mainContainer: {
+    backgroundColor: colors.redAirBNB,
+    paddingHorizontal: 5,
     alignItems: "center",
   },
-  titleText: {
-    fontSize: fonts.big,
+  subHeaderWhite: {
+    alignSelf: "center",
+    color: "white",
+  },
+  roomPreviewContainer: {
+    alignSelf: "center",
+    width: "90%",
+  },
+  roomsContainer: {
+    width: "100%",
+    alignSelf: "center",
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
   },
 });
 

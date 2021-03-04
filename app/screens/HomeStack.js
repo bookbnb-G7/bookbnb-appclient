@@ -15,10 +15,6 @@ import DebugGoToRoomProfile from "./DebugGoToRoomProfile";
 const HomeStackNav = createStackNavigator();
 
 function HomeStack({ route }) {
-  /**https://stackoverflow.com/questions/61281739/how-do-i-access-promise-callback-value-outside-of-the-function */
-  /**Uso el observer en vez del SecureStore porque este screen no se actualiza nunca
-   * por lo tanto queda el store de la sesion anterior
-   */
   const userScreens = {
     Home: HomeScreen,
     DebugGoToRoomProfile: DebugGoToRoomProfile,
@@ -33,14 +29,6 @@ function HomeStack({ route }) {
     UserLogin: UserLoginScreen,
     PasswordRecover: SendPassResetEmailScreen,
   };
-
-  /**Podria poner un observer aca que espere al login pero del appserver
-   * para recien ahi cambiar los screens
-   * react navigation tiene para pasar parametros entre screens
-   * el problema es que el screen se desmonta cuando logeo
-   * y si paso el observer para dentro del lgin screen?
-   * bool isLoggedIn = SignUpObserver(SignUpScreen)
-   */
 
   const [_is_logged_in, setIsLoggedIn] = useState(false);
   useEffect(() => {

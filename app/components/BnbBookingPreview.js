@@ -3,16 +3,21 @@ import { StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import fonts from "../config/fonts";
 import styling from "../config/styling";
+import bnbStyleSheet from "../constant/bnbStyleSheet";
 import constants from "../constant/constants";
 import urls from "../constant/urls";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbButton from "./BnbButton";
+import BnbError from "./BnbError";
 import BnbImageSlider from "./BnbImageSlider";
+import BnbLoadingText from "./BnbLoadingText";
+import RoomPreview from "./RoomPreview";
 
-const BnbBookingPreview = ({ navigation, booking_id }) => {
+const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
   const [_booking, setBooking] = useState();
   const [_photos_urls, setPhotos] = useState([]);
+  const [_room, setRoom] = useState(null);
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
 
@@ -24,20 +29,37 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
     const showButton =
       status === constants.BOOKING_STATUS_PENDING ||
       status === constants.BOOKING_STATUS_ACCEPTED;
+
     return (
       <View>
-        <Text style={styles.bookingInfoText}>Estado de reserva: </Text>
-        {status === 1 && <Text style={styles.orangeText}>Pendiente</Text>}
-        {status === 2 && <Text style={styles.greenText}>Aceptado</Text>}
-        {status === 3 && <Text style={styles.redText}>Rechazado</Text>}
+        <View style={styles.bookingStatusContainer}>
+          <Text style={bnbStyleSheet.normalText}>Estado de reserva: </Text>
+          {status === 1 && (
+            <Text
+              style={{ ...bnbStyleSheet.normalText, ...{ color: "orange" } }}
+            >
+              Pendiente
+            </Text>
+          )}
+          {status === 2 && (
+            <Text
+              style={{ ...bnbStyleSheet.normalText, ...{ color: "green" } }}
+            >
+              Aceptado
+            </Text>
+          )}
+          {status === 3 && (
+            <Text style={{ ...bnbStyleSheet.normalText, ...{ color: "red" } }}>
+              Rechazado
+            </Text>
+          )}
+        </View>
         {showButton && (
           <BnbButton title="Ver reserva" onPress={_handleGoToBookingDetails} />
         )}
       </View>
     );
   };
-
-  const _handleComponentPress = () => {};
 
   useEffect(() => {
     httpGetTokenRequest("GET", urls.URL_BOOKINGS + "/" + booking_id, {})
@@ -51,6 +73,12 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
       })
       .then((photos) => {
         setPhotos(getUrlFromPhotos(photos.room_photos));
+        return httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {
+          "x-access-token": auth_token,
+        });
+      })
+      .then((room) => {
+        setRoom(room);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -60,19 +88,26 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
   }, []);
 
   if (_is_loading) {
-    return <Text>Cargando...</Text>;
+    return <BnbLoadingText>Cargando reserva...</BnbLoadingText>;
   }
   if (_error) {
-    return <Text>{_error.message}</Text>;
+    return <BnbError>Error al cargar la reserva: {_error.message}</BnbError>;
   }
   return (
-    <View style={styles.mainContainer}>
+    <View style={bnbStyleSheet.roomPreviewContainer}>
       <View style={styles.roomImageContainer}>
         <BnbImageSlider images={_photos_urls} />
       </View>
-      <View style={styles.roomDescriptionContainer}>
-        <Text style={styles.bookingInfoText}>Desde: {_booking.date_from}</Text>
-        <Text style={styles.bookingInfoText}>Hasta: {_booking.date_to}</Text>
+      {_room && <RoomPreview room={_room}></RoomPreview>}
+      <View>
+        <View style={styles.bookingDatesContainer}>
+          <Text style={bnbStyleSheet.mediumText}>
+            Desde: {_booking.date_from}
+          </Text>
+          <Text style={bnbStyleSheet.mediumText}>
+            Hasta: {_booking.date_to}
+          </Text>
+        </View>
         {_booking && <ShowBookingStatus status={_booking.booking_status} />}
       </View>
     </View>
@@ -80,44 +115,16 @@ const BnbBookingPreview = ({ navigation, booking_id }) => {
 };
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    //flex: 1,
-    justifyContent: "center",
-    marginVertical: styling.separator,
-  },
   roomImageContainer: {
-    justifyContent: "center",
     alignItems: "center",
-    //borderWidth: 1,
   },
-  roomImage: {
-    width: "100%",
-    height: 200,
-    borderRadius: styling.mediumCornerRadius,
+  bookingDatesContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
-  roomDescriptionContainer: {
-    //flex: 1,
-    //borderWidth: 1,
-    marginVertical: styling.separator,
-  },
-  roomReviewScore: {},
-  roomTitleText: {
-    fontSize: fonts.big,
-  },
-  bookingInfoText: {
-    fontSize: fonts.big,
-  },
-  redText: {
-    fontSize: fonts.big,
-    color: "red",
-  },
-  orangeText: {
-    fontSize: fonts.big,
-    color: "orange",
-  },
-  greenText: {
-    fontSize: fonts.big,
-    color: "green",
+  bookingStatusContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
   },
 });
 

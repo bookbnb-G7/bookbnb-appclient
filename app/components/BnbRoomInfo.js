@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { Rating } from "react-native-elements";
 import styling from "../config/styling";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import urls from "../constant/urls";
@@ -10,19 +11,85 @@ import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
 import BnbError from "./BnbError";
 import BnbIconText from "./BnbIconText";
 import BnbImageSlider from "./BnbImageSlider";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import colors from "../config/colors";
+import { Divider } from "react-native-elements";
+import Separator from "./Separator";
+import httpPostTokenRequest from "../helpers/httpPostTokenRequest";
+import BnbImage from "./BnbImage";
 
-const BnbRoomInfo = ({ room, me_id, navigation }) => {
+const BnbRoomInfo = ({ room, me_id, auth_token, navigation, onChange }) => {
   const [_average_rating, setAverageRating] = useState(0);
   const [_photos_urls, setPhotosUrls] = useState();
   const [_error, setError] = useState();
   const [_roomOwner, setRoomOwner] = useState();
 
   const _handleRoomOwnerPress = () => {
-    if (_roomOwner.id == me_id) {
+    if (_roomOwner.id === me_id) {
       navigation.navigate("ProfileStack", { screen: "Profile" });
     } else {
-      navigation.navigate("User", { user_id: _roomOwner.id });
+      navigation.navigate("SearchRooms", {
+        screen: "User",
+        params: { user_id: _roomOwner.id },
+      });
     }
+  };
+
+  const _handleAddToFavorites = () => {
+    httpPostTokenRequest(
+      "POST",
+      urls.URL_ME + "/favorite_rooms",
+      { room_id: room.id },
+      { "x-access-token": auth_token, "Content-Type": "application/json" }
+    ).then(
+      (response) => {
+        onChange();
+        console.log("favorito");
+      },
+      (error) => {
+        setError(error);
+      }
+    );
+  };
+
+  const _handleRemoveFromFavorites = () => {
+    httpGetTokenRequest("DELETE", urls.URL_ME + "/favorite_rooms/" + room.id, {
+      "x-access-token": auth_token,
+    }).then(
+      (response) => {
+        onChange();
+        console.log("delete favorito");
+      },
+      (error) => {}
+    );
+  };
+
+  const FavoriteButton = ({ is_favorite }) => {
+    return (
+      <TouchableOpacity
+        onPress={
+          is_favorite ? _handleRemoveFromFavorites : _handleAddToFavorites
+        }
+      >
+        <BnbIconText
+          iconName="star"
+          style={styles.addToFavoritesContainer}
+          textStyle={
+            is_favorite
+              ? styles.removeFromFavoritesText
+              : styles.addToFavoritesText
+          }
+          iconStyle={
+            is_favorite
+              ? styles.removeFromFavoritesIcon
+              : styles.addToFavoritesIcon
+          }
+          iconSize={30}
+        >
+          {is_favorite ? "Favorito" : "Agregar a favoritos"}
+        </BnbIconText>
+      </TouchableOpacity>
+    );
   };
 
   useEffect(() => {
@@ -72,30 +139,67 @@ const BnbRoomInfo = ({ room, me_id, navigation }) => {
 
   return (
     <View>
-      <Text style={bnbStyleSheet.headerTextBlack}>{room.description}</Text>
       <View style={styles.imageSlider}>
-        {_photos_urls && <BnbImageSlider images={_photos_urls} width={200} />}
+        {_photos_urls && <BnbImageSlider images={_photos_urls} />}
       </View>
       <View style={styles.roomInfoContainer}>
-        <Text style={bnbStyleSheet.subHeaderText}>Puntuacion</Text>
-        <Text>
-          {isNaN(_average_rating)
-            ? "Sin puntaje"
-            : _average_rating + " de 5 estrellas"}
-        </Text>
+        <Text style={styles.roomTitleText}>{room.title}</Text>
+        {_roomOwner && (
+          <View style={styles.typeOwnerContainer}>
+            <View style={styles.typeContainer}>
+              <Text numberOfLines={1} style={styles.typeText}>
+                {room.type} en {room.location.split(",")[0]}
+              </Text>
+              <View style={styles.inlineTextButton}>
+                <Text style={styles.hostedByText}>Hosteado por </Text>
+                <TouchableOpacity onPress={_handleRoomOwnerPress}>
+                  <Text style={styles.clickableText}>
+                    {_roomOwner.firstname}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <BnbImage
+              onPress={_handleRoomOwnerPress}
+              uri={_roomOwner.photo}
+              imageStyle={styles.profilePic}
+            />
+          </View>
+        )}
+        {_roomOwner && _roomOwner.id !== me_id && (
+          <FavoriteButton is_favorite={room.favorite} />
+        )}
+        <Separator style={{ width: "100%", marginVertical: 10 }} />
+        <View style={styles.priceNGuestsContainer}>
+          <View style={styles.iconText}>
+            <Ionicons name="logo-usd" style={styles.iconStyle} size={15} />
+            <Text style={styles.priceText}>{room.price_per_day} </Text>
+            <Text style={styles.priceNGuests}>por noche</Text>
+          </View>
+          <View style={styles.iconText}>
+            <Ionicons name="people" style={styles.iconStyle} size={16} />
+            <Text style={styles.priceNGuests}>
+              {room.capacity} persona{room.capacity > 1 ? "s" : ""}
+            </Text>
+          </View>
+        </View>
+        <View styles={styles.ratingContainer}>
+          <Text style={styles.priceNGuests}>
+            {isNaN(_average_rating) ? "Sin puntaje" : `${_average_rating}/5`}
+          </Text>
+          <Rating
+            imageSize={20}
+            minValue={0}
+            ratingCount={5}
+            ratingImage="star"
+            readonly
+            startingValue={_average_rating || 0}
+            type="star"
+          />
+        </View>
+        <Separator style={{ width: "100%", marginTop: 20 }} />
         <View>
-          <Text style={bnbStyleSheet.subHeaderText}>Precio por dia</Text>
-          <Text>{room.price_per_day}</Text>
-          <Text style={bnbStyleSheet.subHeaderText}>Categoria</Text>
-          <Text>{room.type}</Text>
-          <Text style={bnbStyleSheet.subHeaderText}>Dueño</Text>
-          {_roomOwner && (
-            <TouchableOpacity onPress={_handleRoomOwnerPress}>
-              <BnbIconText logo={_roomOwner.photo}>
-                {_roomOwner.firstname} {_roomOwner.lastname}
-              </BnbIconText>
-            </TouchableOpacity>
-          )}
+          <Text style={styles.description}>{room.description}</Text>
         </View>
       </View>
     </View>
@@ -108,7 +212,100 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   roomInfoContainer: {
-    marginVertical: styling.separator,
+    paddingHorizontal: 10,
+  },
+  roomTitleText: {
+    fontFamily: "Raleway_700Bold",
+    fontSize: 32,
+    color: "#46484e",
+    paddingTop: 15,
+    paddingBottom: 10,
+  },
+  profilePic: {
+    width: 60,
+    height: 60,
+    borderRadius: 60,
+  },
+  typeOwnerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  typeContainer: {
+    justifyContent: "center",
+    width: "75%",
+  },
+  typeText: {
+    fontFamily: "Raleway_600SemiBold",
+    fontSize: 17,
+  },
+  hostedByText: {
+    fontFamily: "Raleway_400Regular",
+    fontSize: 16,
+  },
+  clickableText: {
+    textDecorationLine: "underline",
+    fontFamily: "Raleway_400Regular",
+    fontSize: 16,
+    color: colors.redAirBNB,
+  },
+  inlineTextButton: {
+    flexDirection: "row",
+    fontFamily: "Raleway_400Regular",
+  },
+  priceNGuests: {
+    fontFamily: "Raleway_400Regular",
+    fontSize: 17,
+    color: "#404040",
+    alignSelf: "center",
+  },
+  priceNGuestsContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    paddingVertical: 5,
+  },
+  iconText: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  iconStyle: {
+    alignSelf: "center",
+    paddingRight: 5,
+  },
+  addToFavoritesContainer: {
+    alignSelf: "center",
+    alignItems: "center",
+    height: 30,
+  },
+  removeFromFavoritesText: {
+    fontFamily: "Raleway_500Medium",
+    fontSize: 15,
+    color: "red",
+  },
+  addToFavoritesText: {
+    fontFamily: "Raleway_500Medium",
+    fontSize: 15,
+    color: "yellow",
+  },
+  removeFromFavoritesIcon: {
+    color: colors.redAirBNB,
+  },
+  addToFavoritesIcon: {
+    color: "yellow",
+  },
+  priceText: {
+    fontFamily: "Raleway_600SemiBold",
+    fontSize: 17,
+  },
+  ratingContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  description: {
+    fontFamily: "Raleway_500Medium",
+    fontSize: 15,
+    color: "#5f5f5f",
   },
 });
 

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Image, Platform, StyleSheet, View, Text } from "react-native";
+import React, {useEffect, useState} from "react";
+import {Image, Platform, StyleSheet, View, Text} from "react-native";
 import BnbMainView from "../components/BnbMainView";
 import BnbButton from "../components/BnbButton";
 import BnbBodyView from "../components/BnbBodyView";
@@ -18,7 +18,7 @@ import BnbImage from "../components/BnbImage";
 /**Version mejorada, la idea es que al sleccionar una imagen, ya sea de perfil o de la lista
  * de fotos del room, me derive a esta pantalla para editarla
  */
-function ImagePickScreen({ route, navigation }) {
+function ImagePickScreen({route, navigation}) {
   const [storedUser, setStoredUser] = useState();
   const [_is_awaiting, setIsAwaiting] = useState(false);
 
@@ -43,7 +43,7 @@ function ImagePickScreen({ route, navigation }) {
 
     /**guardo */
     BnbSecureStore.remember(constants.CACHE_USER_KEY, storeUser).then(() => {
-      navigation.navigate("Profile", { photo: data.photo });
+      navigation.navigate("Profile", {photo: data.photo});
     });
   };
 
@@ -117,7 +117,7 @@ function ImagePickScreen({ route, navigation }) {
           style={styles.button}
           title={"Cambiar imagen"}
           onPress={pickImage}
-        ></BnbButton>
+        />
       </BnbBodyView>
     </BnbMainView>
   );

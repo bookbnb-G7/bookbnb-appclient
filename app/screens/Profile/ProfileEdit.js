@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import BnbButton from "../../components/BnbButton";
 import BnbMainView from "../../components/BnbMainView";
-import BnbTitleText from "../../components/BnbTitleText";
 import colors from "../../config/colors";
 import fonts from "../../config/fonts";
 import BnbSecureStore from "../../classes/BnbSecureStore";
 import constants from "../../constant/constants";
 import httpPostTokenRequest from "../../helpers/httpPostTokenRequest";
 import urls from "../../constant/urls";
-import BnbTextInputObject from "../../components/BnbTextInputObject";
 import BnbLoading from "../../components/BnbLoading";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
-import { Divider } from "react-native-elements";
 import bnbStyleSheet from "../../constant/bnbStyleSheet";
-import BnbError from "../../components/BnbError";
 import firebase from "../../database/firebase";
+import BnbFloatingTextInput from "../../components/BnbFloatingTextInput";
+import Separator from "../../components/Separator";
 
 function ProfileEdit({ me, onTextChange }) {
   const [_is_editing, setIsEditing] = useState(false);
@@ -74,7 +72,14 @@ function ProfileEdit({ me, onTextChange }) {
       _handleApiError
     ).then((response) => {
       if (response) {
-        firebase.auth.signOut();
+        BnbSecureStore.clear(constants.CACHE_USER_KEY).then(() => {
+          firebase.auth
+            .signOut()
+            .then(() =>
+              navigation.navigate("HomeStack", { isLoggedIn: false })
+            );
+        });
+        /**TODO: Borrarlo de firebase */
       }
     });
   };
@@ -88,7 +93,11 @@ function ProfileEdit({ me, onTextChange }) {
           text: "Cancelar",
           style: "cancel",
         },
-        { text: "OK", onPress: _handleConfirmDelete },
+        {
+          text: "Borrar cuenta",
+          style: "destructive",
+          onPress: _handleConfirmDelete,
+        },
       ],
       { cancelable: false }
     );
@@ -109,32 +118,34 @@ function ProfileEdit({ me, onTextChange }) {
   }
 
   return (
-    <BnbMainView style={{ backgroundColor: "white" }}>
-      <Text style={bnbStyleSheet.headerTextBlack}>Detalles</Text>
-      <View>
-        {me ? (
-          <View>
-            <BnbTextInputObject
-              name="Nombre"
-              id="firstname"
-              object={me}
-              onChange={_handleTextChange}
-              editable={_is_editing}
-            ></BnbTextInputObject>
-            <BnbTextInputObject
-              name="Apellido"
-              id="lastname"
-              object={me}
-              onChange={_handleTextChange}
-              editable={_is_editing}
-            ></BnbTextInputObject>
-          </View>
-        ) : (
-          <Text>Cargando...</Text>
-        )}
-      </View>
-      <BnbError>{_error ? _error : ""}</BnbError>
-      <Divider style={bnbStyleSheet.divider}></Divider>
+    <BnbMainView>
+      <Separator />
+      <Text
+        style={{ ...bnbStyleSheet.subHeaderText, ...bnbStyleSheet.separator }}
+      >
+        Detalles
+      </Text>
+      {me ? (
+        <View>
+          <BnbFloatingTextInput
+            name="Nombre"
+            id={"firstname"}
+            object={me}
+            onChange={_handleTextChange}
+            editable={_is_editing}
+          />
+
+          <BnbFloatingTextInput
+            name="Apellido"
+            id={"lastname"}
+            object={me}
+            onChange={_handleTextChange}
+            editable={_is_editing}
+          />
+        </View>
+      ) : (
+        <Text>Cargando...</Text>
+      )}
       <View>
         <BnbButton
           title={_is_editing ? "Aceptar cambios" : "Editar tus datos"}
@@ -153,11 +164,16 @@ function ProfileEdit({ me, onTextChange }) {
       </View>
       {_is_editing && (
         <View style={styles.deleteAccountContainer}>
-          <BnbTitleText style={styles.subTitle}>
+          <Text
+            style={{
+              ...bnbStyleSheet.subHeaderText,
+              ...bnbStyleSheet.separator,
+            }}
+          >
             Eliminar tu cuenta
-          </BnbTitleText>
+          </Text>
           <BnbButton
-            title="Borrar cuenta"
+            title="Eliminar cuenta"
             onPress={_handleDeleteAccountButtonPress}
           />
         </View>

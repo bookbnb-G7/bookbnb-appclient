@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import BnbAlertMultiButtons from "../components/BnbAlertMultiButtons";
@@ -17,19 +17,25 @@ import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbLoading from "../components/BnbLoading";
 import BnbImageSlider from "../components/BnbImageSlider";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
+import BnbFloatingTextInput from "../components/BnbFloatingTextInput";
+import bnbStyleSheet from "../constant/bnbStyleSheet";
+import BnbRoomInfo from "../components/BnbRoomInfo";
 
 function RoomEditScreen({ route, navigation }) {
   const room_id = route.params.room_id;
   const [_room, setRoom] = useState();
-  const [_photos, setPhotos] = useState();
   const [_photos_urls, setPhotosUrl] = useState([]);
   const [storedUser, setStoredUser] = useState();
   const [_is_editing, setIsEditing] = useState(false);
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
 
+  const [roomPatch, setRoomPatch] = useState({
+    price_per_day: 0,
+  });
+
   const _handleTextChange = (key, value) => {
-    setRoom({ ..._room, [key]: value });
+    setRoomPatch({ ...roomPatch, [key]: value });
   };
 
   const _handleImagePress = () => {
@@ -56,7 +62,7 @@ function RoomEditScreen({ route, navigation }) {
       "PATCH",
       urls.URL_ROOMS + "/" + room_id,
       {
-        price_per_day: _room.price_per_day,
+        price_per_day: roomPatch.price_per_day,
       },
       {
         "x-access-token": storedUser.auth_token,
@@ -95,33 +101,37 @@ function RoomEditScreen({ route, navigation }) {
   };
 
   useEffect(() => {
-    httpGetTokenRequest(
-      "GET",
-      urls.URL_ROOMS + "/" + room_id,
-      {},
-      null,
-      _handleApiError
-    )
-      .then((room) => {
-        setRoom(room);
-        return httpGetTokenRequest(
-          "GET",
-          urls.URL_ROOMS + "/" + room_id + "/photos",
-          {},
-          null,
-          _handleApiError
-        );
-      })
-      .then((photos) => {
-        setPhotos(photos);
-        setPhotosUrl(getUrlFromPhotos(photos.room_photos));
-        return BnbSecureStore.read(constants.CACHE_USER_KEY);
-      })
-      .then((user) => {
-        setStoredUser(user);
-        setIsLoading(false);
-      });
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
+      setStoredUser(user);
+    });
   }, []);
+
+  useEffect(() => {
+    if (storedUser) {
+      httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {
+        "x-access-token": storedUser.auth_token,
+      })
+        .then((room) => {
+          setRoom(room);
+          setRoomPatch(room);
+          return httpGetTokenRequest(
+            "GET",
+            urls.URL_ROOMS + "/" + room_id + "/photos",
+            {}
+          );
+        })
+        .then((photos) => {
+          setPhotosUrl(getUrlFromPhotos(photos.room_photos));
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setIsLoading(false);
+        });
+    }
+  }, [storedUser]);
+
+  const ref_price_per_day = useRef();
 
   if (_error) {
     return <Text>{_error.message}</Text>;
@@ -135,39 +145,36 @@ function RoomEditScreen({ route, navigation }) {
     <BnbMainView style={styles.white}>
       <BnbBodyView>
         <ScrollView>
-          <BnbTitleText style={styles.subTitle}>{_room.type}</BnbTitleText>
-          <View style={styles.imageSlider}>
-            <BnbImageSlider
-              images={_photos_urls}
-              width={200}
-              onPress={_handleImagePress}
-            ></BnbImageSlider>
-          </View>
+          {_room && storedUser && (
+            <BnbRoomInfo
+              room={_room}
+              me_id={storedUser.userData.id}
+              auth_token={storedUser.auth_token}
+              navigation={navigation}
+            />
+          )}
           <Separator></Separator>
-          <View style={styles.rowRoomElement}>
-            <Text style={styles.keyText}>Precio por dia: </Text>
-            <TextInput
-              style={styles.valueText}
-              value={_room.price_per_day.toString()}
-              editable={_is_editing}
-              onChangeText={(text) => {
-                _handleTextChange("price_per_day", text);
-              }}
-              multiline
-            ></TextInput>
-          </View>
-
+          <Text style={{ ...bnbStyleSheet.subHeaderText, ...styles.separator }}>
+            Editar publicacion
+          </Text>
+          <BnbFloatingTextInput
+            name="Precio por dia"
+            id={"price_per_day"}
+            object={roomPatch}
+            onChange={_handleTextChange}
+            inputRef={ref_price_per_day}
+            editable={_is_editing}
+          />
           <View style={styles.buttonsContainer}>
             <BnbButton
               style={styles.button}
-              title={_is_editing ? "Aceptar" : "Editar habitacion"}
+              title={_is_editing ? "Aceptar cambios" : "Editar"}
               onPress={
                 _is_editing
                   ? _handleFinishEditingButtonPress
                   : _handleToggleEditRoomButtonPress
               }
-            ></BnbButton>
-
+            />
             {_is_editing && (
               <BnbButton
                 style={styles.button}
@@ -178,12 +185,12 @@ function RoomEditScreen({ route, navigation }) {
           </View>
           {_is_editing && (
             <View>
-              <BnbTitleText style={styles.subTitle}>
-                Eliminar Habitación
-              </BnbTitleText>
+              <Text style={{ ...bnbStyleSheet.subHeaderText }}>
+                Borrar habitación
+              </Text>
               <Separator></Separator>
               <BnbButton
-                title="Eliminar habitación"
+                title="Borrar habitación"
                 onPress={_handleDeleteRoomButtonPress}
               />
             </View>
@@ -205,6 +212,10 @@ const styles = StyleSheet.create({
   imageSlider: {
     flex: 1,
     alignItems: "center",
+  },
+  separator: {
+    marginTop: 30,
+    marginBottom: 15,
   },
   rowRoomElement: {
     flexDirection: "row",

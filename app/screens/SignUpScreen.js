@@ -26,10 +26,15 @@ function SignUpScreen({ route, navigation }) {
     birthdate: "",
     photo: "",
   });
-  /**TODO: crear un formulario para completar estos campos, photo??? */
 
   const [_sign_in_error, setSignInError] = useState("");
   const [_is_awaiting, setIsAwaiting] = useState(false);
+
+  const [countryCode, setCountryCode] = useState("AR");
+
+  const onSelect = (country) => {
+    setCountryCode(country.cca2);
+  };
 
   const _handleTextChange = (key, value) => {
     setUser((prevState) => ({
@@ -58,7 +63,7 @@ function SignUpScreen({ route, navigation }) {
               lastname: user.lastname,
               email: user.email,
               phonenumber: user.phonenumber,
-              country: user.country,
+              country: countryCode,
               birthdate: user.birthdate,
               photo: "null",
             };
@@ -160,18 +165,18 @@ function SignUpScreen({ route, navigation }) {
               object={user}
               onChange={_handleTextChange}
               inputRef={ref_phone}
-              onSubmit={() => ref_country.current?.focus()}
-              returnKeyType="next"
               keyboardType="numeric"
+              viewStyle={{ marginBottom: 0 }}
             />
-            <BnbFloatingTextInput
-              name="Pais"
-              id={"country"}
-              object={user}
-              onChange={_handleTextChange}
-              inputRef={ref_country}
-              onSubmit={() => ref_birthdate.current?.focus()}
-              returnKeyType="next"
+            <Text style={styles.countryInputLabel}>Pais</Text>
+            <CountryPicker
+              containerButtonStyle={styles.countryPickerButton}
+              {...{
+                countryCode,
+                onSelect,
+              }}
+              visible
+              withCountryNameButton={true}
             />
             <BnbFloatingTextInput
               name="Fecha de nacimiento"
@@ -237,6 +242,25 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
+  },
+  countryPickerButton: {
+    borderWidth: 1,
+    borderRadius: 40,
+    minHeight: 50,
+    justifyContent: "center",
+    color: "black",
+    paddingLeft: 20,
+    marginBottom: 6,
+  },
+  countryInputLabel: {
+    marginLeft: 28,
+    paddingHorizontal: 7,
+    alignSelf: "flex-start",
+    color: "#49658c",
+    fontFamily: "Raleway_400Regular",
+    top: 8,
+    backgroundColor: "white",
+    zIndex: 2,
   },
 });
 

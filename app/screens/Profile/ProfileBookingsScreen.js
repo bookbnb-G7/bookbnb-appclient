@@ -12,6 +12,8 @@ import urls from "../../constant/urls";
 import httpGetTokenRequest from "../../helpers/httpGetTokenRequest";
 import { ScrollView } from "react-native-gesture-handler";
 import bnbStyleSheet from "../../constant/bnbStyleSheet";
+import BnbBodyView from "../../components/BnbBodyView";
+import BnbError from "../../components/BnbError";
 
 /**Aca deberia aparecer una lista con todos los rooms del usuario y
  * que indique si estos tienen o no un booking esperando a ser aceptado/rechazado */
@@ -45,29 +47,35 @@ function ProfileBookingsScreen({ navigation }) {
   }, []);
 
   if (_error) {
-    return <Text> {_error.message} </Text>;
+    return (
+      <BnbError>
+        {" "}
+        Hubo un error al cargar las reservas: {_error.message}{" "}
+      </BnbError>
+    );
   }
-
-  /**OJO: no deberia poder intentar modificar las reservas hechas, solo las recibidas */
   if (_is_loading) {
-    return <BnbLoading text="Cargando reservas"></BnbLoading>;
+    return <BnbLoading text="Cargando reservas..."></BnbLoading>;
   } else {
     return (
       <BnbMainView>
-        <View style={styles.centerContainer}>
+        <BnbBodyView>
           <ScrollView>
             <Text style={bnbStyleSheet.headerTextBlack}>
               Tienes {_bookings.made.bookings.length} reservas hechas
             </Text>
             <View>
-              {_bookings.made.bookings.map((item, index) => (
-                <View key={item.id}>
-                  <BnbBookingPreview
-                    navigation={navigation}
-                    booking_id={item.id}
-                  />
-                </View>
-              ))}
+              {storedUser &&
+                _bookings.made.bookings.map((item, index) => (
+                  <View key={item.id}>
+                    <BnbBookingPreview
+                      navigation={navigation}
+                      booking_id={item.id}
+                      room_id={item.room_id}
+                      auth_token={storedUser.auth_token}
+                    />
+                  </View>
+                ))}
             </View>
             <Separator />
             <Text style={bnbStyleSheet.headerTextBlack}>
@@ -79,29 +87,20 @@ function ProfileBookingsScreen({ navigation }) {
                   <BnbBookingPreview
                     navigation={navigation}
                     booking_id={item.id}
+                    room_id={item.room_id}
+                    auth_token={storedUser.auth_token}
                   />
                   <Separator />
                 </View>
               ))}
             </View>
           </ScrollView>
-        </View>
+        </BnbBodyView>
       </BnbMainView>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  centerContainer: {
-    alignItems: "center",
-  },
-  title: {
-    fontSize: fonts.big,
-    alignSelf: "center",
-  },
-  errorText: {
-    color: colors.error,
-  },
-});
+const styles = StyleSheet.create({});
 
 export default ProfileBookingsScreen;

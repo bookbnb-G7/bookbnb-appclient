@@ -67,13 +67,6 @@ export default StyleSheet.create({
     width: "80%",
     margin: 20,
   },
-  headerText: {
-    fontFamily: "Raleway_700Bold",
-    fontSize: 25,
-    paddingLeft: 11,
-    paddingVertical: 15,
-    color: colors.white,
-  },
   bodyView: {
     alignItems: "center",
   },
@@ -83,6 +76,9 @@ export default StyleSheet.create({
   mediumText: {
     fontFamily: "Raleway_500Medium",
   },
+  semiBoldText: {
+    fontFamily: "Raleway_600SemiBold",
+  },
   bnbButton: {
     borderRadius: 10,
     padding: 5,
@@ -90,5 +86,24 @@ export default StyleSheet.create({
   },
   bnbButtonText: {
     color: colors.white,
+  },
+  separator: {
+    marginVertical: styling.separator,
+  },
+  roomPreviewContainer: {
+    justifyContent: "center",
+    marginVertical: styling.separator,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "black",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 5,
+    backgroundColor: "#F0F0F0",
   },
 });
