@@ -49,6 +49,7 @@ const BnbRoomPreview = (props) => {
   };
 
   useEffect(() => {
+    let is_focused = true;
     httpGetTokenRequest(
       "GET",
       urls.URL_ROOMS + "/" + props.room.id + "/ratings",
@@ -57,7 +58,9 @@ const BnbRoomPreview = (props) => {
       _handleApiError
     )
       .then((ratings) => {
-        setRatings(ratings);
+        if (is_focused) {
+          setRatings(ratings);
+        }
         return httpGetTokenRequest(
           "GET",
           urls.URL_ROOMS + "/" + props.room.id + "/photos",
@@ -67,11 +70,14 @@ const BnbRoomPreview = (props) => {
         );
       })
       .then((photos) => {
-        if (photos) {
+        if (photos && is_focused) {
           setPhotosUrl(getUrlFromPhotos(photos.room_photos));
           setIsLoaded(true);
         }
       });
+    return function cleanup() {
+      is_focused = false;
+    };
   }, [props.room.id]);
 
   if (!_is_loaded) {
