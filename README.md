@@ -5,6 +5,7 @@ Esta guía es para aprender como utilizar la aplicación Bookbnb, dedicada la of
 
 ### Bienvenido
 
+![WelcomeScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/welcome_screen.png)
 <Foto del WelcomeScreen>
 
 La primera pantalla se le presentará con dos opciones
