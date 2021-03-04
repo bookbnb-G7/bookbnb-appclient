@@ -53,7 +53,7 @@ function ProfileBookingsScreen({ navigation }) {
             ]}
             onPress={() => onButtonPress(item.state)}
           >
-            <Text style={[styles.filterButtonText]}>{item.text}</Text>
+            <Text style={styles.filterButtonText}>{item.text}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -120,22 +120,23 @@ function ProfileBookingsScreen({ navigation }) {
               onButtonPress={setReceivedState}
             />
             <View>
-              {_bookings.received.bookings.map((item, index) => (
-                <View key={item.id}>
-                  {(_receivedState === 0 ||
-                    _receivedState == item.booking_status) && (
-                    <View>
-                      <BnbBookingPreview
-                        navigation={navigation}
-                        booking_id={item.id}
-                        room_id={item.room_id}
-                        auth_token={storedUser.auth_token}
-                      />
-                      <Separator />
-                    </View>
-                  )}
-                </View>
-              ))}
+              {storedUser &&
+                _bookings.received.bookings.map((item, index) => (
+                  <View key={item.id}>
+                    {(_receivedState === 0 ||
+                      _receivedState == item.booking_status) && (
+                      <View>
+                        <BnbBookingPreview
+                          navigation={navigation}
+                          booking_id={item.id}
+                          room_id={item.room_id}
+                          auth_token={storedUser.auth_token}
+                        />
+                        <Separator />
+                      </View>
+                    )}
+                  </View>
+                ))}
             </View>
           </ScrollView>
         </BnbBodyView>

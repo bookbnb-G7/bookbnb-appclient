@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import fonts from "../config/fonts";
-import styling from "../config/styling";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import constants from "../constant/constants";
 import urls from "../constant/urls";
@@ -62,9 +59,12 @@ const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
   };
 
   useEffect(() => {
+    let is_focused = true;
     httpGetTokenRequest("GET", urls.URL_BOOKINGS + "/" + booking_id, {})
       .then((booking) => {
-        setBooking(booking);
+        if (is_focused) {
+          setBooking(booking);
+        }
         return httpGetTokenRequest(
           "GET",
           urls.URL_ROOMS + "/" + booking.room_id + "/photos",
@@ -72,19 +72,28 @@ const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
         );
       })
       .then((photos) => {
-        setPhotos(getUrlFromPhotos(photos.room_photos));
+        if (is_focused) {
+          setPhotos(getUrlFromPhotos(photos.room_photos));
+        }
         return httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {
           "x-access-token": auth_token,
         });
       })
       .then((room) => {
-        setRoom(room);
-        setIsLoading(false);
+        if (is_focused) {
+          setRoom(room);
+          setIsLoading(false);
+        }
       })
       .catch((error) => {
-        setError(error);
-        setIsLoading(false);
+        if (is_focused) {
+          setError(error);
+          setIsLoading(false);
+        }
       });
+    return function cleanup() {
+      is_focused = false;
+    };
   }, []);
 
   if (_is_loading) {
