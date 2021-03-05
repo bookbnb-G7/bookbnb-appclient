@@ -101,7 +101,6 @@ function ImagesEditScreen({ route, navigation }) {
 
   const _deleteImage = (photo_firebase_id) => {
     setIsLoading(true);
-    console.log(photo_firebase_id);
     httpGetTokenRequest(
       "DELETE",
       urls.URL_ROOMS + "/" + room_id + "/photos/" + photo_firebase_id,

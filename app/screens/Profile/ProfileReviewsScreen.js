@@ -17,14 +17,12 @@ function ProfileReviewsScreen({ route, navigation }) {
   const [_guestReviews, setGuestReviews] = useState();
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
-  console.log("######################ProfileReviewScreen#############");
   const _handleApiError = (error) => {
     setError(error);
     setIsLoading(false);
   };
 
   useEffect(() => {
-    console.log("*********");
     httpGetTokenRequest(
       "GET",
       urls.URL_USERS + "/" + user_id + "/guest_reviews",

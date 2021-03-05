@@ -44,7 +44,6 @@ const BnbRoomInfo = ({ room, me_id, auth_token, navigation, onChange }) => {
     ).then(
       (response) => {
         onChange();
-        console.log("favorito");
       },
       (error) => {
         setError(error);
@@ -58,7 +57,6 @@ const BnbRoomInfo = ({ room, me_id, auth_token, navigation, onChange }) => {
     }).then(
       (response) => {
         onChange();
-        console.log("delete favorito");
       },
       (error) => {}
     );

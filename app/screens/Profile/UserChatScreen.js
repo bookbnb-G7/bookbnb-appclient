@@ -43,19 +43,14 @@ function UserChatScreen({ route, navigation }) {
         "x-access-token": auth_token,
       }
     ).then(
-      (response) => {
-        console.log(response);
-      },
-      (error) => {
-        console.log(error.message);
-      }
+      (response) => {},
+      (error) => {}
     );
   }, []);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
       setStoredUser(user);
-      console.log(user);
       httpGetTokenRequest("GET", urls.URL_ME + "/chats/" + other_uuid, {
         "x-access-token": user.auth_token,
       }).then(
@@ -81,9 +76,7 @@ function UserChatScreen({ route, navigation }) {
       (other) => {
         setOtherUser(other);
       },
-      (error) => {
-        console.log(error.message);
-      }
+      (error) => {}
     );
   }, []);
 

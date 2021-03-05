@@ -13,7 +13,6 @@ const BnbUserPost = ({ user_id, time, text, onUsernameTap }) => {
   const [_error, setError] = useState();
 
   useEffect(() => {
-    console.log("******BnbUserPost*****");
     httpGetTokenRequest("GET", urls.URL_USERS + "/" + user_id, {}).then(
       (user) => {
         setUser(user);

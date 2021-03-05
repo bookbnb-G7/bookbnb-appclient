@@ -45,7 +45,6 @@ function ProfileChatsScreen({ navigation }) {
   );
 
   const renderItem = ({ chat }) => {
-    console.log("CHAT:" + chat);
     if (chat) {
       return (
         <TouchableOpacity

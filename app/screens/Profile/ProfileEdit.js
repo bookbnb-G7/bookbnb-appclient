@@ -70,21 +70,19 @@ function ProfileEdit({ me, navigation, onTextChange }) {
       "x-access-token": _x_access_token,
     }).then(
       (response) => {
-        console.log("DEBUGGG: se borro del app server");
         if (response) {
           const user = firebase.auth.currentUser;
           if (user) {
             user
               .delete()
               .then(() => {
-                console.log("PE: Eliminado de firebase");
+                console.log("Borrado de firebase");
               })
               .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY))
               .then(() =>
                 navigation.navigate("HomeStack", { isLoggedIn: false })
               )
               .catch((error) => {
-                console.log("PE: Error despues del delete" + error);
                 setError(error);
                 setIsLoading(false);
               });
@@ -92,7 +90,6 @@ function ProfileEdit({ me, navigation, onTextChange }) {
         }
       },
       (error) => {
-        console.log("DEBUGGG: error del request");
         setError(error);
         setIsLoading(false);
       }

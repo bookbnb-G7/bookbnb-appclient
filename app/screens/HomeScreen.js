@@ -128,20 +128,6 @@ function HomeScreen({ navigation }) {
               />
             </View>
             <BnbWindow navigation={navigation} style={styles.window} />
-            <View style={styles.optionsContainer}>
-              <View>
-                <BnbButton
-                  title="DEBUG Cerrar sesion"
-                  onPress={_handleLogOutButton}
-                />
-                <BnbButton
-                  title="DEBUG Room/Profile by id"
-                  onPress={() => {
-                    navigation.navigate("DebugGoToRoomProfile");
-                  }}
-                />
-              </View>
-            </View>
           </View>
           <Separator />
           {_recommendedRooms && storedUser && (
