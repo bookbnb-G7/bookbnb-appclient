@@ -14,8 +14,9 @@ import bnbStyleSheet from "../../constant/bnbStyleSheet";
 import firebase from "../../database/firebase";
 import BnbFloatingTextInput from "../../components/BnbFloatingTextInput";
 import Separator from "../../components/Separator";
+import BnbError from "../../components/BnbError";
 
-function ProfileEdit({ me, onTextChange }) {
+function ProfileEdit({ me, navigation, onTextChange }) {
   const [_is_editing, setIsEditing] = useState(false);
   const [_is_loading, setIsLoading] = useState(false);
   const [_error, setError] = useState();
@@ -63,25 +64,36 @@ function ProfileEdit({ me, onTextChange }) {
   };
 
   const _handleConfirmDelete = () => {
-    setIsEditing(false);
-    httpGetTokenRequest(
-      "DELETE",
-      urls.URL_USERS + "/" + me.id,
-      { "x-access-token": _x_access_token },
-      null,
-      _handleApiError
-    ).then((response) => {
-      if (response) {
-        BnbSecureStore.clear(constants.CACHE_USER_KEY).then(() => {
-          firebase.auth
-            .signOut()
-            .then(() =>
-              navigation.navigate("HomeStack", { isLoggedIn: false })
-            );
-        });
-        /**TODO: Borrarlo de firebase */
+    //setIsEditing(false);
+    setIsLoading(true);
+    httpGetTokenRequest("DELETE", urls.URL_USERS + "/" + me.id, {
+      "x-access-token": _x_access_token,
+    }).then(
+      (response) => {
+        if (response) {
+          const user = firebase.auth.currentUser;
+          if (user) {
+            user
+              .delete()
+              .then(() => {
+                console.log("Borrado de firebase");
+              })
+              .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY))
+              .then(() =>
+                navigation.navigate("HomeStack", { isLoggedIn: false })
+              )
+              .catch((error) => {
+                setError(error);
+                setIsLoading(false);
+              });
+          }
+        }
+      },
+      (error) => {
+        setError(error);
+        setIsLoading(false);
       }
-    });
+    );
   };
 
   const _handleDeleteAccountButtonPress = () => {
@@ -172,10 +184,13 @@ function ProfileEdit({ me, onTextChange }) {
           >
             Eliminar tu cuenta
           </Text>
-          <BnbButton
-            title="Eliminar cuenta"
-            onPress={_handleDeleteAccountButtonPress}
-          />
+          {_x_access_token && (
+            <BnbButton
+              title="Eliminar cuenta"
+              onPress={_handleDeleteAccountButtonPress}
+            />
+          )}
+          {_error && <BnbError>{_error}</BnbError>}
         </View>
       )}
     </BnbMainView>

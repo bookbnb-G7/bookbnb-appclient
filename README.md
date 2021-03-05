@@ -1,11 +1,11 @@
 ## Guia de usuario
 
-Esta guía es para aprender como utilizar la aplicación Bookbnb, dedicada la oferta de alojamientos a individuos.
+Esta guía es para aprender como utilizar la aplicación Bookbnb, dedicada a la oferta de alojamientos a individuos.
 
 
 ### Bienvenido
 
-<Foto del WelcomeScreen>
+![WelcomeScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/welcome_screen.png)
 
 La primera pantalla se le presentará con dos opciones
 
@@ -23,7 +23,7 @@ Si es la primera vez que usa esta aplicación debe registrarse.
 
 > En el caso de que ya tenga una cuenta, puede salter este paso.
 
-<Foto del RegisterSelectScreen>
+![RegisterSelect](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/register_select_screen.png)
 
 Para registrarse, BookBnb tiene tres opciones.
 
@@ -34,7 +34,7 @@ Para registrarse, BookBnb tiene tres opciones.
 
 #### Email y contraseña
 
-<SignUpScreen>
+![SignUpScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/signup_screen.png)
 
 La primera opción es para crear una cuenta nueva de Bookbnb que solo le servira para esta aplicación y en la cual deberá completar un formulario con sus datos personales.
 
@@ -49,18 +49,16 @@ Continua en *Introduccion a BookBnb*
 
 #### Google o Facebook
 
-Las otras dos permiten utilizar una cuenta existente ya sea de Google o de Facebook. Solo se le pedira un permiso para poder acceder a su cuenta de Google o Facebook y completar unos pocos campos con su información personal.
+Las otras dos permiten utilizar una cuenta existente ya sea de Google o de Facebook. Solo se le pedirá un permiso para poder acceder a su cuenta de Google o Facebook y completar unos pocos campos con su información personal.
 
-<Foto de permiso Facebook>
+![facebook_auth](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/facebook_auth.png)
   
-<Foto de permiso Google>
-
 
 ### Ingresar (Login)
 
 > En el caso de haber realizado el paso *Registrarse*, puede saltear este paso.
 
-<Foto LoginSelect>
+![LoginSelectScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/login_select.png)
 
 Para ingresar, BookBnb tiene las mismas tres opciones que el paso *Registrarse*.
 
@@ -73,7 +71,7 @@ Una vez seleccionada una de estas opciones y completado los pasos, ingresará a 
 
 #### Email y contraseña
 
-<UserLoginScreen.js>
+![UserLoginScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/user_login.png)
 
 Simplemente debe proporcionar el E-mail y la contraseña de una cuenta que se haya registrado con la opción *Email y contraseña* del paso *Registrarse*.
 
@@ -94,20 +92,20 @@ Deberá ingresar e-mail y contraseña de su cuenta de facebook.
 
 ### Introducción a BookBnb
 
-En esta sección se da una explicación detallada de todas las funcionalidades que otorga BookBnb a sus usuarios
+En esta sección se da una breve explicación sobre las funcionalidades mas relevantes que otorga BookBnb a sus usuarios
 
-<HomeScreen.js>
+![HomeScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/home_screen.png)
 
-Es la pantalla de inicio, la primera en verse una vez se haya ingresado a la aplicación (habiendo logeado o completado el registro). La sesión se mantiene aún si ha cerrado la aplicación, esto implica que al volver a abrir BookBnb no se le volvera a solicitar un ingreso (login o registro) y se encontrará con esta pantalla de nuevo.
+Pantalla de inicio, la primera en verse una vez se haya ingresado a la aplicación (habiendo logeado o completado el registro). La sesión se mantiene aún si ha cerrado la aplicación, esto implica que al volver a abrir BookBnb no se le volvera a solicitar un ingreso (login o registro) y se encontrará con esta pantalla de nuevo.
 
-La pantalla de inicio aparecen dos componentes principales, los botones de acceso directo y la barra inferior.
+Hay dos componentes principales, los botones de acceso directo y la barra de navegación inferior.
 
 
 ### Barra de navegación inferior
 
 Esta barra es el principal componente utilizado para la navegación y estará presente en todas las pantallas de la aplicación, permitiendo al usuario navegar de una pantalla a otra y al volver seguir donde había dejado.
 
-<HomeScreen.js remarcado con cuadrado rojo el TabNavigator>
+![HomeScreenTabNav](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/home_screen_tab_nav.png)
 
 La barra inferior tiene 4 botones, el presionar cada uno lo lleva directamente a una nueva pantalla donde se le presentarán las distintas opciones para usar la aplicación.
 
@@ -125,11 +123,11 @@ La pantalla principal antes mencionada, al inicio de cada sesión siempre será 
 
 En el centro tiene 4 botones en una ventana con accesos directos a las funciones mas utilizadas
 
-<HomeScreen.js remarcado con cuadrado rojo el BnbWindow>
+![HomeScreenWindow](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/home_screen_window.png)
 
 Ademas tiene una sección con habitaciones recomendadas al usuario
 
-<HomeScreen.js en recomendaciones>
+![HomeScreenRecommendations](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/home_screen_recommend.png)
 
 
 #### Buscar
@@ -142,27 +140,27 @@ A continuación se da un pequeño ejemplo de su uso:
 
 Presionando el boton de *Buscar* en la barra inferior o en el menu de la pantalla de inicio, irá a la pantalla de busqueda.
 
-<HomeScreen.js remarcando con rojo los dos botones buscar>
+![HomeScreenSearch](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/home_screen_search.png)
 
 La primera pantalla solicita que se indique la localidad en la que se quiere buscar. Para esto BookBnb tiene un sistema de autocompletar en el que irá desplegando una lsita de posibles coincidencias de localidades con lo que el usuario esta ingresando.
 
-<SearchInputScreen>
+![SearchInputScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/search_input.png)
 
 Seleccionada la localidad, pasará a la siguiente pantalla donde se le solicita indicar el tiempo de estadía. Deberá indicar dia de inicio y de fin.
 
-<SearchDateTimePicker>
+![SearchDateTimePicker](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/search_datetime_picker.png)
 
 La siguiente pantalla nos solicitará ingresar la cantidad de Adultos y Niños a hospedarse
 
-<SearchCountersScreen>
+![SearchCountersScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/search_counter.png)
 
 Por ultimo, la pantalla de filtros opcionales nos da la opcion de filtrar por rangode precios o categoría. En el caso de no querer aplicar ningún filtro apretar el boton *Siguiente*
 
-<OptionalFiltersScreen>
+![SearchOptionalFilters](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/search_optionals_filters.png)
   
 Al finalizar con este ultimo paso la aplicación mostrara un listado de todas las habitaciones que cumplan con los parámetros indicados.
 
-<SearchResultScreen>
+![SearchResultsScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/search_results.png)
 
 Para ver la publicación en detalle solo debe presionar la publicación.
 
@@ -171,7 +169,7 @@ Para ver la publicación en detalle solo debe presionar la publicación.
 
 #### Chat
 
-<ProfileChatScreen>
+![SearchResultsScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_chat.png)
   
 Pantalla con una lista de las conversaciones privadas en tiempo real que puede tener con distintos usuarios.
 
@@ -179,16 +177,16 @@ Solamente se presentaran aquellas conversaciones en curso con otros usuarios, si
 
 > Los usuarios estan presentes en la sección Comentarios de una habitación y tambien como dueño de las publicaciones. Apretando cualquiera de los iconos de usuario le enviará directamente a su perfil.
 
-<Profile de un user señalando el boton Mensaje>
+![UserProfileMsg](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/user_profile_msg.png)
 
 En el momento que envia el primer mensaje, se añadira la nueva conversación a la lista de la pantalla *Chat*
 
-<UserChatScreen>
+![UserChatScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/user_chat.png)
 
 
 #### Perfil
 
-<Profile me>
+![ProfileMe](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_me.png)
 
 Pantalla con sus datos personales, en esta pantalla puede ver las reseñas que ha recibido tanto como iniquilino y como anfitrión; manejar las habitaciones y reservas y editar sus datos de perfil.
 
@@ -201,7 +199,7 @@ En esta pantalla también tiene la opción de eliminar permanentemente su cuenta
 
 En esta sección se dan indicaciones sobre como crear, mantener las publicaciones y manejar las reservas siendo el dueño y el como reservar una habitación como inquilino.
 
-<Profile me señalando el boton Habitaciones y Reservas>
+![ProfileMeRooms](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_me_rooms.png)
 
 En el Perfil hay un boton *Habitaciones y Reservas* que envía al usuario a una pantalla con opciones para el manejo de las Habitaciones y la Billetera.
 
@@ -215,14 +213,14 @@ Hay cuatro opciones
 * Mis habitaciones
 * Favoritos
 
-<ProfileRoomsptionsScreen>
+![ProfileRoomsOptions](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_rooms_options.png)
 
 
 ##### Crear habitación
 
 Permite crear una nueva publicación de un alojamiento
 
-<RoomCreateScreen>
+![RoomCreateScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/room_create.png)
 
 Debe completar el formulario y por ultimo tiene la opción de agregar una foto de la habitación.
 Una vez finalizada la creación de la publicación los usuarios podrán encontrarla mediante el buscador y empezar a realizar reservas, comentarios y podran ver su perfil para iniciar conversaciones.
@@ -230,12 +228,12 @@ Una vez finalizada la creación de la publicación los usuarios podrán encontra
 
 ##### Mis reservas
 
-<ProfileBookingsScreen>
+![ProfileBookingsScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_bookings.png)
 
 Dos listados, uno con las reservas que han realizado de mis habitaciones y otra con las reservas que el usuario a solicitado.
 Podrá consultar el estado ya sea Pendiente, Aceptado o Rechazado. También tiene la opción de ver los detalles de las reservas presionando el boton *Ver reserva*.
 
-<RoomBookingScreen>
+![RoomBookingScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/room_booking.png)
 
 En el caso de ser el dueño del alojamiento, tiene la opción de Aceptar o Rechazar aquellas reservas que esten en estado Pendiente.
 
@@ -247,11 +245,11 @@ El anfitrión puede hacer con el inquilino. Las reseñas son tanto cuantitativas
 
 Un listado con todas las publicaciones creadas por el usuario
 
-<ProfileRoomsScreen>
+![ProfileRoomsScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_rooms.png)
 
-Presionando cualquiera de las publicaciones permite ver los alojamientos con detalle, de la misma manera que haría un usuario que esta buscando una habitación
+Presionar una publicación permite ver los detalles, de la misma manera que haría un usuario que esta buscando una habitación. De esta manera puede verificar los datos de sus publicaciones.
 
-<RoomScreen.js>
+![RoomScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/room_screen.png)
 
 En esta pantalla el dueño puede ver la publicacion como si fuera un inquilino pero con los adicionales de poder contestar a los comentarios que se hacen en la publicación y el de editar la habitación (agregar fotos, cambiar precio, eliminarla)
 
@@ -260,7 +258,7 @@ En esta pantalla el dueño puede ver la publicacion como si fuera un inquilino p
 
 Pantalla con una lista de todas las publicaciones que el usuario ha marcado como favorito
 
-<ProfileFavoritesScreen>
+![ProfileFavoritesScreen](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_favorites.png)
 
 Funciona como un acceso directo a la publicación sin tener que realizar otra busqueda.
 
@@ -275,13 +273,14 @@ Al crear una cuenta nueva, la aplicación automaticamente crea una Wallet al usu
 
 Esta pantalla indica el balance del usuario junto con el address para la transferencia de Ethereum.
 
-<ProfileWalletScreen>
+![ProfileWallet](https://github.com/bookbnb-G7/bookbnb-appclient/blob/dev/docs/images/profile_wallet.png)
 
 Lista de operaciones que poseen un coste:
 
 * Realizar una reserva
 * Crear una publicación
 
+La aplicación le pedira una confirmación cada vez que vaya a realizar alguna de estas operaciones, el monto será descontado directamente de su billetera.
 
  
 

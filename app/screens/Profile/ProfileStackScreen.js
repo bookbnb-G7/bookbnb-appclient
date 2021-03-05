@@ -39,7 +39,6 @@ function ProfileStackScreen({ navigation }) {
         navigation.navigate("ProfileStack", { screen: "Profile" });
       } else {
         navigation.navigate("ProfileStack");
-        /**Dependiendo del index hago uno o otra */
       }
     });
 

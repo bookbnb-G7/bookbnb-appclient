@@ -64,7 +64,7 @@ function RoomScreen({ route, navigation }) {
         setIsLoading(false);
         BnbAlert(
           "Reserva",
-          "Ocurrio un problema al intentar reservar la habitación",
+          `Ocurrio un problema al intentar reservar la habitación: Fondos insuficientes`,
           "Entendido"
         );
       }
@@ -72,12 +72,20 @@ function RoomScreen({ route, navigation }) {
   };
 
   const _handleRoomBooking = () => {
+    if (!route.params.searchForm) {
+      Alert.alert(
+        "Reserva",
+        "Debe elegir una fecha de Check-in y otra de Check-out"
+      );
+      return;
+    }
     let date_from = formatDate(route.params.searchForm.dateBegin);
     let date_to = formatDate(route.params.searchForm.dateEnd);
     Alert.alert(
-      "Reservar",
-      `Desea reservar el alojamiento desde ${date_from} a: ${date_to}, por el monto total de` +
-        room.price_per_day * (date_to - date_from),
+      "Reservar Alojamiento",
+      `Desea reservar el alojamiento desde ${date_from} al ${date_to}, por el monto de ` +
+        _room.price_per_day +
+        " ether por dia?",
       [
         {
           text: "Cancelar",
@@ -85,7 +93,9 @@ function RoomScreen({ route, navigation }) {
         },
         {
           text: "Confirmar Reserva",
-          onPress: _confirmRoomBooking(date_from, date_to),
+          onPress: () => {
+            _confirmRoomBooking(date_from, date_to);
+          },
         },
       ]
     );
@@ -106,10 +116,9 @@ function RoomScreen({ route, navigation }) {
   /**Fetcheo los datos del room cada vez que el parametro cambia */
   useEffect(() => {
     if (storedUser) {
-      console.log("DEBUG: fetching room data");
       fetchRoomData();
     }
-  }, [route.params?.room_id, storedUser]);
+  }, [route.params.room_id, storedUser]);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {

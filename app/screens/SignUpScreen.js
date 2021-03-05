@@ -80,8 +80,8 @@ function SignUpScreen({ route, navigation }) {
               },
               (error) => {
                 console.log("No se puedo crear el usuario, no habia data");
-                firebase.auth().signOut();
                 setIsAwaiting(false);
+                firebase.auth.signOut();
               }
             );
           });

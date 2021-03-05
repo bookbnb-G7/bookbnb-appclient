@@ -8,6 +8,7 @@ import { GiftedChat } from "react-native-gifted-chat";
 import { Text } from "react-native";
 import BnbError from "../../components/BnbError";
 import httpPostTokenRequest from "../../helpers/httpPostTokenRequest";
+import bnbStyleSheet from "../../constant/bnbStyleSheet";
 
 function UserChatScreen({ route, navigation }) {
   const other_uuid = route.params.other_uuid;
@@ -42,19 +43,14 @@ function UserChatScreen({ route, navigation }) {
         "x-access-token": auth_token,
       }
     ).then(
-      (response) => {
-        console.log(response);
-      },
-      (error) => {
-        console.log(error.message);
-      }
+      (response) => {},
+      (error) => {}
     );
   }, []);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
       setStoredUser(user);
-      console.log(user);
       httpGetTokenRequest("GET", urls.URL_ME + "/chats/" + other_uuid, {
         "x-access-token": user.auth_token,
       }).then(
@@ -80,9 +76,7 @@ function UserChatScreen({ route, navigation }) {
       (other) => {
         setOtherUser(other);
       },
-      (error) => {
-        console.log(error.message);
-      }
+      (error) => {}
     );
   }, []);
 
@@ -96,13 +90,9 @@ function UserChatScreen({ route, navigation }) {
 
   return (
     <BnbMainView>
-      <Text>
-        Tu {storedUser.userData.email} id:
-        {storedUser.userData.id}
-      </Text>
       {_otherUser && (
-        <Text>
-          Chateando con {_otherUser.email} other_uuid: {other_uuid}
+        <Text style={bnbStyleSheet.normalText}>
+          Chateando con {_otherUser.firstname} {_otherUser.lastname}
         </Text>
       )}
       <GiftedChat

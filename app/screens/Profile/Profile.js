@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, Image, StatusBar } from "react-native";
 import colors from "../../config/colors";
 import fonts from "../../config/fonts";
 
-import Separator from "../../components/Separator";
 import BnbMainView from "../../components/BnbMainView";
 import BnbBodyView from "../../components/BnbBodyView";
 import BnbSecureStore from "../../classes/BnbSecureStore";
@@ -20,7 +19,6 @@ import getAverage from "../../helpers/getAverage";
 import { ScrollView } from "react-native-gesture-handler";
 import BnbError from "../../components/BnbError";
 import ProfileEdit from "./ProfileEdit";
-import BnbIconText from "../../components/BnbIconText";
 import { useFocusEffect } from "@react-navigation/native";
 
 /**Este es de solo lectura, generico y debe sevir para cualquier usuario */
@@ -118,11 +116,7 @@ function Profile({ route, navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      const unsubscribe = fetchUserData();
-
-      /**return function cleanup(){
-        setError(null)
-      }*/
+      fetchUserData();
     }, [route.params?.user_id])
   );
 
@@ -202,7 +196,11 @@ function Profile({ route, navigation }) {
             </View>
           )}
           {_show_info && user && (
-            <ProfileEdit me={user} onTextChange={_handleTextChange} />
+            <ProfileEdit
+              me={user}
+              navigation={navigation}
+              onTextChange={_handleTextChange}
+            />
           )}
         </ScrollView>
       </BnbBodyView>

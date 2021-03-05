@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {StyleSheet, View, Text} from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View, Text, Alert } from "react-native";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import BnbButton from "../components/BnbButton";
 import BnbImageSlider from "../components/BnbImageSlider";
@@ -17,11 +17,12 @@ import useRequestMediaLibraryPermissionsAsync from "../helpers/useRequestMediaLi
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import BnbBodyView from "../components/BnbBodyView";
+import BnbError from "../components/BnbError";
 
 /**Deberia pasar un ide y hacer el fetch aca, pero dejaria de ser generico
  * dado que no es lo mismo el user que el room, creo
  */
-function ImagesEditScreen({route, navigation}) {
+function ImagesEditScreen({ route, navigation }) {
   const room_id = route.params.room_id;
   const isCreatingRoom = route?.params?.isCreatingRoom;
 
@@ -30,6 +31,8 @@ function ImagesEditScreen({route, navigation}) {
   const [_is_loading, setIsLoading] = useState(true);
   const [_error, setError] = useState();
   const [_photos_urls, setPhotosUrl] = useState([]);
+
+  const [_is_loading_photos, setIsLoadingPhotos] = useState(false);
 
   const _handleApiResponse = () => {
     setIsLoading(false);
@@ -45,28 +48,25 @@ function ImagesEditScreen({route, navigation}) {
   };
 
   const _handleApiError = (error) => {
-    setError(error);
-    BnbAlert("Error al subir foto", error.message, "Entendido");
+    BnbAlert("Error", "Hubo un error con la galeria de imagenes", "Entendido");
     setIsLoading(false);
+    setIsLoadingPhotos(false);
   };
 
   const _handleRemoveImage = (index) => {
     if (_photos.room_photos.length !== 0) {
-      BnbAlertMultiButtons(
-        "Eliminar imagen",
-        "Si acepta la imagen sera eliminada permanentemente",
-        [
-          {
-            text: "Aceptar",
-            onPress: _deleteImage(_photos.room_photos[index].firebase.id),
+      Alert.alert("Eliminar imagen", "Si acepta la imagen sera eliminada", [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Aceptar",
+          onPress: () => {
+            _deleteImage(_photos.room_photos[index].firebase_id);
           },
-          {
-            text: "Cancelar",
-            style: "cancel",
-          },
-        ],
-        false
-      );
+        },
+      ]);
     } else {
       alert("Esta habitacion no tiene ninguna foto");
     }
@@ -88,7 +88,9 @@ function ImagesEditScreen({route, navigation}) {
             _handleApiResponse,
             _handleApiError,
             true
-          );
+          ).then(() => {
+            _fetchPhotos();
+          });
         }
       },
       (cancelled) => {
@@ -102,31 +104,45 @@ function ImagesEditScreen({route, navigation}) {
     httpGetTokenRequest(
       "DELETE",
       urls.URL_ROOMS + "/" + room_id + "/photos/" + photo_firebase_id,
-      {"x-access-token": storedUser.auth_token},
-      _handleApiResponse,
-      _handleApiError
+      { "x-access-token": storedUser.auth_token }
+    ).then(
+      () => {
+        _fetchPhotos();
+      },
+      (error) => {
+        BnbAlert(
+          "Error",
+          "Hubo un error con la galeria de imagenes",
+          "Entendido"
+        );
+        setIsLoading(false);
+      }
     );
   };
 
+  const _fetchPhotos = () => {
+    setIsLoadingPhotos(true);
+    httpGetTokenRequest(
+      "GET",
+      urls.URL_ROOMS + "/" + room_id + "/photos",
+      {},
+      null,
+      _handleApiError
+    ).then((photos) => {
+      if (photos) {
+        setPhotos(photos);
+        setPhotosUrl(getUrlFromPhotos(photos.room_photos));
+        setIsLoading(false);
+        setIsLoadingPhotos(false);
+      }
+    });
+  };
+
   useEffect(() => {
-    BnbSecureStore.read(constants.CACHE_USER_KEY)
-      .then((user) => {
-        setStoredUser(user);
-        return httpGetTokenRequest(
-          "GET",
-          urls.URL_ROOMS + "/" + room_id + "/photos",
-          {},
-          null,
-          _handleApiError
-        );
-      })
-      .then((photos) => {
-        if (photos) {
-          setPhotos(photos);
-          setPhotosUrl(getUrlFromPhotos(photos.room_photos));
-          setIsLoading(false);
-        }
-      });
+    BnbSecureStore.read(constants.CACHE_USER_KEY).then((user) => {
+      setStoredUser(user);
+      _fetchPhotos();
+    });
   }, []);
 
   useEffect(() => {
@@ -143,16 +159,10 @@ function ImagesEditScreen({route, navigation}) {
     });
   }, []);
 
-  useEffect(() => {
-    if (_error) {
-      setError(undefined);
-    }
-  }, [_error]);
-
   if (_is_loading) {
     return <BnbLoading text="Cargando Imagenes..."></BnbLoading>;
   } else if (_error) {
-    return <Text style={styles.centerText}>Error: {_error.message}</Text>;
+    return <BnbError>Error: {_error.message}</BnbError>;
   } else {
     return (
       <BnbMainView>
@@ -163,13 +173,22 @@ function ImagesEditScreen({route, navigation}) {
             </Text>
           )}
           <View style={styles.imageSlider}>
-            <BnbImageSlider
-              images={_photos_urls}
-              width={200}
-              onPress={_handleRemoveImage}
-            />
+            {!_is_loading_photos && (
+              <BnbImageSlider
+                images={_photos_urls}
+                onPress={_handleRemoveImage}
+              />
+            )}
           </View>
-          <BnbButton title={"Agregar imagen"} onPress={_pickImage}/>
+          {!isCreatingRoom && (
+            <View>
+              <Text style={bnbStyleSheet.normalText}>
+                Para quitar una imagen de la publicación solo presione la imagen
+                que quiere remover
+              </Text>
+            </View>
+          )}
+          <BnbButton title={"Agregar imagen"} onPress={_pickImage} />
           {isCreatingRoom && (
             <BnbButton
               title={"No agregar imagen y terminar"}

@@ -99,21 +99,17 @@ function HomeScreen({ navigation }) {
       .then(() => BnbSecureStore.clear(constants.CACHE_USER_KEY));
   };
 
-  const fetchRecommendations = async (is_focused) => {
-    httpGetTokenRequest("GET", urls.URL_RECOMMENDATIONS, {}).then(
-      (recommendedRooms) => {
-        if (is_focused) {
-          setRecommendedRooms(recommendedRooms);
-        }
-      },
-      (error) => {}
-    );
-  };
-
   useFocusEffect(
     useCallback(() => {
       let is_focused = true;
-      fetchRecommendations(is_focused);
+      httpGetTokenRequest("GET", urls.URL_RECOMMENDATIONS, {}).then(
+        (recommendedRooms) => {
+          if (is_focused) {
+            setRecommendedRooms(recommendedRooms);
+          }
+        },
+        (error) => {}
+      );
       return () => {
         is_focused = false;
       };
@@ -132,20 +128,6 @@ function HomeScreen({ navigation }) {
               />
             </View>
             <BnbWindow navigation={navigation} style={styles.window} />
-            <View style={styles.optionsContainer}>
-              <View>
-                <BnbButton
-                  title="DEBUG Cerrar sesion"
-                  onPress={_handleLogOutButton}
-                />
-                <BnbButton
-                  title="DEBUG Room/Profile by id"
-                  onPress={() => {
-                    navigation.navigate("DebugGoToRoomProfile");
-                  }}
-                />
-              </View>
-            </View>
           </View>
           <Separator />
           {_recommendedRooms && storedUser && (

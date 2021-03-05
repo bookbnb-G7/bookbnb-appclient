@@ -20,6 +20,7 @@ import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import BnbFloatingTextInput from "../components/BnbFloatingTextInput";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import BnbRoomInfo from "../components/BnbRoomInfo";
+import BnbError from "../components/BnbError";
 
 function RoomEditScreen({ route, navigation }) {
   const room_id = route.params.room_id;
@@ -134,11 +135,11 @@ function RoomEditScreen({ route, navigation }) {
   const ref_price_per_day = useRef();
 
   if (_error) {
-    return <Text>{_error.message}</Text>;
+    return <BnbError>{_error.message}</BnbError>;
   }
 
   if (_is_loading) {
-    return <BnbLoading></BnbLoading>;
+    return <BnbLoading text="Cargando detalles..." />;
   }
 
   return (
@@ -157,6 +158,7 @@ function RoomEditScreen({ route, navigation }) {
           <Text style={{ ...bnbStyleSheet.subHeaderText, ...styles.separator }}>
             Editar publicacion
           </Text>
+          <BnbButton title={"Editar imagenes"} onPress={_handleImagePress} />
           <BnbFloatingTextInput
             name="Precio por dia"
             id={"price_per_day"}
@@ -168,7 +170,7 @@ function RoomEditScreen({ route, navigation }) {
           <View style={styles.buttonsContainer}>
             <BnbButton
               style={styles.button}
-              title={_is_editing ? "Aceptar cambios" : "Editar"}
+              title={_is_editing ? "Aceptar cambios" : "Editar campos"}
               onPress={
                 _is_editing
                   ? _handleFinishEditingButtonPress
