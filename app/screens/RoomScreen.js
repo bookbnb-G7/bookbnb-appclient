@@ -72,14 +72,10 @@ function RoomScreen({ route, navigation }) {
   };
 
   const _handleRoomBooking = () => {
-    if (
-      !route.params.searchForm.dateBegin &&
-      !route.params.searchForm.dateEnd
-    ) {
+    if (!route.params.searchForm) {
       Alert.alert(
         "Reserva",
-        "Debe elegir una fecha de Check-in y otra de Check-out",
-        "Entendido"
+        "Debe elegir una fecha de Check-in y otra de Check-out"
       );
       return;
     }
@@ -122,7 +118,7 @@ function RoomScreen({ route, navigation }) {
     if (storedUser) {
       fetchRoomData();
     }
-  }, [route.params?.room_id, storedUser]);
+  }, [route.params.room_id, storedUser]);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
