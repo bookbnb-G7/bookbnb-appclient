@@ -284,13 +284,13 @@ const styles = StyleSheet.create({
   addToFavoritesText: {
     fontFamily: "Raleway_500Medium",
     fontSize: 15,
-    color: "yellow",
+    color: "#ffd700",
   },
   removeFromFavoritesIcon: {
     color: colors.redAirBNB,
   },
   addToFavoritesIcon: {
-    color: "yellow",
+    color: "#ffd700",
   },
   priceText: {
     fontFamily: "Raleway_600SemiBold",
