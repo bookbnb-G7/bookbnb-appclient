@@ -175,7 +175,6 @@ function SignUpScreen({ route, navigation }) {
                 countryCode,
                 onSelect,
               }}
-              visible
               withCountryNameButton={true}
             />
             <BnbFloatingTextInput

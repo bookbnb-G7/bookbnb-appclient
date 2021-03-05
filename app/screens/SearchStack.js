@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Text } from "react-native";
 import BnbSecureStore from "../classes/BnbSecureStore";
 import constants from "../constant/constants";
+import BookingDatePicker from "./BookingDatePicker";
 import ImagesEditScreen from "./ImagesEditScreen";
 import OptionalFiltersScreen from "./OptionalFiltersScreen";
 import Profile from "./Profile/Profile";
@@ -96,6 +97,7 @@ function SearchStack({ navigation }) {
         {/**Estos screen son para ver los datos de otros usuarios, no para los de mi propio perfil*/}
         <SearchStackNav.Screen name="User" component={Profile} />
         <SearchStackNav.Screen name="ImagesEdit" component={ImagesEditScreen} />
+        <SearchStackNav.Screen name="BookingDatePicker" component={BookingDatePicker} />
       </SearchStackNav.Navigator>
     );
   }

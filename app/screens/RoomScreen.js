@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Calendar } from "react-native-calendars";
+import { Overlay } from "react-native-elements";
 import BnbBodyView from "../components/BnbBodyView";
 import BnbButton from "../components/BnbButton";
 import BnbMainView from "../components/BnbMainView";
@@ -20,6 +21,7 @@ import BnbAlert from "../components/BnbAlert";
 import formatDate from "../helpers/formatDate";
 import BnbRoomInfo from "../components/BnbRoomInfo";
 import BnbError from "../components/BnbError";
+import BookingDatePicker from "./BookingDatePicker";
 
 function RoomScreen({ route, navigation }) {
   const room_id = route.params?.room_id;
@@ -32,6 +34,11 @@ function RoomScreen({ route, navigation }) {
 
   const [_bookings, setBookings] = useState();
   const [_owner, setOwner] = useState();
+  const [visible, setVisible] = useState(false);
+
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
 
   const _handleRoomDetailsButtonPress = () => {
     navigation.navigate("RoomDetails", { room_id: _room.id });
@@ -72,6 +79,7 @@ function RoomScreen({ route, navigation }) {
   };
 
   const _handleRoomBooking = () => {
+    toggleOverlay();
     if (!route.params.searchForm) {
       Alert.alert(
         "Reserva",
@@ -193,7 +201,7 @@ function RoomScreen({ route, navigation }) {
   } else {
     return (
       <BnbMainView>
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="always">
           <BnbBodyView style={styles.bodyView}>
             {_room && storedUser && (
               <BnbRoomInfo
@@ -243,7 +251,12 @@ function RoomScreen({ route, navigation }) {
                 <BnbButton
                   style={styles.center}
                   title="Reservar"
-                  onPress={_handleRoomBooking}
+                  onPress={() => 
+                    navigation.navigate('BookingDatePicker', {
+                      room_id: _room.id,
+                      room_price: _room.price_per_day,
+                    })
+                  }
                 />
               </View>
             )}
