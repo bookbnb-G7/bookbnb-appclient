@@ -469,3 +469,17 @@ Marzo 5, 2021
 Se agrega la función de poder seleccionar fecha de reserva una vez dentro de la publicación.
 Anteriormente se hacía en la etapa de búsqueda de alojamientos.
 
+
+## Análisis postmortem
+
+### Manejo de errores por parte de la app
+
+Normalmente la request puede fallar lo que provoca que el flujo normal de la aplicación sea interrumpido. La aplicación atrapa estos errores pero en varios casos no emite mensajes adecuados para el usuario ni plantea una forma de recuperarse del error, además afecta la presentación de componentes como por ejemplo en el caso de que una vista previa de una publicación no funcione, simplemente aparece un texto en rojo indicando el error cuando podría aparecer de una forma mucho más amigable para el usuario.
+
+
+### Firebase
+
+La documentación de firebase se encuentra desactualizada con respecto a la autorización y mantenimiento de la sesión de los usuarios en la app, por lo tanto la implementación de las funcionalidades de la API ha tomado cierto tiempo, la más importante el mantener el token de acceso actualizado para evitar la expiración dado que no existe documentación oficial sobre cómo lograr esto y se debió recurrir a otras páginas/foros para encontrar formas de lograr persistencia en el logeo.
+
+
+
