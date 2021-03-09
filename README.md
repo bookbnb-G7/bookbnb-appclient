@@ -288,141 +288,184 @@ La aplicación le pedira una confirmación cada vez que vaya a realizar alguna d
 A continuación se da una linea de tiempo simplificada con las distintas tareas realizadas a lo largo del desarrollo de la aplicación
 
 
-Octubre 14, 2020 
+Octubre 14, 2020
+
 Inicio del proyecto
 Se crea el proyecto en GitHub y junto con el los primeros repositorios, entre ellos el bookbnb-appclient que será el repositorio a detallar en esta bitácora
 
 Octubre 17, 2020
+
 Utilizando la herramienta Expo se creo una aplicación básica que hacia solo una request al boobnb-appserver
 
 Octubre 19, 2020
+
 Se agrego un POST request para probar el bookbnb-appserver
 
 Octubre 27, 2020
+
 Se agrego un navegador (React navigation) a la aplicación y una pantalla de inicio (Home)
 
 Octubre 31, 2020
+
 Se agrega la pantalla para la visualización de una publicación (RoomScreen.js)
 
 Noviembre 1, 2020
+
 Se agrega la pantalla para la visualización del perfil (Profile.js)
 
 Noviembre 10, 2020
+
 Se agrega un grupo de pantallas que conforman el esqueleto de la búsqueda de una publicación, en orden; ingresar ubicación geográfica, fecha de reserva y resultados de la búsqueda.
 
 Noviembre 14, 2020
+
 Se agrega la pantalla para la reseña de un alojamiento
 Refactorizado de la pantalla RoomScreen
 Se agrega a las pantallas de búsqueda la pantalla para indicar la cantidad de inquilinos
 
 Noviembre 16,2020
+
 Creada una función tipo helper para los request HTTP
 Se agrega un Tab Navigator con los Stack Navigators Home, Perfil y Búsqueda
 
 Noviembre 17, 2020
+
 Refactor del Stack Navigator del Perfil
 Se agrega pantalla para la información del Perfil (ProfileInfoScreen)
 
 Noviembre 18, 2020
+
 Se agrega pantalla para la edición de una publicación
 
 Noviembre 19, 2020
+
 Se agrega la función, eliminar una publicación
 Se agrega la función, eliminar usuario.
 Se agrega la función, actualizar publicación.
 
 Noviembre 23, 2020
+
 Se agrega pantalla para la creación de una publicación (RoomCreateScreen.js)
 
 Noviembre 25, 2020
+
 Se agrega esqueleto de la pantalla para el registro de un usuario
 
 Diciembre 5, 2020
+
 Agregado HTTP request para subir imagenes
 Se agrega pantalla para la elección de imágenes de la galería (ImagesPickScreen.js)
 
 Diciembre 7, 2020
+
 Implementado el registro de un usuario a partir de firebase
 
 Diciembre 10, 2020
+
 Agregado el parámetro "x-access-token" a las funciones helpers.
 
 Diciembre 12, 2020
+
 Implemento expo-secure-store para almacenar los datos del usuario una vez logeado/registrado.
 
 Diciembre 14, 2020
+
 Se agrega pantalla para mostrar todas las publicaciones de un usuario.
 
 Diciembre 17, 2020
+
 Se agrega pantalla para seleccionar las fechas de inicio y fin de la estadía (SearchDateTimePicker)
 
 Diciembre 28, 2020
+
 Refactorizado de las pantallas de inicio, logeo y registro
 
 Enero 2, 2021
+
 Se agrega pantalla para aceptar o rechazar las reservas (RoomBookinsScreen.js)
 
 Enero 3, 2021
+
 Se agrega componente ImageSlider para mostrar varias imágenes en carrusel
 
 Enero 4, 2021
+
 Implementado ImageSlider en la pantalla de la publicación
 Se agrega pantalla para mostrar la billetera del usuario.
 
 Enero 5, 2021
+
 Se agrega funciones para agregar y remover imágenes.
 Refactorización de la pantalla de bienvenida, logeo y registro.
 
 Enero 7, 2021
+
 Implementada función para la recuperación de la contraseña
 
 Enero 9, 2021
+
 Se agrega pantalla con filtros opcionales, rango de precios y tipo de alojamiento
 
 Enero 10, 2021
+
 Se agrega pantalla para la reseña de un usuario
 Refactorización de la pantalla ed creación de publicaciones
 
 Enero 15, 2021
+
 Se agrega la funcionalidad de comentar una publicación
 
 Enero 16, 2021
+
 Implementado registro de usuario por Google and Facebook
 Implementado Chat privado entre usuarios
 
 Enero 18, 2021
+
 Implementado notificaciones
 
 Enero 19, 2021
+
 Refactorización de la vista del perfil
 
 Enero 23, 2021
+
 Agregado Calendario de reservas en la pantalla de la publicación
 
 Enero 28, 2021
+
 Refactorización de los comentarios
 
 Febrero 2, 2021
+
 Refactorización de las reseñas del alojamiento
 
 Febrero 3, 2021
+
 Se agrega componente para la información de una publicación
 
 Febrero 12, 2021
+
 Agregado lista autocompletar para el ingreso de la localidad en la búsqueda de alojamientos
 
 Febrero 14, 2021
+
 Se agrega pantalla de publicaciones favoritas y la opción de agregar una publicación a favoritos.
 
 Febrero 24, 2021
+
 Se agrega recomendaciones de habitaciones en la pantalla de inicio
 
 Marzo 2, 2021
+
 Se crea documentación Guia de usuario.
 
 Marzo 3, 2021
+
 Fixes y refactorización en las vistas previas (miniaturas) de las publicaciones
 
 Marzo 5, 2021
+
 Se agrega la función de poder seleccionar fecha de reserva una vez dentro de la publicación.
 Anteriormente se hacía en la etapa de búsqueda de alojamientos.
+
