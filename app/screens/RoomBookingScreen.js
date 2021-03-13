@@ -98,6 +98,12 @@ function RoomBookingScreen({ route, navigation }) {
             Aceptado
           </Text>
         )}
+        {status === constants.BOOKING_STATUS_REJECTED && (
+          <Text style={{ ...bnbStyleSheet.normalText, ...{ color: "red" } }}>
+            {" "}
+            Rechazado
+          </Text>
+        )}
       </View>
     );
   };
@@ -210,19 +216,19 @@ function RoomBookingScreen({ route, navigation }) {
                   Hasta: {_booking.date_to}
                 </Text>
               </View>
+              {storedUser && (
+                <View style={{ alignSelf: "center" }}>
+                  <BnbBookerInfo
+                    booker_id={_booking.booker_id}
+                    me_id={storedUser.userData.id}
+                    navigation={navigation}
+                  />
+                </View>
+              )}
               {_booking && (
                 <ShowBookingStatus status={_booking.booking_status} />
               )}
             </View>
-            {storedUser && (
-              <View style={{ alignSelf: "center" }}>
-                <BnbBookerInfo
-                  booker_id={_booking.booker_id}
-                  me_id={storedUser.userData.id}
-                  navigation={navigation}
-                />
-              </View>
-            )}
             {_is_owner &&
               _booking.booking_status === constants.BOOKING_STATUS_PENDING && (
                 <View>

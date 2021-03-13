@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import constants from "../constant/constants";
 import urls from "../constant/urls";
 import getUrlFromPhotos from "../helpers/getUrlFromPhotos";
 import httpGetTokenRequest from "../helpers/httpGetTokenRequest";
+import BnbBookerInfo from "./BnbBookerInfo";
 import BnbButton from "./BnbButton";
 import BnbError from "./BnbError";
 import BnbImageSlider from "./BnbImageSlider";
 import BnbLoadingText from "./BnbLoadingText";
 import RoomPreview from "./RoomPreview";
 
-const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
+const BnbBookingPreview = ({
+  navigation,
+  booking_id,
+  room_id,
+  me_id,
+  auth_token,
+}) => {
   const [_booking, setBooking] = useState();
   const [_photos_urls, setPhotos] = useState([]);
   const [_room, setRoom] = useState(null);
@@ -51,9 +59,6 @@ const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
             </Text>
           )}
         </View>
-        {showButton && (
-          <BnbButton title="Ver reserva" onPress={_handleGoToBookingDetails} />
-        )}
       </View>
     );
   };
@@ -104,9 +109,11 @@ const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
   }
   return (
     <View style={bnbStyleSheet.roomPreviewContainer}>
-      <View style={styles.roomImageContainer}>
-        <BnbImageSlider images={_photos_urls} />
-      </View>
+      <TouchableOpacity onPress={_handleGoToBookingDetails}>
+        <View style={styles.roomImageContainer}>
+          <BnbImageSlider images={_photos_urls} />
+        </View>
+      </TouchableOpacity>
       {_room && <RoomPreview room={_room}></RoomPreview>}
       <View>
         <View style={styles.bookingDatesContainer}>
@@ -116,6 +123,13 @@ const BnbBookingPreview = ({ navigation, booking_id, room_id, auth_token }) => {
           <Text style={bnbStyleSheet.mediumText}>
             Hasta: {_booking.date_to}
           </Text>
+        </View>
+        <View style={{ alignSelf: "center" }}>
+          <BnbBookerInfo
+            booker_id={_booking.booker_id}
+            me_id={me_id}
+            navigation={navigation}
+          />
         </View>
         {_booking && <ShowBookingStatus status={_booking.booking_status} />}
       </View>
@@ -130,6 +144,7 @@ const styles = StyleSheet.create({
   bookingDatesContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
+    height: 20,
   },
   bookingStatusContainer: {
     flexDirection: "row",

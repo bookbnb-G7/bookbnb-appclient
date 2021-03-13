@@ -103,6 +103,7 @@ function ProfileBookingsScreen({ navigation }) {
                           navigation={navigation}
                           booking_id={item.id}
                           room_id={item.room_id}
+                          me_id={storedUser.userData.id}
                           auth_token={storedUser.auth_token}
                         />
                         <Separator />
@@ -130,6 +131,7 @@ function ProfileBookingsScreen({ navigation }) {
                           navigation={navigation}
                           booking_id={item.id}
                           room_id={item.room_id}
+                          me_id={storedUser.userData.id}
                           auth_token={storedUser.auth_token}
                         />
                         <Separator />
