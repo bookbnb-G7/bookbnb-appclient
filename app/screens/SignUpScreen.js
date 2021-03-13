@@ -43,6 +43,15 @@ function SignUpScreen({ route, navigation }) {
     }));
   };
 
+  const inputIsIncorrect = (user) => {
+    return (
+      user.email === "" ||
+      user.password === "" ||
+      user.firstname === "" ||
+      user.lastname === ""
+    );
+  };
+
   const _handleCreateUserButtonPress = () => {
     if (
       user.email === "" ||

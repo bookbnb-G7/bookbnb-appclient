@@ -18,7 +18,7 @@ import RoomEditScreen from "../RoomEditScreen";
 import ProfileOwnerScreen from "./ProfileOwnerScreen";
 import UserReviewScreen from "../UserReviewScreen";
 import ProfileFavoritesScreen from "./ProfileFavoritesScreen";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ProfileStack = createStackNavigator();
 
@@ -92,7 +92,7 @@ function ProfileStackScreen({ navigation }) {
           component={ProfileBookingsScreen}
         />
         <ProfileStack.Screen name="RoomBooking" component={RoomBookingScreen} />
-        <ProfileStack.Screen name="UserReview" component={UserReviewScreen} />
+        <ProfileStack.Screen name="ReviewUser" component={UserReviewScreen} />
         <ProfileStack.Screen
           name="ProfileWallet"
           component={ProfileWalletScreen}

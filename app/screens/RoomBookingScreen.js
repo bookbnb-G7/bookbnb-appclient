@@ -5,8 +5,6 @@ import BnbButton from "../components/BnbButton";
 import BnbLoading from "../components/BnbLoading";
 import BnbMainView from "../components/BnbMainView";
 import BnbBodyView from "../components/BnbBodyView";
-import fonts from "../config/fonts";
-import styling from "../config/styling";
 import bnbStyleSheet from "../constant/bnbStyleSheet";
 import constants from "../constant/constants";
 import urls from "../constant/urls";
@@ -18,6 +16,7 @@ import BnbRoomInfo from "../components/BnbRoomInfo";
 import { ScrollView } from "react-native-gesture-handler";
 import RoomRating from "../components/RoomRating";
 import RoomReviews from "../components/RoomReviews";
+import BnbBookerInfo from "../components/BnbBookerInfo";
 
 function RoomBookingScreen({ route, navigation }) {
   const { booking_id } = route.params;
@@ -78,7 +77,7 @@ function RoomBookingScreen({ route, navigation }) {
     /**Si soy el dueño de la room eso significa que el booking es de un guest
      * caso contario soy un guest calificando a un host
      */
-    navigation.navigate("UserReview", {
+    navigation.navigate("ReviewUser", {
       is_guest: _is_owner,
       reviewed_id: _is_owner ? _booking.booker_id : _booking.room_owner_id,
     });
@@ -215,9 +214,19 @@ function RoomBookingScreen({ route, navigation }) {
                 <ShowBookingStatus status={_booking.booking_status} />
               )}
             </View>
+            {storedUser && (
+              <View style={{ alignSelf: "center" }}>
+                <BnbBookerInfo
+                  booker_id={_booking.booker_id}
+                  me_id={storedUser.userData.id}
+                  navigation={navigation}
+                />
+              </View>
+            )}
             {_is_owner &&
               _booking.booking_status === constants.BOOKING_STATUS_PENDING && (
                 <View>
+                  <Separator />
                   <BnbButton
                     buttonStyle={{
                       ...bnbStyleSheet.bnbButton,
@@ -293,6 +302,7 @@ const styles = StyleSheet.create({
   bookingDatesContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
+    height: 20,
   },
   bookingStatusContainer: {
     flexDirection: "row",

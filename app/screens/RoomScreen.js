@@ -110,23 +110,20 @@ function RoomScreen({ route, navigation }) {
   };
 
   const fetchRoomData = async () => {
-    httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {
+    return httpGetTokenRequest("GET", urls.URL_ROOMS + "/" + room_id, {
       "x-access-token": storedUser.auth_token,
-    })
-      .then((room) => {
+    }).then(
+      (room) => {
         setRoom(room);
-      })
-      .catch((error) => {
+        return Promise.resolve(room);
+      },
+      (error) => {
         setIsLoading(false);
-      });
+        setError(error);
+        return Promise.reject(null);
+      }
+    );
   };
-
-  /**Fetcheo los datos del room cada vez que el parametro cambia */
-  useEffect(() => {
-    if (storedUser) {
-      fetchRoomData();
-    }
-  }, [route.params.room_id, storedUser]);
 
   useEffect(() => {
     BnbSecureStore.read(constants.CACHE_USER_KEY).then((storedUser) => {
@@ -135,62 +132,55 @@ function RoomScreen({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    /**Debe coincidir el id del Secure Store con el id del dueño del cuarto*/
-    if (_room && storedUser) {
-      setIsOwner(storedUser.userData.id === _room.owner_uuid);
-    }
-  }, [_room, storedUser]);
-
-  /**Fetcheo el owner aca para no tocar la cadena de promesa del room fetch*/
-  useEffect(() => {
-    /**Fetcheo el owner si es la primera vez o cambio el id respecto a la ultima vez*/
-    if (_room && (!_owner || _owner.id !== _room.owner_uuid)) {
-      setIsLoading(true);
-      httpGetTokenRequest(
-        "GET",
-        urls.URL_USERS + "/" + _room.owner_uuid,
-        {}
-      ).then(
-        (owner) => {
-          setOwner(owner);
-          setIsLoading(false);
+    if (storedUser) {
+      fetchRoomData().then(
+        (room) => {
+          setIsOwner(storedUser.userData.id === room.owner_uuid);
+          httpGetTokenRequest(
+            "GET",
+            urls.URL_USERS + "/" + room.owner_uuid,
+            {}
+          ).then(
+            (owner) => {
+              setOwner(owner);
+              setIsLoading(false);
+              httpGetTokenRequest(
+                "GET",
+                urls.URL_BOOKINGS +
+                  "?" +
+                  new URLSearchParams({ roomId: room.id }),
+                {}
+              ).then(
+                (bookings) => {
+                  let markedDates = {};
+                  for (let i = 0; i < bookings.amount; i++) {
+                    markedDates[bookings.bookings[i]["date_from"]] = {
+                      startingDay: true,
+                      textColor: "#d9e1e8",
+                    };
+                    markedDates[bookings.bookings[i]["date_to"]] = {
+                      endingDay: true,
+                      textColor: "#d9e1e8",
+                    };
+                  }
+                  setBookings(markedDates);
+                },
+                (error) => {
+                  console.log("bookings error");
+                }
+              );
+            },
+            (error) => {
+              console.log("owner error");
+            }
+          );
         },
         (error) => {
-          setError(error);
-          setIsLoading(false);
+          console.log("room error");
         }
       );
     }
-  }, [_room]);
-
-  //Fetchear bookings y convertirlos al formato que pide el componente del calendario
-  useEffect(() => {
-    if (_room) {
-      httpGetTokenRequest(
-        "GET",
-        urls.URL_BOOKINGS + "?" + new URLSearchParams({ roomId: _room.id }),
-        {}
-      ).then(
-        (bookings) => {
-          let markedDates = {};
-          for (let i = 0; i < bookings.amount; i++) {
-            markedDates[bookings.bookings[i]["date_from"]] = {
-              startingDay: true,
-              textColor: "#d9e1e8",
-            };
-            markedDates[bookings.bookings[i]["date_to"]] = {
-              endingDay: true,
-              textColor: "#d9e1e8",
-            };
-          }
-          setBookings(markedDates);
-        },
-        (error) => {
-          setError(error);
-        }
-      );
-    }
-  }, [_room]);
+  }, [route.params.room_id, storedUser]);
 
   if (_error) {
     return <BnbError>Error al carga la publicación: {_error.message}</BnbError>;
@@ -251,8 +241,8 @@ function RoomScreen({ route, navigation }) {
                 <BnbButton
                   style={styles.center}
                   title="Reservar"
-                  onPress={() => 
-                    navigation.navigate('BookingDatePicker', {
+                  onPress={() =>
+                    navigation.navigate("BookingDatePicker", {
                       room_id: _room.id,
                       room_price: _room.price_per_day,
                     })
