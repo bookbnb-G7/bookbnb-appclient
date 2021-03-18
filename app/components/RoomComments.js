@@ -139,14 +139,15 @@ function RoomComments({ room_id, me_id, is_owner, token, navigation }) {
   };
 
   useEffect(() => {
+    let is_focused = true;
     fetchRoomComments();
     return function cleanup() {
-      setError(undefined);
+      is_focused = false;
     };
-  }, []);
+  }, [room_id]);
 
   if (_is_loading) {
-    return <Text>Cargando comentarios</Text>;
+    return <Text>Cargando comentarios...</Text>;
   }
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
@@ -191,7 +192,7 @@ function RoomComments({ room_id, me_id, is_owner, token, navigation }) {
 const styles = StyleSheet.create({
   addCommentContainer: {
     paddingVertical: 10,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
   textInput: {
     borderRadius: styling.smallCornerRadius,
@@ -200,7 +201,7 @@ const styles = StyleSheet.create({
     marginVertical: styling.separator,
   },
   commentsContainer: {
-    paddingLeft: 10
+    paddingLeft: 10,
   },
 });
 

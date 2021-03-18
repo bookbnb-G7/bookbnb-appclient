@@ -85,11 +85,12 @@ function RoomReviews({
   };
 
   useEffect(() => {
+    let is_focused = true;
     fetchRoomReviews();
     return function cleanup() {
-      setError(undefined);
+      is_focused = false;
     };
-  }, []);
+  }, [room_id]);
 
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;
@@ -99,8 +100,10 @@ function RoomReviews({
   }
   return (
     <View style={styles.roomReviewCompContainer}>
-      <Separator style={{width: "100%", marginVertical: 15}} />
-      <Text style={{ ...bnbStyleSheet.headerTextBlack, paddingLeft: 0}}>Reseñas habitación</Text>
+      <Separator style={{ width: "100%", marginVertical: 15 }} />
+      <Text style={{ ...bnbStyleSheet.headerTextBlack, paddingLeft: 0 }}>
+        Reseñas habitación
+      </Text>
       <View style={styles.roomReviewsContainer}>
         {_room_reviews &&
           _room_reviews.reviews.map((item, index) => (
@@ -126,14 +129,13 @@ function RoomReviews({
           <BnbButton title="Publicar" onPress={_handlePostReview} />
         </View>
       )}
-      <Separator style={{width: "100%", marginTop: 15}} />
+      <Separator style={{ width: "100%", marginTop: 15 }} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  roomReviewsContainer: {
-  },
+  roomReviewsContainer: {},
   writeAReviewContainer: {},
   textInput: {
     borderRadius: styling.smallCornerRadius,
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
     marginVertical: styling.separator,
   },
   roomReviewCompContainer: {
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
 });
 

@@ -43,7 +43,7 @@ const BnbRoomInfo = ({ room, me_id, auth_token, navigation, onChange }) => {
       { "x-access-token": auth_token, "Content-Type": "application/json" }
     ).then(
       (response) => {
-        onChange();
+        onChange(room.id);
       },
       (error) => {
         setError(error);
@@ -56,7 +56,7 @@ const BnbRoomInfo = ({ room, me_id, auth_token, navigation, onChange }) => {
       "x-access-token": auth_token,
     }).then(
       (response) => {
-        onChange();
+        onChange(room.id);
       },
       (error) => {}
     );
@@ -103,7 +103,7 @@ const BnbRoomInfo = ({ room, me_id, auth_token, navigation, onChange }) => {
         setError(error);
       }
     );
-  }, []);
+  }, [room.id]);
 
   useEffect(() => {
     httpGetTokenRequest(
@@ -118,7 +118,7 @@ const BnbRoomInfo = ({ room, me_id, auth_token, navigation, onChange }) => {
         setError(error);
       }
     );
-  }, []);
+  }, [room.id]);
 
   useEffect(() => {
     httpGetTokenRequest("GET", urls.URL_USERS + "/" + room.owner_uuid, {}).then(
@@ -129,7 +129,7 @@ const BnbRoomInfo = ({ room, me_id, auth_token, navigation, onChange }) => {
         setError(error);
       }
     );
-  }, []);
+  }, [room.id]);
 
   if (_error) {
     return <BnbError>{_error.message}</BnbError>;

@@ -19,6 +19,7 @@ import ProfileOwnerScreen from "./ProfileOwnerScreen";
 import UserReviewScreen from "../UserReviewScreen";
 import ProfileFavoritesScreen from "./ProfileFavoritesScreen";
 import { useFocusEffect } from "@react-navigation/native";
+import BnbLoadingText from "../../components/BnbLoadingText";
 
 const ProfileStack = createStackNavigator();
 
@@ -55,7 +56,7 @@ function ProfileStackScreen({ navigation }) {
   );
 
   if (!storedUser) {
-    return <Text>Cargando...</Text>;
+    return <BnbLoadingText>Cargando datos...</BnbLoadingText>;
   } else {
     return (
       <ProfileStack.Navigator

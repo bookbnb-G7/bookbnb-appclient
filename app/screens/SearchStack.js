@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useCallback, useEffect, useState } from "react";
 import { Text } from "react-native";
 import BnbSecureStore from "../classes/BnbSecureStore";
+import BnbLoadingText from "../components/BnbLoadingText";
 import constants from "../constant/constants";
 import BookingDatePicker from "./BookingDatePicker";
 import ImagesEditScreen from "./ImagesEditScreen";
@@ -27,19 +28,6 @@ function SearchStack({ navigation }) {
     });
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("tabPress", (e) => {
-      e.preventDefault();
-      if (is_focused) {
-        navigation.navigate("SearchRooms", { screen: "SearchInput" });
-      } else {
-        navigation.navigate("SearchRooms");
-      }
-    });
-
-    return unsubscribe;
-  });
-
   useFocusEffect(
     useCallback(() => {
       is_focused = true;
@@ -63,7 +51,7 @@ function SearchStack({ navigation }) {
   }, [navigation]);
 
   if (!storedUser) {
-    return <Text>Cargando...</Text>;
+    return <BnbLoadingText>Cargando datos...</BnbLoadingText>;
   } else {
     return (
       <SearchStackNav.Navigator
